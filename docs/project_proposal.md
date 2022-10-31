@@ -3,7 +3,7 @@
 ## Leading Question
 
 We have acquired a dataset on the San Fransico Road Network, and we are thinking about developing a project to help police cope with crime activities by providing efficient ways(routes) to chase criminals. Our project can be used to achive the following goals:
-THis isin BFS
+
 1. Identify Busiest Road in San Fransico (or best 10):
 
 2. Optimum route for chasing criminals:
