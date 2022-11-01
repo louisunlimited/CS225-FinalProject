@@ -40,37 +40,63 @@ We have acquired a dataset on the San Fransico Road Network, and we are thinking
 
 ## Graph Algorithms
 
-1. _____ for Betweeness Centrality
+1. Find importance of all nodes
 
-    Input: A graph of Mapdata | None
+    **Algorithm**: `Dijkstra's algorithm` will be applied to every node to find all shortest paths. Then for every point, we will calculate the betweeness centrality as its importance value.
 
-    Output: A PNG containing the marked position. (or all position with different values(colors) for each point)
+    **Input**: (empty)
 
-    Function Effiency: "Floyd Marshall": O(|V|^3) or "Johnson's" : O(|V|^2 log(|V|) + |V||E|)
+    **Output**:
+     - A `PNG` containing the map of the entire San Francisco. All nodes are colored differently to match its betweeness centrality value.
 
-2. A* Path Finding
+    **Complexity**:
+     - Time: $O((|V| + |E|)|V|log(|V|))$
+     - Space: $O(|V|)$ (Note that the shortest paths are not stored simutaneously)
 
-    Input: current \ destination coordinate | None | (zoom factor)
+2. Path finding between any two location
 
-    Output: A PNG containing the marked path. (possibly zoomed)
+    **Algorithm**: First, `k-d tree` is used to find the nearest node to the two given locations. Then we apply `A* search algorithm` for finding the shortest path between the two nodes.
 
-    Function Effiency: Probably approaching O(V)
+    **Input**:
+     - Starting coordinate: `Coord(double, double)`
+     - Destination coordinate: `Coord(double, double)`
+     - Zoom factor: `double`
 
-3. BFS
+    **Output**:
+     - A `PNG` containing the map showing the path from the starting node to the target node. The image is scaled by the given factor.
 
-    Input: A graph of Mapdata + current coordinate | None | (zoom factor)
+    **Complexity**:
+     - Time: $O((|V| + |E|)log(|V|))$
+     - Space: $O(|V|)$
 
-    Output: A PNG containing all the possible points availavble to reach. (possibly zoomed)
+3. Finding all nodes within distance
 
-    Function Effiency: O(V)
+    **Algorithm**: The list of nodes can be obtained by going through the procedure as specified by `Dijkestra's algorithm` and record all nodes visited. Nodes outside the range will be dropped immediately without appending to the queue.
 
-4. _____ for finding police station (Dijkstra's?)
+    **Input**:
+     - Starting coordinate: `Coord(double, double)`
+     - Zoom factor: `double`
 
-    Input: A graph of Mapdata | None
+    **Output**:
+     - A `PNG` showing a zoomed map that highlights all possible nodes availavble to reach. The image is scaled by the given factor.
 
-    Output: A PNG with marked positions for the next possible police station.
+    **Complexity**:
+     - Time: $O((|V| + |E|)log(|V|))$
+     - Space: $O(|V|)$
 
-    Function Effiency: O(V)
+4. Finding best location for new police station
+
+    **Algorithm**: We will use `k-d tree` to map the current police stations into nodes. Then we apply `Dijkstra's algorithm` to measure the distance of all nodes to the nearest police station. This can be achieved by initally pushing all police station nodes into the priority queue. Finally, the node with the largest distance will be selected as the best location.
+
+    **Input**:
+     - Zoom factor: `double`
+
+    **Output**:
+     - A `PNG` with highlighted location for the next possible police station. The image is scaled by the given factor.
+
+    **Complexity**:
+     - Time: $O((|V| + |E|)log(|V|))$
+     - Space: $O(|V|)$
 
 ## Timeline
 
