@@ -32,11 +32,11 @@ We have acquired a dataset on the San Fransico Road Network, and we are thinking
 
 2. Data Correction:
 
-    We are going to check whether the input is a `.csv` or a `.txt` and we will parse the data accordingly. We don't think there will be any major errors present in our dataset, but we will do some prelimilary checks for GPS Coordinates and else. (weight >= absolute distance between two points) (makesure a weight is present) (no two weight present for same set of nodes)
+    We are going to check whether the input is a `.csv` or a `.txt` and we will parse the data accordingly. We don't think there will be any major errors present in our dataset, but we will do some prelimilary checks for GPS Coordinates and else. For invalid data, we will check whether weight is larger than or equal to the absolute distance between two points. We will make sure a weight is present  and no two weight present for same set of nodes.
 
 3. Data Storage:
 
-    For our mapdata, we will be storing them in a graph wiht an Adjacency List. Which would take O(E + V) space. And we might use KD-tree to find the nearest neighour, which would take O(Nlog(N)), where N is the number of nodes.
+    For our mapdata, we will be storing them in a graph wiht an Adjacency List, which would take O(E + V) space. And we might use KD-tree to find the nearest neighour, which would take O(Vlog(V)).
 
 ## Graph Algorithms
 
