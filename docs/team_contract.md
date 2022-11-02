@@ -22,7 +22,7 @@ At each weekly meeting, we will list all the deliveralbls for group members to c
 
 2.**Time Commitment**
 
-Each week, each member is expected to work around 3-6 hours for the weekly goal. If a particular deliverable has taken more than those time, work adjustments can be made to mend the situation. It is the team's responsibility to ensure that all deliverables are completed on time, not just one member's. If a member is unable to meet the weekly goal, they will be responsible for informing the team and providing updates on their progress. If a member continues to miss deadlines and/or does not communicate with the team, the team will discuss and decide on a course of action.
+In each week, each member is expected to work around 3-6 hours for the weekly goal. If a particular deliverable has taken more than those time, work adjustments can be made to mend the situation. It is the team's responsibility to ensure that all deliverables are completed on time, not just one member's. If a member is unable to meet the weekly goal, they will be responsible for informing the team and providing updates on their progress. If a member continues to miss deadlines and/or does not communicate with the team, the team will discuss and decide on a course of action.
 
 3.**Conflict Resolution**
 
