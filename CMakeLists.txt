@@ -22,13 +22,27 @@ FetchContent_Declare(
     FetchContent_MakeAvailable(Catch2)
 endif()
 
+# Path definitions.
+set(lib_dir ${CMAKE_SOURCE_DIR}/lib)
+set(src_dir ${CMAKE_SOURCE_DIR}/src)
+set(tests_dir ${CMAKE_SOURCE_DIR}/tests)
+set(entry_dir ${CMAKE_SOURCE_DIR}/entry)
+
 # add subdirectories
-# add_subdirectory(tests)
+# add_subdirectory(${tests_dir})
+add_subdirectory(${lib_dir})
+add_subdirectory(${src_dir})
 
 # configure testexecutables
-add_executable(test_all tests/tests.cpp)
-target_link_libraries(test_all Catch2::Catch2WithMain)
-add_executable(main main.cpp)
+add_executable(test_all ${tests_dir}/tests.cpp)
+target_link_libraries(test_all PRIVATE Catch2::Catch2WithMain libs src)
+
+# entry
+set(entrypoints "main")
+foreach(entrypoint IN LISTS entrypoints)
+    add_executable(${entrypoint} ${entry_dir}/${entrypoint}.cpp)
+    target_link_libraries(${entrypoint} PRIVATE libs src)
+endforeach()
 
 # configure CI tests
 include(Catch)
