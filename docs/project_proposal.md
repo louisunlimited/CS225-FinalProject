@@ -6,9 +6,10 @@ We have acquired a dataset on the San Fransico Road Network, and we are thinking
 
 1. **Identify the importance of places in the city:** With the help of our project, police can identify the importance of places in the city, and can focus on the places that are more important. This can be achieved by using dijkstra's algorithm to find all shortes paths from a given node to all other nodes in the graph, and calculate the weight of how many times a node is visited. The corresponding weights represents the importance of places in the city.
 
-2. **Optimum route for chasing criminals:**
+2. **Optimum route for chasing criminals:** With the help of this function, police can find the best route to chase a target (a criminal), which can help them save time and increase the probability of catching criminals. After getting three parameters, the starting coordinate, the destination coordinate and the zoom factor, we will firstly use the k-d tree to find the nearest node to the two given location(the starting coordinate and the destination coordinate). Then we will apply the A* search algorithm to find the nodes that can form the shortest path between the two given nodes. In the end, the function will generate a map containing the path, which will be scaled by the third parameter, the zoom factor.
 
-3. **Optimum route for searching a specific area:**
+
+3. **Optimum route for searching a specific area:** With the help of this function, we will design the best route for police to search an area. With a starting coordinate, we will use the Dijkestra's algorithm to find the shortest path to go through every nodes in the area. The nodes will be treated as every places, and the weighted edges will be treated as the length of the road. To generate the path, we will record every nodes that has been visited and delete the nodes outside the area. 
 
 4. **Finding the next best position for a new police station:** We would also want to help the police to find the next best position for the new police station with the dataset we have. This can be achieved by using the same method as the first goal, but this time we will use a kd-tree to populate the graph.
 
