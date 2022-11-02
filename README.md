@@ -17,3 +17,30 @@ Additionally, we added [San Francisco Police Station data](https://data.sfgov.or
 All relevant docs can be found inside the `/docs` directory. These include dev logs, project proposal, team contract, etc.
 
 Datasets can be found inside `/data` directory. These include all the relevant datas used in this project.
+
+## Running Instructions
+
+Make sure you have [docker](www.docker.com) installed on your machine and you are running this in your docker environment. If you have trouble setting up, please refer to [this](https://courses.engr.illinois.edu/cs225/fa2022/resources/own-machine/) link for reference.
+
+Once you are in your docker environment, navigate to the root directory of this project and run the following commands to properly initalize the build directory with [cmake](https://cmake.org/):
+
+```bash
+mkdir build
+cd build
+cmake ..
+```
+
+Then, run
+
+```bash
+# run all (main + tests)
+make 
+
+# run main
+make main
+./main
+
+# run tests
+make tests
+./tests
+```
