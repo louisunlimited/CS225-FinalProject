@@ -62,7 +62,7 @@ namespace cs225 {
 
     // Return result
     return hsl;
-  };
+  }
 
   static rgbaColor hsl2rgb(const hslaColor & hsl) {
     rgbaColor rgb;
