@@ -13,16 +13,24 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -pedantic -Wfatal-errors -
 find_package(Catch2)
 
 if(NOT Catch2_FOUND)
-    include(FetchContent)
-    FetchContent_Declare(
-        Catch2
-        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-        GIT_TAG v3.0.1 # or a later release
-    )
+include(FetchContent)
+FetchContent_Declare(
+    Catch2
+    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+    GIT_TAG v3.0.1 # or a later release
+)
     FetchContent_MakeAvailable(Catch2)
 endif()
 
-add_executable(test tests/tests.cpp)
-target_link_libraries(test Catch2::Catch2WithMain)
+# add subdirectories
+# add_subdirectory(tests)
 
+# configure testexecutables
+add_executable(test_all tests/tests.cpp)
+target_link_libraries(test_all Catch2::Catch2WithMain)
 add_executable(main main.cpp)
+
+# configure CI tests
+include(Catch)
+include(CTest)
+catch_discover_tests(test_all)
