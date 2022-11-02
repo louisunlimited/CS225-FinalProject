@@ -3,8 +3,18 @@ name: CMake
 on:
   push:
     branches: ["main"]
+    paths-ignore:
+      - "README.md"
+      - ".github/**"
+      - "docs/**"
+      - ".gitignore"
   pull_request:
     branches: ["main"]
+    paths-ignore:
+      - "README.md"
+      - ".github/**"
+      - "docs/**"
+      - ".gitignore"
 
 env:
   BUILD_TYPE: Release
