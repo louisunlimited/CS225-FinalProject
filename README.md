@@ -41,6 +41,6 @@ make main
 ./main
 
 # run tests
-make tests
-./tests
+make test_all
+./test_all
 ```
