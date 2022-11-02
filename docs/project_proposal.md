@@ -4,15 +4,15 @@
 
 We have acquired a dataset on the San Fransico Road Network, and we are thinking about developing a project to help police cope with crime activities by providing efficient ways(routes) to chase criminals. Our project can be used to achive the following goals:
 
-1. Identify Busiest Road in San Fransico (or best 10):
+1. **Identify the importance of places in the city:** With the help of our project, police can identify the importance of places in the city, and can focus on the places that are more important. This can be achieved by using dijkstra's algorithm to find all shortes paths from a given node to all other nodes in the graph, and calculate the weight of how many times a node is visited. The corresponding weights represents the importance of places in the city.
 
-2. Optimum route for chasing criminals:
+2. **Optimum route for chasing criminals:**
 
-3. Optimum route for searching a specific area:
+3. **Optimum route for searching a specific area:**
 
-4. Finding the next best position for a police station: (KD-Tree?)
+4. **Finding the next best position for a new police station:** We would also want to help the police to find the next best position for the new police station with the dataset we have. This can be achieved by using the same method as the first goal, but this time we will use a kd-tree to populate the graph.
 
-## Dataset Acquisition
+## Dataset Acquisition and Processing
 
 1. Data Format:
 
