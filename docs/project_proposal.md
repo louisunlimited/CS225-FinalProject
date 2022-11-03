@@ -8,8 +8,7 @@ We have acquired a dataset on the San Fransico Road Network, and we are thinking
 
 2. **Optimum route for chasing criminals:** With the help of this function, police can find the best route to chase a target (a criminal), which can help them save time and increase the probability of catching criminals. After getting three parameters, the starting coordinate, the destination coordinate and the zoom factor, we will firstly use the k-d tree to find the nearest node to the two given location(the starting coordinate and the destination coordinate). Then we will apply the A* search algorithm to find the nodes that can form the shortest path between the two given nodes. In the end, the function will generate a map containing the path, which will be scaled by the third parameter, the zoom factor.
 
-
-3. **Optimum route for searching a specific area:** With the help of this function, we will design the best route for police to search an area. With a starting coordinate, we will use the Dijkestra's algorithm to find the shortest path to go through every nodes in the area. The nodes will be treated as every places, and the weighted edges will be treated as the length of the road. To generate the path, we will record every nodes that has been visited and delete the nodes outside the area. 
+3. **Police Training Simulator:** Want to become better in chansing criminals? Use this simulator to try to simulate a criminal's running route and try to catch them. After getting the starting coordinates for the path, we would output a GIF showing the criminals running path. We will use DFS to similate this route.
 
 4. **Finding the next best position for a new police station:** We would also want to help the police to find the next best position for the new police station with the dataset we have. This can be achieved by using the same method as the first goal, but this time we will use a kd-tree to populate the graph.
 
@@ -33,28 +32,30 @@ We have acquired a dataset on the San Fransico Road Network, and we are thinking
 
 2. Data Correction:
 
-    We are going to check whether the input is a `.csv` or a `.txt` and we will parse the data accordingly. We don't think there will be any major errors present in our dataset, but we will do some prelimilary checks for GPS Coordinates and else. For invalid data, we will check whether weight is larger than or equal to the absolute distance between two points. We will make sure a weight is present  and no two weight present for same set of nodes.
+    We are going to check whether the input is a `.csv` or a `.txt` and we will parse the data accordingly. We don't think there will be any major errors present in our dataset, but we will do some prelimilary checks for GPS Coordinates and else. For invalid data, we will check whether weight is larger than or equal to the absolute distance between two points. We will make sure a weight is present  and no two weight present for same set of nodes. Furthermore, we would also want to check whether the graph is connected. The input is only valid if there exists a connected compoents that contains more than half of the total number of nodes.
+
+    For police station nodes, we will be approximating them to our map node for easier reference.
 
 3. Data Storage:
 
-    For our mapdata, we will be storing them in a graph wiht an Adjacency List, which would take O(E + V) space. And we might use KD-tree to find the nearest neighour, which would take O(Vlog(V)).
+    For our mapdata, we will be storing them in a graph with an Adjacency List, which would take O(E + V) space. And we might use KD-tree to find the nearest neighour, which would take O(Vlog(V)). We will be storing Police Stations in a vector than takes O(N), where N is the number of stations present.
 
 ## Graph Algorithms
 
-1. Find importance of all nodes
+1. Identify the importance of places in the city
 
     **Algorithm**: `Dijkstra's algorithm` will be applied to every node to find all shortest paths. Then for every point, we will calculate the betweeness centrality as its importance value.
 
-    **Input**: (empty)
+    **Input**: RBG value(optional)
 
     **Output**:
-     - A `PNG` containing the map of the entire San Francisco. All nodes are colored differently to match its betweeness centrality value.
+     - A `PNG` containing the map of the entire San Francisco. All nodes are colored, according to user input or default, differently to match its betweeness centrality value.
 
     **Complexity**:
-     - Time: $O((|V| + |E|)|V|log(|V|))$
+     - Time: $O((|V| + |E|)|V| log(|V|))$
      - Space: $O(|V|)$ (Note that the shortest paths are not stored simutaneously)
 
-2. Path finding between any two location
+2. Optimum route for chasing criminals
 
     **Algorithm**: First, `k-d tree` is used to find the nearest node to the two given locations. Then we apply `A* search algorithm` for finding the shortest path between the two nodes.
 
@@ -70,24 +71,23 @@ We have acquired a dataset on the San Fransico Road Network, and we are thinking
      - Time: $O((|V| + |E|)log(|V|))$
      - Space: $O(|V|)$
 
-3. Finding all nodes within distance
+3. Police Training Simulator
 
-    **Algorithm**: The list of nodes can be obtained by going through the procedure as specified by `Dijkestra's algorithm` and record all nodes visited. Nodes outside the range will be dropped immediately without appending to the queue.
+    **Algorithm:** Depth-First-Search will be used to select the path for the criminal through a graph. The nodes will be coordinates and the edges are corresponding to the length of the road between.
 
-    **Input**:
-     - Starting coordinate: `Coord(double, double)`
-     - Zoom factor: `double`
+    **Input:**
+    - Starting coordinate: `Coord(double, double)`
 
-    **Output**:
-     - A `PNG` showing a zoomed map that highlights all possible nodes availavble to reach. The image is scaled by the given factor.
+    **Output:**
+    - A `GIF` showing a regular map that shows the movement of the criminal out of town.
 
-    **Complexity**:
-     - Time: $O((|V| + |E|)log(|V|))$
-     - Space: $O(|V|)$
+    **Complexity:**
+    - Time: $O(|V| + |E|)$
+    - Space: $O(|V|)$
 
-4. Finding best location for new police station
+4. Finding the next best position for a new police station
 
-    **Algorithm**: We will use `k-d tree` to map the current police stations into nodes. Then we apply `Dijkstra's algorithm` to measure the distance of all nodes to the nearest police station. This can be achieved by initally pushing all police station nodes into the priority queue. Finally, the node with the largest distance will be selected as the best location.
+    **Algorithm**: We will apply `Dijkstra's algorithm` to measure the distance of all nodes to the nearest police station. This can be achieved by initially pushing all police station nodes into the priority queue. Finally, the node with the largest distance will be selected as the best location.
 
     **Input**:
      - Zoom factor: `double`
