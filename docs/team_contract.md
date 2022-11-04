@@ -30,8 +30,7 @@ All conflicts within the team will be discussed by all the members to ensure qua
 
 ## Signatures
 
- Louis Qian: yuq4
- Xiping Sun: xipings2
- Hezi Jiang: hezij2
- Tianyue Cao: tc37
-
+    Louis Qian: yuq4
+    Xiping Sun: xipings2
+    Hezi Jiang: hezij2
+    Tianyue Cao: tc37
