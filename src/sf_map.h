@@ -12,6 +12,18 @@
 using namespace std;
 
 class SFMap {
+    private:
+        struct MapNode {
+            int index;
+            Coord coord;
+            bool isPoliceStation;
+            MapNode(int index, Coord coord, bool isPoliceStation) {
+                this->index = index;
+                this->coord = coord;
+                this->isPoliceStation = isPoliceStation;
+            }
+        };
+
     public:
         /**
          * Constructor. Checks if the given data is valid. An error is raised if at least half
@@ -29,7 +41,7 @@ class SFMap {
          * @param edges The edge data
          * @param police Coordinates of the police station
          */
-        SFMap(vector<Coord> nodes, vector<tuple<int, int, double>> edges, vector<Coord> police);
+        SFMap(vector<Coord> nodes, vector<tuple<int, int>> edges, vector<Coord> police);
 
         /**
          * Add a new police station. Snap to nearest node. Ignore if it is at the same location
@@ -59,7 +71,7 @@ class SFMap {
          * Helper for 1.
          * @return A list of importance of each node
          */
-        std::vector<double> importanceAsVec();
+        vector<double> importanceAsVec();
 
         /**
          * 2. Optimum route for chasing criminals:
@@ -78,7 +90,7 @@ class SFMap {
          * Helper for 2.
          * @return A list of nodes (including both ends) representing the path
          */
-        std::vector<MapNode*> shortestPathAsVec(Coord start, Coord end);
+        vector<MapNode*> shortestPathAsVec(Coord start, Coord end);
 
         /**
          * 3. Police training simulator
@@ -88,15 +100,16 @@ class SFMap {
          * to the length of the road between them.
          *
          * @param start starting coordinate
+         * @param minDist minimum distance the criminal escapes (in km)
          * @return An animation of the escaping criminal
          */
-        Animation escapeRoute(Coord start);
+        Animation escapeRoute(Coord start, double minDist);
 
         /**
          * Helper for 3.
          * @return A list of nodes (including both ends) representing the escape route
          */
-        std::vector<MapNode*> escapeRouteAsVec(Coord start);
+        vector<MapNode*> escapeRouteAsVec(Coord start, double minDist);
 
         /**
          * 4. Finding the next best position for a new police station
@@ -119,15 +132,6 @@ class SFMap {
         MapNode* nextPoliceStationAsCoord(Coord start);
 
     private:
-        struct MapNode {
-            Coord coord;
-            bool isPoliceStation;
-            MapNode(Coord coord, bool isPoliceStation) {
-                this.coord = coord;
-                this.isPoliceStation = isPoliceStation;
-            }
-        };
-
         /* Coordinates */
         vector<MapNode> _nodes;
         /* Adjacency list */
