@@ -1,10 +1,12 @@
-#pragma once;
+#pragma once
 
 #include <string>
 #include <tuple>
 #include <vector>
 #include "cs225/PNG.h"
 #include "cs225/RGB_HSL.h"
+#include "animation.h"
+#include "coord.h"
 #include "kdtree.h"
 
 using namespace std;

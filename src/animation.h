@@ -31,39 +31,39 @@ using namespace cs225;
  */
 class Animation
 {
-  public:
-    /**
-     * Adds a frame to the animation.
-     *
-     * @param img The image to be added.
-     */
-    void addFrame(const PNG& img);
+    public:
+        /**
+        * Adds a frame to the animation.
+        *
+        * @param img The image to be added.
+        */
+        void addFrame(const PNG& img);
 
-    /**
-     * Writes the animation to the file name specified.
-     *
-     * @param filename The name of the file to be written to.
-     */
-    void write(const std::string& filename);
+        /**
+        * Writes the animation to the file name specified.
+        *
+        * @param filename The name of the file to be written to.
+        */
+        void write(const std::string& filename);
 
-    /**
-     * Returns a frame at a specific index.
-     *
-     * @param index The zero-based index frame to return
-     */
-    PNG getFrame(unsigned index);
+        /**
+        * Returns a frame at a specific index.
+        *
+        * @param index The zero-based index frame to return
+        */
+        PNG getFrame(unsigned index);
 
-    /**
-     * Returns the number of frames currently in the animation.
-     */
-    unsigned frameCount();
+        /**
+        * Returns the number of frames currently in the animation.
+        */
+        unsigned frameCount();
 
 
-  private:
-    std::vector<PNG> frames;
+    private:
+        std::vector<PNG> frames;
 
-    template <typename T>
-    string to_string(const T& value);
-    string getString(int i, int padToSameLengthAs);
-    bool exists(const string& path);
+        template <typename T>
+        string to_string(const T& value);
+        string getString(int i, int padToSameLengthAs);
+        bool exists(const string& path);
 };

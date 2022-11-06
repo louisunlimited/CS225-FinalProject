@@ -1,11 +1,11 @@
-#pragma once;
+#pragma once
 
 #include <cmath>
 
 using namespace std;
 
 /* Radius of the Earth (in km) */
-#define RADIUS 6378.1
+const double RADIUS = 6378.1;
 
 struct Coord {
     double lat_;
@@ -33,6 +33,6 @@ double dist(Coord x, Coord y) {
     double phi1 = x.lat_ / 180.0 * M_PI;
     double phi2 = y.lat_ / 180.0 * M_PI;
     double thetaDiff = (x.long_ - y.long_) / 180.0 * M_PI;
-    double cosAlp = sin(phi1) * sin(phi2) * cos(thetaDiff) + cos(phi1) * cos(phi2)
+    double cosAlp = sin(phi1) * sin(phi2) * cos(thetaDiff) + cos(phi1) * cos(phi2);
     return acos(cosAlp) * RADIUS;
 }

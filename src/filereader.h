@@ -1,8 +1,9 @@
-#pragma once;
+#pragma once
 
 #include <string>
 #include <tuple>
 #include <vector>
+#include "coord.h"
 
 using namespace std;
 
