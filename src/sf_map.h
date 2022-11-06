@@ -20,7 +20,7 @@ class SFMap {
          * @param nodes The node data
          * @param edges The edge data
          */
-        SFMap(vector<Coord> nodes, vector<tuple<int, int, double>> edges);
+        SFMap(vector<Coord> nodes, vector<tuple<int, int>> edges);
 
         /**
          * Constructor. Same as above but contains police station data.
@@ -37,7 +37,7 @@ class SFMap {
          *
          * @param coord The coordinate of the new police station
          */
-        Coord addPoliceStation(Coord coord);
+        void addPoliceStation(Coord coord);
 
         /**
          * Return a map of the city of San Francisco. 5000 pixels represents 1 degree
@@ -78,7 +78,7 @@ class SFMap {
          * Helper for 2.
          * @return A list of nodes (including both ends) representing the path
          */
-        std::vector<int> shortestPathAsVec(Coord start, Coord end);
+        std::vector<MapNode*> shortestPathAsVec(Coord start, Coord end);
 
         /**
          * 3. Police training simulator
@@ -96,7 +96,7 @@ class SFMap {
          * Helper for 3.
          * @return A list of nodes (including both ends) representing the escape route
          */
-        std::vector<int> escapeRouteAsVec(Coord start);
+        std::vector<MapNode*> escapeRouteAsVec(Coord start);
 
         /**
          * 4. Finding the next best position for a new police station
@@ -114,15 +114,26 @@ class SFMap {
 
         /**
          * Helper for 4.
-         * @return A nodes representing the next best location for the new police station
+         * @return A node pointer representing the next best location for the new police station
          */
-        Coord nextPoliceStationAsCoord(Coord start);
+        MapNode* nextPoliceStationAsCoord(Coord start);
 
     private:
+        struct MapNode {
+            Coord coord;
+            bool isPoliceStation;
+            MapNode(Coord coord, bool isPoliceStation) {
+                this.coord = coord;
+                this.isPoliceStation = isPoliceStation;
+            }
+        };
+
         /* Coordinates */
-        vector<Coord> _coords;
+        vector<MapNode> _nodes;
         /* Adjacency list */
-        vector<vector<int>> _neighbors;
+        vector<vector<MapNode*>> _neighbors;
+        /* Police stations */
+        vector<MapNode*> _police;
         /* K-d tree */
         // KDTree tree;
         /* Map range */

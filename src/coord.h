@@ -36,3 +36,16 @@ double dist(Coord x, Coord y) {
     double cosAlp = sin(phi1) * sin(phi2) * cos(thetaDiff) + cos(phi1) * cos(phi2);
     return acos(cosAlp) * RADIUS;
 }
+
+/**
+ * Find the distance between two normalized coordinates
+ *
+ * @param x The first coordinate
+ * @param y The second coordinate
+ * @return The normalized distance
+ */
+double normalizedDist(Coord x, Coord y) {
+    double latDiff = x.lat_ - y.lat_;
+    double longDiff = x.long_ - y.long_;
+    return sqrt(latDiff * latDiff + longDiff * longDiff);
+}
