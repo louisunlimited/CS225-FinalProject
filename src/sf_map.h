@@ -153,4 +153,24 @@ class SFMap {
         const double RADIUS = 5;
         /* Width of edge */
         const double WIDTH = 5;
+
+        // HELPER FUNCTIONS
+        /**
+         * The current data is valid if there exists a subset of the data such that
+         *  1) has size at least 90% of the total data
+         *  2) all pairs of points are within 1000 km
+         *  3) is a connected graph
+         * The subset with the largest size will be returned as a valid subset.
+         *
+         * @return A vector of boolean values representing whether each node is valid
+         */
+        vector<bool> getValidSubset();
+
+        /**
+         * Cleans up the data according to the return value of `getValidSubset`. It removes
+         * all invalid nodes and the edges connected to them.
+         *
+         * @param validPoints A vector of boolean values representing whether each node is valid
+         */
+        void cleanData(const vector<bool>& validPoints);
 };
