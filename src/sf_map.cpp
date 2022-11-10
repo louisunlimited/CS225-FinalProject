@@ -38,14 +38,19 @@ SFMap::SFMap(vector<Coord> nodes, vector<tuple<int, int>> edges) {
     }
 
     // Construct KDTree
-    // TODO
+    vector<pair<Coord, int>> coords;
+    for (const SFMap::MapNode& node : _nodes) {
+        coords.push_back(pair(node.coord, node.index));
+    }
+    tree = KDTree(coords, dist);
 }
 
 SFMap::SFMap(vector<Coord> nodes, vector<tuple<int, int>> edges, vector<Coord> police): SFMap(nodes, edges) {
-    // TODO: finish this function
     for (Coord coord : police) {
         // Find nearest node to the police station
-        SFMap::MapNode* node = new SFMap::MapNode(0, coord, false); // TODO: replace with the KDTree search result
+        int index = tree.search(coord);
+        if (index == -1) continue;
+        SFMap::MapNode* node = &_nodes[index];
         if (!node->isPoliceStation) {
             node->isPoliceStation = true;
             _police.push_back(node);

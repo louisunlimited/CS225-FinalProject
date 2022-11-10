@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <stdexcept>
 
 using namespace std;
 
@@ -10,6 +11,28 @@ const double RADIUS = 6378.1;
 struct Coord {
     double lat_;
     double long_;
+
+    double& operator[](int d) {
+        switch (d) {
+            case 0:
+                return lat_;
+            case 1:
+                return long_;
+            default:
+                throw out_of_range("Index out of range");
+        }
+    }
+
+    double at(int d) const {
+        switch (d) {
+            case 0:
+                return lat_;
+            case 1:
+                return long_;
+            default:
+                throw out_of_range("Index out of range");
+        }
+    }
 };
 
 /**
@@ -29,7 +52,7 @@ struct Coord {
  * @param y The second coordinate
  * @return The distance in km
  */
-double dist(Coord x, Coord y) {
+double dist(const Coord& x, const Coord& y) {
     double phi1 = x.lat_ / 180.0 * M_PI;
     double phi2 = y.lat_ / 180.0 * M_PI;
     double thetaDiff = (x.long_ - y.long_) / 180.0 * M_PI;
@@ -44,7 +67,7 @@ double dist(Coord x, Coord y) {
  * @param y The second coordinate
  * @return The normalized distance
  */
-double normalizedDist(Coord x, Coord y) {
+double normalizedDist(const Coord& x, const Coord& y) {
     double latDiff = x.lat_ - y.lat_;
     double longDiff = x.long_ - y.long_;
     return sqrt(latDiff * latDiff + longDiff * longDiff);

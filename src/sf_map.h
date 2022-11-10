@@ -139,7 +139,7 @@ class SFMap {
         /* Police stations */
         vector<MapNode*> _police;
         /* K-d tree */
-        // KDTree tree;
+        KDTree tree;
         /* Map range */
         double _min_lat;
         double _max_lat;
@@ -156,9 +156,9 @@ class SFMap {
 
         // HELPER FUNCTIONS
         /**
-         * The current data is valid if there exists a subset of the data such that
-         *  1) has size at least 90% of the total data
-         *  2) all pairs of points are within 1000 km
+         * The current data is valid if there exists a subset of the nodes such that
+         *  1) has size at least 90% of the total nodes
+         *  2) all pairs of nodes in the subset are within 1000 km
          *  3) is a connected graph
          * The subset with the largest size will be returned as a valid subset.
          *
