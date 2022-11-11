@@ -21,8 +21,8 @@ vector<std::pair<int, int>> FileReader::readEdge(string fileName) {
 	while(getline(read_file, line)) {
         // each line of SF.cedge.txt get √
         // split the content by space 只要中间俩 
-        int startnode; // 1
-        int endnode; // 2
+        int startnode = 0; // 1
+        int endnode = 0; // 2
         int count = 0; // 1, 2
         int lastindex = 0; // + 1
 
