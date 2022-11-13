@@ -112,7 +112,7 @@ class SFMap {
          */
         vector<MapNode*> escapeRouteAsVec(Coord start, double minDist);
 
-        bool DFS(vector<SFMap::MapNode*>& currNodes, double remainDist, unordered_map<int, bool>& visited)
+        bool findRoute(vector<SFMap::MapNode*>& currNodes, double remainDist, unordered_map<int, bool>& visited);
 
         /**
          * 4. Finding the next best position for a new police station
