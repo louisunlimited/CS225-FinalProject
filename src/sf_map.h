@@ -110,7 +110,7 @@ class SFMap {
          * @return A list of nodes (including both ends) representing the escape route
          */
         vector<MapNode*> escapeRouteAsVec(Coord start, double minDist);
-
+        bool DFS(vector<SFMap::MapNode*>& currNodes, double remainDist, unordered_map<int, bool>& visited);
         /**
          * 4. Finding the next best position for a new police station
          *
