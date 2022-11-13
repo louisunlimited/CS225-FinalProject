@@ -46,13 +46,10 @@ vector<std::pair<int, int>> FileReader::readEdge(string fileName) {
 vector<Coord> FileReader::readPoliceStation(string fileName) {
     vector<Coord> police;
 
-
     ifstream read_file(fileName);
     string line;
     getline(read_file, line);
-
     while (getline(read_file, line)) {
-
         unsigned int lastindex = line.size() - 1;
         while (lastindex > 0) {
             if (line[lastindex] != '(') {
@@ -61,7 +58,7 @@ vector<Coord> FileReader::readPoliceStation(string fileName) {
                 break;
             }
         }
-        lastindex ++;
+        lastindex++;
         double latitude = 0.0;
         double longtitude = 0.0;
         for (unsigned int i = lastindex; i < line.size(); i++) {
@@ -71,11 +68,11 @@ vector<Coord> FileReader::readPoliceStation(string fileName) {
                 longtitude = stod(line.substr(lastindex, line.size() - 2 - lastindex));
                 break;
             }
-        } // create new coord object
+        }
+
         Coord policestation;
         policestation.lat_ = latitude;
         policestation.long_ = longtitude;
-        
         police.push_back(policestation);
     }
     return police;
