@@ -42,6 +42,7 @@ class KDTree {
         * Constructs a KDTree from a vector of Coords.
         *
         * @param coords The vector of points to build your KDTree off of.
+        * @param dist The distance function to use.
         */
         KDTree(const vector<pair<Coord, int>>& coords, function<double(const Coord&, const Coord&)> dist);
 
