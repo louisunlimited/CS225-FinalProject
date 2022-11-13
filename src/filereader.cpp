@@ -15,8 +15,8 @@ vector<Coord> FileReader::convertNode(vector<Coord> normalizedCoords,
 }
 
 // Jiang Hezi
-vector<tuple<int, int>> FileReader::readEdge(string fileName) {
-    vector<tuple<int, int>> edges;
+vector<pair<int, int>> FileReader::readEdge(string fileName) {
+    vector<pair<int, int>> edges;
     return edges;
 }
 
