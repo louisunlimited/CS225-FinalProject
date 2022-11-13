@@ -71,7 +71,7 @@ vector<Coord> FileReader::readPoliceStation(string fileName) {
                 longtitude = stod(line.substr(lastindex, line.size() - 2 - lastindex));
                 break;
             }
-        }
+        } // create new coord object
         Coord policestation;
         policestation.lat_ = latitude;
         policestation.long_ = longtitude;
