@@ -1,5 +1,7 @@
 #include "filereader.h"
 
+using namespace std;
+
 vector<Coord> FileReader::readNormalizedNode(string fileName) {
     vector<Coord> nodes;
     return nodes;
@@ -14,8 +16,8 @@ vector<Coord> FileReader::convertNode(vector<Coord> normalizedCoords,
 }
 
 // Jiang Hezi
-vector<std::pair<int, int>> FileReader::readEdge(string fileName) {
-    vector<std::pair<int, int>> edges;
+vector<pair<int, int>> FileReader::readEdge(string fileName) {
+    vector<pair<int, int>> edges;
     ifstream read_file(fileName);
 	string line;
     
@@ -38,7 +40,7 @@ vector<std::pair<int, int>> FileReader::readEdge(string fileName) {
                 lastindex = i + 1;
             }
         }
-        edges.push_back(std::pair<int, int>(startnode, endnode));
+        edges.push_back(pair<int, int>(startnode, endnode));
 	}
     return edges;
 }
@@ -53,7 +55,7 @@ vector<Coord> FileReader::readPoliceStation(string fileName) {
         unsigned int lastindex = line.size() - 1;
         while (lastindex > 0) {
             if (line[lastindex] != '(') {
-                lastindex --;
+                lastindex--;
             } else {
                 break;
             }
