@@ -118,8 +118,6 @@ class SFMap {
          */
         vector<MapNode*> escapeRouteAsVec(Coord start, double minDist);
 
-        bool findRoute(vector<SFMap::MapNode*>& currNodes, double remainDist, unordered_map<int, bool>& visited);
-
         /**
          * 4. Finding the next best position for a new police station
          *
@@ -190,4 +188,7 @@ class SFMap {
          * @param validPoints A vector of boolean values representing whether each node is valid
          */
         void cleanData(const vector<bool>& validPoints);
+
+        // helper for 3
+        bool findRoute(vector<SFMap::MapNode*>& currNodes, double remainDist, unordered_map<int, bool>& visited);
 };
