@@ -2,30 +2,15 @@
 
 #include "filereader.h"
 
-TEST_CASE("Test FileReader readEdge", "[FileReader]") {
-    FileReader fr;
-    vector<std::pair<int, int>> edges = fr.readEdge("../data/SF.cedge.txt");
-
-    // check edge read
-    REQUIRE(edges.size() == 223001);
-    REQUIRE(edges[0].first == 0);
-    REQUIRE(edges[0].second == 5);
-    REQUIRE(edges[258].first == 5905);
-    REQUIRE(edges[258].second == 5908);
-    REQUIRE(edges[132812].first == 111607);
-    REQUIRE(edges[132812].second == 111618);
-    REQUIRE(edges[223000].first == 743);
-    REQUIRE(edges[223000].second == 745);
-}
-
-TEST_CASE("Test FileReader readPoliceStation", "[FileReader]") {
-    FileReader fr;
-    vector<Coord> police = fr.readPoliceStation("../data/Map_of_Police_Stations__2011_.csv");
-
-    // check police station read
-    REQUIRE(police.size() == 10);
-    REQUIRE(police[0].lat_ == 37.7986453192461);
-    REQUIRE(police[0].long_ == -122.4098629092911);
-    REQUIRE(police[9].lat_ == 37.7801611403781);
-    REQUIRE(police[9].long_ == -122.432390435179);
+TEST_CASE("readNormalizedNode", "[weight=1][part=1]") {
+    vector<Coord> nodes = FileReader::readNormalizedNode("../data/SF.cnode.txt");
+    REQUIRE(nodes.size() == 174956);
+    REQUIRE(nodes[0].long_ == 1905.934692);
+    REQUIRE(nodes[0].lat_ == 2760.598145);
+    REQUIRE(nodes[1].long_ == 1910.898193);
+    REQUIRE(nodes[1].lat_ == 2758.484863);
+    REQUIRE(nodes[91899].long_ == 7556.671875);
+    REQUIRE(nodes[91899].lat_ == 8581.037109);
+    REQUIRE(nodes[174955].long_ == 3999.741943);
+    REQUIRE(nodes[174955].lat_ == 5436.662598);
 }
