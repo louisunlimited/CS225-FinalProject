@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <tuple>
 #include <vector>
 #include "cs225/PNG.h"
 #include "cs225/RGB_HSL.h"
@@ -33,7 +32,7 @@ class SFMap {
          * @param nodes The node data
          * @param edges The edge data
          */
-        SFMap(vector<Coord> nodes, vector<tuple<int, int>> edges);
+        SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges);
 
         /**
          * Constructor. Same as above but contains police station data.
@@ -42,7 +41,14 @@ class SFMap {
          * @param edges The edge data
          * @param police Coordinates of the police station
          */
-        SFMap(vector<Coord> nodes, vector<tuple<int, int>> edges, vector<Coord> police);
+        SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges, const vector<Coord>& police);
+
+        /**
+         * Find the number of nodes in the graph
+         *
+         * @return The number of nodes
+         */
+        int size() const;
 
         /**
          * Add a new police station. Snap to nearest node. Ignore if it is at the same location
@@ -142,7 +148,7 @@ class SFMap {
         /* Police stations */
         vector<MapNode*> _police;
         /* K-d tree */
-        // KDTree tree;
+        KDTree tree;
         /* Map range */
         double _min_lat;
         double _max_lat;
@@ -156,4 +162,32 @@ class SFMap {
         const double RADIUS = 5;
         /* Width of edge */
         const double WIDTH = 5;
+
+        // HELPER FUNCTIONS
+        /**
+         * The current data is valid if there exists a subset of the nodes such that
+         *  1) has size at least 90% of the total nodes
+         *  2) all nodes lies in a circle of diameter 1000 km
+         *  3) is a connected graph
+         * The subset with the largest size will be returned as a valid subset.
+         *
+         * @return A vector of boolean values representing whether each node is valid
+         */
+        vector<bool> getValidSubset();
+
+        /**
+         * Helper for the above helper.
+         * Given a connected graph, remove the least number of nodes such that
+         *  1) remaining graph is still connected
+         *  2) all nodes lies in a circle of diameter 1000 km
+         */
+        void getValidSubsetHelper(vector<bool>& validPoints);
+
+        /**
+         * Cleans up the data according to the return value of `getValidSubset`. It removes
+         * all invalid nodes and the edges connected to them.
+         *
+         * @param validPoints A vector of boolean values representing whether each node is valid
+         */
+        void cleanData(const vector<bool>& validPoints);
 };

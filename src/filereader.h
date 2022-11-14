@@ -2,10 +2,10 @@
 
 #include <string>
 #include <vector>
-#include "coord.h"
 #include <fstream>
 #include <iostream>
 
+#include "coord.h"
 
 using namespace std;
 
