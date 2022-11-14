@@ -1,9 +1,11 @@
 #pragma once
 
 #include <string>
-#include <tuple>
 #include <vector>
 #include "coord.h"
+#include <fstream>
+#include <iostream>
+
 
 using namespace std;
 
@@ -32,7 +34,7 @@ class FileReader {
          *
          * @param fileName The relative path to the target file
          */
-        static vector<tuple<int, int>> readEdge(string fileName);
+        static vector<pair<int, int>> readEdge(string fileName);
 
         /**
          * Read data from the police station file into a vector of coordinates.
