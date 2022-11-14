@@ -1,6 +1,8 @@
 #include <algorithm>
 #include <stack>
 
+#include "kdtree.h"
+
 using namespace std;
 
 KDTree::KDTree() {}

@@ -94,4 +94,3 @@ class KDTree {
 
 bool smallerDimVal(const Coord& first, const Coord& second, int d);
 
-#include "kdtree.hpp"
