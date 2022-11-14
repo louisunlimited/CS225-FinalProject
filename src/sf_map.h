@@ -2,12 +2,14 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
+#include <stdexcept>
 #include "cs225/PNG.h"
 #include "cs225/RGB_HSL.h"
 #include "animation.h"
 #include "coord.h"
 #include "kdtree.h"
-#include <unordered_map>
+
 
 using namespace std;
 
