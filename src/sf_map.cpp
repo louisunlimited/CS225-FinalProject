@@ -67,13 +67,7 @@ int SFMap::size() const {
 }
 
 vector<SFMap::MapNode*> SFMap::escapeRouteAsVec(Coord start, double minDist) {
-    SFMap::MapNode* startNode;
-    for (auto node: _nodes) {
-        if (dist((&node)->coord, start) < 0.001) {
-            SFMap::MapNode* startNode = new SFMap::MapNode(node.index, start, false);
-            break;
-        }
-    }
+    SFMap::MapNode* startNode = &_nodes[tree.search(start)];
     vector<SFMap::MapNode*> currNodes;
     unordered_map<int, bool> visited;
     findRoute(currNodes, minDist, visited);
@@ -101,92 +95,6 @@ bool SFMap::findRoute(vector<SFMap::MapNode*>& currNodes, double remainDist, uno
         currNodes.pop_back();
     }
     return false;
-}
-
-// Helpers
-vector<bool> SFMap::getValidSubset() {
-    int n = _nodes.size();
-    // The result
-    // validPoints[i] == true  <==>  node i is in the valid subset
-    vector<bool> validPoints = vector(n, false);
-
-    // Use DFS to find connected components
-    // parent[i] == -1  <==>  node i has not been visited
-    // parent[i] == parent[j] != -1  <==>  node i & j connected
-    vector<int> parent = vector(n, -1);
-    for (int i = 0; i < n; i++) {
-        if (parent[i] != -1) continue;
-
-        // DFS starting at node i
-        int count = 1;
-        parent[i] = i;
-        stack<int> s;
-        s.push(i);
-        while (!s.empty()) {
-            int curr = s.top();
-            s.pop();
-            for (SFMap::MapNode* nextNode : _neighbors[curr]) {
-                int next = nextNode->index;
-                if (parent[next] == -1) {
-                    parent[next] = i;
-                    count++;
-                    s.push(next);
-                }
-            }
-        }
-
-        // If a connected component with at least 90% total size is found, return the largest
-        // subset satisfying the conditions specified in the header file.
-        if (count >= 0.9 * n) {
-            for (int j = 0; j < n; j++) {
-                validPoints[j] = parent[j] == i;
-            }
-            getValidSubsetHelper(validPoints);
-            return validPoints;
-        }
-    }
-
-    // If all connected components are too small, return an empty result
-    return validPoints;
-}
-
-void SFMap::getValidSubsetHelper(vector<bool>& validPoints) {
-    // I don't know how to implement this
-    // The time complexity will likely go above O(|V|^2)
-    return;
-}
-
-void SFMap::cleanData(const vector<bool>& validPoints) {
-    // Count number of valid points. Throw exception if no valid points.
-    int n = 0;
-    for (bool isValid : validPoints) if (isValid) n++;
-    if (n == 0) throw std::invalid_argument(
-        "The data received contains an insufficient number of valid nodes");
-
-    // Clean adjacency list
-    for (int i = n - 1; i >= 0; i--) {
-        // Remove entire adjacency vector if i is invalid
-        if (!validPoints[i]) {
-            _neighbors.erase(_neighbors.begin() + i);
-            continue;
-        }
-        // Otherwise check if each adjacent node is invalid
-        for (int j = _neighbors[i].size() - 1; j >= 0; j--) {
-            if (!validPoints[_neighbors[i][j]->index]) {
-                _neighbors[i].erase(_neighbors[i].begin() + j);
-            }
-        }
-    }
-
-    // Clean nodes
-    int index = n - 1;
-    for (int i = _nodes.size(); i >= 0; i--) {
-        if (!validPoints[_nodes[i].index]) {
-            _nodes.erase(_nodes.begin() + i);
-        } else {
-            _nodes[i].index = index--;
-        }
-    }
 }
 
 // Helpers
