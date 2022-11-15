@@ -1,6 +1,9 @@
+
+
 #pragma once
 
 #include <cmath>
+#include <stdexcept>
 
 using namespace std;
 
@@ -10,6 +13,10 @@ const double RADIUS = 6378.1;
 struct Coord {
     double lat_;
     double long_;
+
+    double& operator[](int d);
+
+    double at(int d) const;
 };
 
 /**

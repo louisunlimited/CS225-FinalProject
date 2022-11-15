@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <tuple>
 #include <vector>
 #include "cs225/PNG.h"
 #include "cs225/RGB_HSL.h"
@@ -32,7 +31,7 @@ class SFMap {
          * @param nodes The node data
          * @param edges The edge data
          */
-        SFMap(vector<Coord> nodes, vector<tuple<int, int>> edges);
+        SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges);
 
         /**
          * Constructor. Same as above but contains police station data.
@@ -41,7 +40,14 @@ class SFMap {
          * @param edges The edge data
          * @param police Coordinates of the police station
          */
-        SFMap(vector<Coord> nodes, vector<tuple<int, int>> edges, vector<Coord> police);
+        SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges, const vector<Coord>& police);
+
+        /**
+         * Find the number of nodes in the graph
+         *
+         * @return The number of nodes
+         */
+        int size() const;
 
         /**
          * Add a new police station. Snap to nearest node. Ignore if it is at the same location
@@ -49,7 +55,7 @@ class SFMap {
          *
          * @param coord The coordinate of the new police station
          */
-        void addPoliceStation(Coord coord);
+        void addPoliceStation(const Coord& coord);
 
         /**
          * Return a map of the city of San Francisco. 5000 pixels represents 1 degree
@@ -65,13 +71,31 @@ class SFMap {
          * @param color RGB value of the output image
          * @return A colored PNG containing the map of the entire San Francisco
          */
-        cs225::PNG importance(cs225::rgbaColor color);
+        cs225::PNG importance(const cs225::rgbaColor& color);
 
         /**
          * Helper for 1.
+         *
          * @return A list of importance of each node
          */
         vector<double> importanceAsVec();
+
+        /**
+         * For testing
+         *
+         * @return A vector of distance between start and all other nodes
+         *  e.g. result[i] = the node before the ith node on the shortest path between start and
+         *  the ith nodes.
+         */
+        vector<double> getParents(int start);
+
+        /**
+         * For testing
+         *
+         * @return A vector of distance between start and all other nodes
+         *  e.g. result[i] = distance of shortest path between start and the ith nodes.
+         */
+        vector<double> getDistances(int start);
 
         /**
          * 2. Optimum route for chasing criminals:
@@ -84,13 +108,14 @@ class SFMap {
          * @param zoom zoom factor of the PNG
          * @return A colored PNG containing the map of the entire San Francisco
          */
-        cs225::PNG shortestPath(Coord start, Coord end, double zoom);
+        cs225::PNG shortestPath(const Coord& start, const Coord& end, double zoom);
 
         /**
          * Helper for 2.
+         *
          * @return A list of nodes (including both ends) representing the path
          */
-        vector<MapNode*> shortestPathAsVec(Coord start, Coord end);
+        vector<MapNode*> shortestPathAsVec(const Coord& start, const Coord& end);
 
         /**
          * 3. Police training simulator
@@ -107,6 +132,7 @@ class SFMap {
 
         /**
          * Helper for 3.
+         *
          * @return A list of nodes (including both ends) representing the escape route
          */
         vector<MapNode*> escapeRouteAsVec(Coord start, double minDist);
@@ -127,9 +153,10 @@ class SFMap {
 
         /**
          * Helper for 4.
-         * @return A node pointer representing the next best location for the new police station
+         *
+         * @return A integer representing the index of the best node for the new police station
          */
-        MapNode* nextPoliceStationAsCoord(Coord start);
+        int nextPoliceStationAsIndex(Coord start);
 
     private:
         /* Coordinates */
@@ -139,7 +166,7 @@ class SFMap {
         /* Police stations */
         vector<MapNode*> _police;
         /* K-d tree */
-        // KDTree tree;
+        KDTree tree;
         /* Map range */
         double _min_lat;
         double _max_lat;
@@ -153,4 +180,32 @@ class SFMap {
         const double RADIUS = 5;
         /* Width of edge */
         const double WIDTH = 5;
+
+        // HELPER FUNCTIONS
+        /**
+         * The current data is valid if there exists a subset of the nodes such that
+         *  1) has size at least 90% of the total nodes
+         *  2) all nodes lies in a circle of diameter 1000 km
+         *  3) is a connected graph
+         * The subset with the largest size will be returned as a valid subset.
+         *
+         * @return A vector of boolean values representing whether each node is valid
+         */
+        vector<bool> getValidSubset();
+
+        /**
+         * Helper for the above helper.
+         * Given a connected graph, remove the least number of nodes such that
+         *  1) remaining graph is still connected
+         *  2) all nodes lies in a circle of diameter 1000 km
+         */
+        void getValidSubsetHelper(vector<bool>& validPoints);
+
+        /**
+         * Cleans up the data according to the return value of `getValidSubset`. It removes
+         * all invalid nodes and the edges connected to them.
+         *
+         * @param validPoints A vector of boolean values representing whether each node is valid
+         */
+        void cleanData(const vector<bool>& validPoints);
 };
