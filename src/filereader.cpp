@@ -1,5 +1,7 @@
 #include "filereader.h"
 
+using namespace std;
+
 vector<Coord> FileReader::readRawNode(string fileName) {
     vector<Coord> nodes;
     fstream file(fileName);
@@ -23,21 +25,31 @@ vector<Coord> FileReader::readRawNode(string fileName) {
 void FileReader::convertNode(vector<Coord>& normalizedCoords,
     Coord anchor1, Coord normalizedAnchor1,
     Coord anchor2, Coord normalizedAnchor2) {
-        // calculate the scale factor
-        double scaleFactor = sqrt(pow(anchor1.long_ - anchor2.long_, 2) + pow(anchor1.lat_ - anchor2.lat_, 2)) /
-            sqrt(pow(normalizedAnchor1.long_ - normalizedAnchor2.long_, 2) + pow(normalizedAnchor1.lat_ - normalizedAnchor2.lat_, 2));
-        // calculate the offset
-        double offsetX = anchor1.long_ - normalizedAnchor1.long_ * scaleFactor;
-        double offsetY = anchor1.lat_ - normalizedAnchor1.lat_ * scaleFactor;
-        // convert normalized coordinates into actual coordinates
-        vector<Coord> coords;
-        for (Coord coord : normalizedCoords) {
-            Coord actualCoord;
-            actualCoord.long_ = coord.long_ * scaleFactor + offsetX;
-            actualCoord.lat_ = coord.lat_ * scaleFactor + offsetY;
-            coords.push_back(actualCoord);
-        }
-        return coords;
+
+    double x1n = anchor1.long_;
+    double y1n = anchor1.lat_;
+    double x2n = anchor2.long_;
+    double y2n = anchor2.lat_;
+    double x1 = normalizedAnchor1.long_;
+    double y1 = normalizedAnchor1.lat_;
+    double x2 = normalizedAnchor2.long_;
+    double y2 = normalizedAnchor2.lat_;
+
+    double a = (y2 - y1) / (x2 - x1);
+    double b = y1 - a * x1;
+    double an = (y2n - y1n) / (x2n - x1n);
+    double bn = y1n - an * x1n;
+
+    for (Coord& coord : normalizedCoords) {
+        double x = coord.long_;
+        double y = coord.lat_;
+        double xn = (x - x1) / (x2 - x1) * (x2n - x1n) + x1n;
+        double yn = (y - y1) / (y2 - y1) * (y2n - y1n) + y1n;
+        coord.long_ = xn;
+        coord.lat_ = yn;
+        cout << coord.long_ << " " << coord.lat_ << endl;
+    }
+
 }
 
 // Jiang Hezi
