@@ -192,5 +192,5 @@ class SFMap {
         void cleanData(const vector<bool>& validPoints);
 
         // helper for 3
-        bool findRoute(vector<SFMap::MapNode*>& currNodes, double remainDist, unordered_map<int, bool>& visited);
+        bool findRoute(vector<SFMap::MapNode*>& currNodes, double remainDist, vector<bool>& visited);
 };
