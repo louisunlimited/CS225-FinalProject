@@ -14,27 +14,9 @@ struct Coord {
     double lat_;
     double long_;
 
-    double& operator[](int d) {
-        switch (d) {
-            case 0:
-                return lat_;
-            case 1:
-                return long_;
-            default:
-                throw out_of_range("Index out of range");
-        }
-    }
+    double& operator[](int d);
 
-    double at(int d) const {
-        switch (d) {
-            case 0:
-                return lat_;
-            case 1:
-                return long_;
-            default:
-                throw out_of_range("Index out of range");
-        }
-    }
+    double at(int d) const;
 };
 
 /**

@@ -58,7 +58,7 @@ class SFMap {
          *
          * @param coord The coordinate of the new police station
          */
-        void addPoliceStation(Coord coord);
+        void addPoliceStation(const Coord& coord);
 
         /**
          * Return a map of the city of San Francisco. 5000 pixels represents 1 degree
@@ -74,13 +74,31 @@ class SFMap {
          * @param color RGB value of the output image
          * @return A colored PNG containing the map of the entire San Francisco
          */
-        cs225::PNG importance(cs225::rgbaColor color);
+        cs225::PNG importance(const cs225::rgbaColor& color);
 
         /**
          * Helper for 1.
+         *
          * @return A list of importance of each node
          */
         vector<double> importanceAsVec();
+
+        /**
+         * For testing
+         *
+         * @return A vector of distance between start and all other nodes
+         *  e.g. result[i] = the node before the ith node on the shortest path between start and
+         *  the ith nodes.
+         */
+        vector<double> getParents(int start);
+
+        /**
+         * For testing
+         *
+         * @return A vector of distance between start and all other nodes
+         *  e.g. result[i] = distance of shortest path between start and the ith nodes.
+         */
+        vector<double> getDistances(int start);
 
         /**
          * 2. Optimum route for chasing criminals:
@@ -93,13 +111,14 @@ class SFMap {
          * @param zoom zoom factor of the PNG
          * @return A colored PNG containing the map of the entire San Francisco
          */
-        cs225::PNG shortestPath(Coord start, Coord end, double zoom);
+        cs225::PNG shortestPath(const Coord& start, const Coord& end, double zoom);
 
         /**
          * Helper for 2.
+         *
          * @return A list of nodes (including both ends) representing the path
          */
-        vector<MapNode*> shortestPathAsVec(Coord start, Coord end);
+        vector<MapNode*> shortestPathAsVec(const Coord& start, const Coord& end);
 
         /**
          * 3. Police training simulator
@@ -116,6 +135,7 @@ class SFMap {
 
         /**
          * Helper for 3.
+         *
          * @return A list of nodes (including both ends) representing the escape route
          */
         vector<MapNode*> escapeRouteAsVec(const Coord& start, double minDist);
@@ -136,9 +156,10 @@ class SFMap {
 
         /**
          * Helper for 4.
-         * @return A node pointer representing the next best location for the new police station
+         *
+         * @return A integer representing the index of the best node for the new police station
          */
-        MapNode* nextPoliceStationAsCoord(Coord start);
+        int nextPoliceStationAsIndex(Coord start);
 
     private:
         /* Coordinates */

@@ -2,7 +2,6 @@
 #include <stack>
 #include "sf_map.h"
 
-// Cao Tianyue
 SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges) {
     // The validation criteria is slightly modified. The detailed description is in the header
     // files next to the `getValidSubset` method.
@@ -50,20 +49,41 @@ SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges,
     const vector<Coord>& police): SFMap(nodes, edges) {
 
     for (Coord coord : police) {
-        // Find nearest node to the police station
-        int index = tree.search(coord);
-        if (index == -1) continue;
-
-        SFMap::MapNode* node = &_nodes[index];
-        if (!node->isPoliceStation) {
-            node->isPoliceStation = true;
-            _police.push_back(node);
-        }
+        addPoliceStation(coord);
     }
 }
 
 int SFMap::size() const {
     return _nodes.size();
+}
+
+void SFMap::addPoliceStation(const Coord& coord) {
+    // Find nearest node to the police station
+    int index = tree.search(coord);
+
+    SFMap::MapNode* node = &_nodes[index];
+    if (!node->isPoliceStation) {
+        node->isPoliceStation = true;
+        _police.push_back(node);
+    }
+}
+
+cs225::PNG SFMap::drawMap(double zoom) {
+    // TODO
+    cs225::PNG png;
+    return png;
+}
+
+vector<double> SFMap::importanceAsVec() {
+    // TODO
+    vector<double> result;
+    return result;
+}
+
+vector<double> SFMap::getParents(int start) {
+    // TODO
+    vector<double> parents;
+    return parents;
 }
 
 vector<SFMap::MapNode*> SFMap::escapeRouteAsVec(const Coord& start, double minDist) {
