@@ -66,13 +66,14 @@ int SFMap::size() const {
     return _nodes.size();
 }
 
-vector<SFMap::MapNode*> SFMap::escapeRouteAsVec(Coord start, double minDist) {
+vector<SFMap::MapNode*> SFMap::escapeRouteAsVec(const Coord& start, double minDist) {
     // find start node
     SFMap::MapNode* startNode = &_nodes[tree.search(start)];
     // check if start node is police station
-    if (startNode->isPoliceStation == true) {
+    if (startNode->isPoliceStation) {
         throw runtime_error("Never start at the police station.");
     }
+
     // set DFS path
     vector<SFMap::MapNode*> currNodes;
     unordered_map<int, bool> visited;
@@ -83,9 +84,11 @@ vector<SFMap::MapNode*> SFMap::escapeRouteAsVec(Coord start, double minDist) {
 }
 
 bool SFMap::findRoute(vector<SFMap::MapNode*>& currNodes, double remainDist, unordered_map<int, bool>& visited) {
+    // base case
     if (remainDist <= 0) {
         return true;
     }
+
     SFMap::MapNode* lastNode = currNodes[currNodes.size() - 1];
     for (auto neighbor: _neighbors[lastNode->index]) {
         if (neighbor->isPoliceStation || visited.find(neighbor->index) != visited.end()) {

@@ -112,13 +112,13 @@ class SFMap {
          * @param minDist minimum distance the criminal escapes (in km)
          * @return An animation of the escaping criminal
          */
-        Animation escapeRoute(Coord start, double minDist);
+        Animation escapeRoute(const Coord& start, double minDist);
 
         /**
          * Helper for 3.
          * @return A list of nodes (including both ends) representing the escape route
          */
-        vector<MapNode*> escapeRouteAsVec(Coord start, double minDist);
+        vector<MapNode*> escapeRouteAsVec(const Coord& start, double minDist);
 
         /**
          * 4. Finding the next best position for a new police station
