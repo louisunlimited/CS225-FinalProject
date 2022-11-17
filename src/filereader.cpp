@@ -25,34 +25,26 @@ vector<Coord> FileReader::readRawNode(string fileName) {
 void FileReader::convertNode(vector<Coord>& normalizedCoords,
     Coord anchor1, Coord normalizedAnchor1,
     Coord anchor2, Coord normalizedAnchor2) {
+    double anchor1Long = anchor1.long_;
+    double anchor1Lat = anchor1.lat_;
+    double anchor2Long = anchor2.long_;
+    double anchor2Lat = anchor2.lat_;
+    double normalizedAnchor1Long = normalizedAnchor1.long_;
+    double normalizedAnchor1Lat = normalizedAnchor1.lat_;
+    double normalizedAnchor2Long = normalizedAnchor2.long_;
+    double normalizedAnchor2Lat = normalizedAnchor2.lat_;
 
-    double x1n = anchor1.long_;
-    double y1n = anchor1.lat_;
-    double x2n = anchor2.long_;
-    double y2n = anchor2.lat_;
-    double x1 = normalizedAnchor1.long_;
-    double y1 = normalizedAnchor1.lat_;
-    double x2 = normalizedAnchor2.long_;
-    double y2 = normalizedAnchor2.lat_;
+    double k = (normalizedAnchor2Lat - normalizedAnchor1Lat) / (anchor2Lat - anchor1Lat);
+    double b = normalizedAnchor1Lat - k * anchor1Lat;
+    double k1 = (normalizedAnchor2Long - normalizedAnchor1Long) / (anchor2Long - anchor1Long);
+    double b1 = normalizedAnchor1Long - k1 * anchor1Long;
 
-    double a = (y2 - y1) / (x2 - x1);
-    double b = y1 - a * x1;
-    double an = (y2n - y1n) / (x2n - x1n);
-    double bn = y1n - an * x1n;
-
-    for (Coord& coord : normalizedCoords) {
-        double x = coord.long_;
-        double y = coord.lat_;
-        double xn = (x - x1) / (x2 - x1) * (x2n - x1n) + x1n;
-        double yn = (y - y1) / (y2 - y1) * (y2n - y1n) + y1n;
-        coord.long_ = xn;
-        coord.lat_ = yn;
-        cout << coord.long_ << " " << coord.lat_ << endl;
+    for (auto& node : normalizedCoords) {
+        node.long_ = k1 * node.long_ + b1;
+        node.lat_ = k * node.lat_ + b;
     }
-
 }
 
-// Jiang Hezi
 vector<pair<int, int>> FileReader::readEdge(string fileName) {
     vector<pair<int, int>> edges;
     ifstream read_file(fileName);
