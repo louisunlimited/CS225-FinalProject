@@ -34,14 +34,12 @@ void FileReader::convertNode(vector<Coord>& normalizedCoords,
     double normalizedAnchor2Long = normalizedAnchor2.long_;
     double normalizedAnchor2Lat = normalizedAnchor2.lat_;
 
-    double k = (normalizedAnchor2Lat - normalizedAnchor1Lat) / (anchor2Lat - anchor1Lat);
-    double b = normalizedAnchor1Lat - k * anchor1Lat;
-    double k1 = (normalizedAnchor2Long - normalizedAnchor1Long) / (anchor2Long - anchor1Long);
-    double b1 = normalizedAnchor1Long - k1 * anchor1Long;
+    double k = (anchor2Lat - anchor1Lat) / (normalizedAnchor2Lat - normalizedAnchor1Lat);
+    double k1 = (anchor2Long - anchor1Long) / (normalizedAnchor2Long - normalizedAnchor1Long);
 
-    for (auto& node : normalizedCoords) {
-        node.long_ = k1 * node.long_ + b1;
-        node.lat_ = k * node.lat_ + b;
+    for (auto& coord : normalizedCoords) {
+        coord.long_ = k1 * (coord.long_ - normalizedAnchor1Long) + anchor1Long;
+        coord.lat_ = k * (coord.lat_ - normalizedAnchor1Lat) + anchor1Lat;
     }
 }
 
