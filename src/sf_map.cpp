@@ -5,7 +5,7 @@ SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges) {
     // files next to the `getValidSubset` method.
 
     int n = nodes.size();
-    if (n == 0) throw std::invalid_argument("There should be at least one node in the data");
+    if (n == 0) throw invalid_argument("There should be at least one node in the data");
 
     // Populate the nodes (and update min & max coordinates)
     for (int i = 0; i < n; i++) {
@@ -34,6 +34,11 @@ SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges) {
         _minLong = min(_minLong, node.coord.long_);
         _maxLong = max(_maxLong, node.coord.long_);
     }
+    // The map should be slightly larger than the actual range of all nodes
+    _minLat -= MARGIN;
+    _maxLat += MARGIN;
+    _minLong -= MARGIN;
+    _maxLong += MARGIN;
 
     // Construct KDTree
     vector<pair<Coord, int>> coords;
@@ -66,51 +71,73 @@ void SFMap::addPoliceStation(const Coord& coord) {
     }
 }
 
-cs225::PNG SFMap::drawMap(double zoom, const Coord& center, bool drawLines) const {
-    // Lat. and long. increases in the  direction shown below:
+PNG SFMap::drawMap(double zoom, const Coord& center, bool drawLines) const {
+    // Lat. and long. increases in the  direction below:
     //               ↑ (lat)
     //               |
     //               +------> (long)
+    // x, y values of PNG increases in the direction below:
+    //               +------> (x)
+    //               |
+    //               ↓ (y)
 
     // Check for invalid inputs
-    if (zoom < 1) {
-        throw std::invalid_argument("Zoom factor must be at least 1.0");
+    if (zoom < 1 || zoom > 20) {
+        throw invalid_argument("Zoom factor must be in the range 1.0 ~ 20.0 inclusive");
     }
 
-    int height = (_maxLat - _minLat) * SCALE;
-    int width = (_maxLong - _minLong) * SCALE;
-
-    // Determine the lat. and long. of the borders after the map is zoomed
-    double centerLat = min(max(center.lat_, _minLat), _maxLat);
-    double centerLong = min(max(center.long_, _minLong), _maxLong);
-    double zMinLat = (1 / zoom) * _minLat + (1 - 1 / zoom) * centerLat;
-    double zMinLong = (1 / zoom) * _minLong + (1 - 1 / zoom) * centerLong;
-
-    cs225::PNG image(width + 2 * MARGIN, height + 2 * MARGIN);
-    cs225::rgbaColor black{ 0, 0, 0, 255 };
-
-    // Draw points
-    for (const MapNode& node : _nodes) {
-        drawCircle(image, node.coord, RADIUS, black);
+    double mHeight = _maxLat - _minLat;  // height of map (in deg)
+    double mWidth = _maxLong - _minLong;  // height of map (in deg)
+    int pHeight = mHeight * SCALE;  // height of image (in pxl)
+    int pWidth = mWidth * SCALE;  // width of image (in pxl)
+    double zHeight = mHeight / zoom;  // height of zoomed map (in deg)
+    double zWidth = mWidth / zoom;  // height of zoomed map (in deg)
+    if (mHeight == 0 || mWidth == 0) {
+        throw invalid_argument("Map too narrow to be drawn");
     }
 
-    if (!drawLines) {
-        return image;
-    }
+    // Find the lower left corner of the zoomed rectangle's borders
+    // The zoomed rectangle will be placed such that `center` is at the center of it.
+    // Note that it should not get out of bounds as defined by _minLat, _maxLat
+    double zMinLat = min(max(center.lat_ - 0.5 * zHeight, _minLat), _maxLat - zHeight);
+    double zMinLong = min(max(center.long_ - 0.5 * zWidth, _minLong), _maxLong - zWidth);
+    Coord lowerLeft = Coord(zMinLat, zMinLong);
+
+    // Create the canvas
+    PNG image(pWidth, pHeight);
+    rgbaColor black{ 0, 0, 0, 255 };
 
     // Draw lines
-    for (int i = 0; i < size(); i++) {
-        const MapNode& node = _nodes[i];
-        for (const MapNode* neighbor : _neighbors[i]) {
-            if (neighbor->index > i) {
-                drawLine(image, node.coord, neighbor->coord, LINE_WIDTH, black);
+    if (drawLines) {
+        for (int i = 0; i < size(); i++) {
+            const MapNode& node = _nodes[i];
+            for (const MapNode* neighbor : _neighbors[i]) {
+                if (neighbor->index > i) {
+                    // DO NOT SKIP even if node/neighbor is out of bounds
+                    // Because a segment of the path may lie inside the zoomed rectangle
+                    // Find the zoomed location (in pxl) of the pair of nodes
+                    Coord start = coord2Pixel(node.coord, lowerLeft, zoom);
+                    Coord end = coord2Pixel(neighbor->coord, lowerLeft, zoom);
+                    drawLine(image, start, end, LINE_WIDTH, black);
+                }
             }
         }
     }
+
+    // Draw points
+    for (const MapNode& node : _nodes) {
+        // Skip if node not in the zoomed rectangle
+        if (node.coord.lat_ < zMinLat || node.coord.lat_ > zMinLat + zHeight
+            || node.coord.long_ < zMinLong || node.coord.long_ > zMinLong + zWidth) continue;
+        // Find the zoomed location (in pxl) of the node
+        Coord zoomed = coord2Pixel(node.coord, lowerLeft, zoom);
+        drawCircle(image, zoomed, RADIUS, black);
+    }
+
     return image;
 }
 
-cs225::PNG SFMap::drawMap(bool drawLines) const {
+PNG SFMap::drawMap(bool drawLines) const {
     return drawMap(1, Coord(0, 0), drawLines);
 }
 
@@ -204,7 +231,7 @@ void SFMap::cleanData(const vector<bool>& validPoints) {
     // Count number of valid points. Throw exception if no valid points.
     int n = 0;
     for (bool isValid : validPoints) if (isValid) n++;
-    if (n == 0) throw std::invalid_argument(
+    if (n == 0) throw invalid_argument(
         "The data received contains an insufficient number of valid nodes");
 
     // Clean adjacency list
@@ -233,14 +260,24 @@ void SFMap::cleanData(const vector<bool>& validPoints) {
     }
 }
 
-void SFMap::drawCircle(cs225::PNG& image, const Coord& center, double radius,
-    const cs225::rgbaColor& color) const {
+Coord SFMap::coord2Pixel(const Coord& coord, const Coord& lowerLeft, double zoom) const {
+    Coord pixel;
+    pixel.lat_ = (coord.lat_ - lowerLeft.lat_) * zoom * SCALE;
+    pixel.long_ = (coord.long_ - lowerLeft.long_) * zoom * SCALE;
+    // Invert the latitude due to mismatch of the y-orientation of the image and map
+    pixel.lat_ = (_maxLat - _minLat) * SCALE - pixel.lat_;
+
+    return pixel;
+}
+
+void SFMap::drawCircle(PNG& image, const Coord& center, double radius,
+    const rgbaColor& color) const {
 
     // TODO
 }
 
-void SFMap::drawLine(cs225::PNG& image, const Coord& start, const Coord& end, double width,
-    const cs225::rgbaColor& color) const {
+void SFMap::drawLine(PNG& image, const Coord& start, const Coord& end, double width,
+    const rgbaColor& color) const {
 
     // TODO
 }

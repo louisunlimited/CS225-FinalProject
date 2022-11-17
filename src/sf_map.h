@@ -65,7 +65,7 @@ class SFMap {
         /**
          * Return a map of the city of San Francisco. 5000 pixels represents 1 degree
          *
-         * @param zoom The zoom factor greater than 1.0
+         * @param zoom The zoom factor between 1.0 and 20.0, inclusive
          * @param center The center point to zoom on
          * @param drawLines
          */
@@ -190,12 +190,12 @@ class SFMap {
         // CONSTANTS FOR DRAW MAP
         /* pixels per degree */
         const double SCALE = 1000;
-        /* Map margin (in pixel) */
-        const double MARGIN = 50;
+        /* Map margin (in degree) */
+        const double MARGIN = 0.01;
         /* Radius of node */
-        const double RADIUS = 3;
+        const double RADIUS = 8;
         /* Width of edge */
-        const double LINE_WIDTH = 3;
+        const double LINE_WIDTH = 8;
 
         // HELPER FUNCTIONS
         /**
@@ -228,6 +228,7 @@ class SFMap {
         /**
          * Helpers for drawMap.
          */
+        Coord coord2Pixel(const Coord& coord, const Coord& lowerLeft, double zoom) const;
         void drawCircle(PNG& image, const Coord& center, double radius,
             const rgbaColor& color) const;
         void drawLine(PNG& image, const Coord& start, const Coord& end, double width,
