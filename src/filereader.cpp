@@ -72,10 +72,7 @@ vector<Coord> FileReader::readPoliceStation(string fileName) {
             }
         }
 
-        Coord policestation;
-        policestation.lat_ = latitude;
-        policestation.long_ = longtitude;
-        police.push_back(policestation);
+        police.push_back(Coord(latitude, longtitude));
     }
     return police;
 }
