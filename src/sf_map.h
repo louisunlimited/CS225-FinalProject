@@ -2,11 +2,14 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
+#include <stdexcept>
 #include "cs225/PNG.h"
 #include "cs225/RGB_HSL.h"
 #include "animation.h"
 #include "coord.h"
 #include "kdtree.h"
+
 
 using namespace std;
 
@@ -128,14 +131,14 @@ class SFMap {
          * @param minDist minimum distance the criminal escapes (in km)
          * @return An animation of the escaping criminal
          */
-        Animation escapeRoute(Coord start, double minDist);
+        Animation escapeRoute(const Coord& start, double minDist);
 
         /**
          * Helper for 3.
          *
          * @return A list of nodes (including both ends) representing the escape route
          */
-        vector<MapNode*> escapeRouteAsVec(Coord start, double minDist);
+        vector<MapNode*> escapeRouteAsVec(const Coord& start, double minDist);
 
         /**
          * 4. Finding the next best position for a new police station
@@ -208,4 +211,7 @@ class SFMap {
          * @param validPoints A vector of boolean values representing whether each node is valid
          */
         void cleanData(const vector<bool>& validPoints);
+
+        // helper for 3
+        bool findRoute(vector<SFMap::MapNode*>& currNodes, double remainDist, vector<bool>& visited);
 };

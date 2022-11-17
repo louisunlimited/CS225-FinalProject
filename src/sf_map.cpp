@@ -86,10 +86,48 @@ vector<double> SFMap::getParents(int start) {
     return parents;
 }
 
-// Sun Xiping
-vector<SFMap::MapNode*> SFMap::escapeRouteAsVec(Coord start, double minDist) {
-    vector<SFMap::MapNode*> path;
-    return path;
+vector<SFMap::MapNode*> SFMap::escapeRouteAsVec(const Coord& start, double minDist) {
+    // find start node
+    SFMap::MapNode* startNode = &_nodes[tree.search(start)];
+    // check if start node is police station
+    if (startNode->isPoliceStation) {
+        throw runtime_error("Never start at the police station.");
+    }
+
+    // set DFS path
+    vector<SFMap::MapNode*> currNodes;
+    vector<bool> visited = vector(0, false);
+    if (!findRoute(currNodes, minDist, visited)) {
+        throw runtime_error("Cannot find escape route");
+    }
+    return currNodes;
+}
+
+// Using recursion might cause a stack overflow given the large number of nodes
+// Consider using stack + loop instead of recursion
+bool SFMap::findRoute(vector<SFMap::MapNode*>& currNodes, double remainDist, vector<bool>& visited) {
+    // base case
+    if (remainDist <= 0) {
+        return true;
+    }
+
+    SFMap::MapNode* lastNode = currNodes.back();
+    for (SFMap::MapNode* neighbor : _neighbors[lastNode->index]) {
+        if (neighbor->isPoliceStation || visited[neighbor->index]) {
+            continue;
+        }
+
+        visited[neighbor->index] = true;
+        SFMap::MapNode* newNode = &_nodes[neighbor->index];
+
+        // recursion
+        currNodes.push_back(newNode);
+        if (findRoute(currNodes, remainDist - dist(newNode->coord, lastNode->coord), visited)) {
+            return true;
+        }
+        currNodes.pop_back();
+    }
+    return false;
 }
 
 // Helpers
