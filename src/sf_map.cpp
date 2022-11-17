@@ -273,7 +273,38 @@ Coord SFMap::coord2Pixel(const Coord& coord, const Coord& lowerLeft, double zoom
 void SFMap::drawCircle(PNG& image, const Coord& center, double radius,
     const rgbaColor& color) const {
 
-    // TODO
+    double top = center.lat_ - radius;
+    double bottom = center.lat_ + radius;
+    double left = center.long_ - radius;
+    double right = center.long_ + radius;
+
+    for (int x = left; x < right; x++) {
+        for (int y = top; y < bottom; y++) {
+            // An approximation of the area of the pixel (x, y) that is inside the circle
+            double score_tl = radius - normalizedDist(Coord(x, y), center);
+            double score_tr = radius - normalizedDist(Coord(x + 1, y), center);
+            double score_bl = radius - normalizedDist(Coord(x, y + 1), center);
+            double score_br = radius - normalizedDist(Coord(x + 1, y + 1), center);
+            double sum = score_tl + score_tr + score_bl + score_br;
+            double absSum = abs(score_tl) + abs(score_tr) + abs(score_bl) + abs(score_br);
+            double percentage = (sum + absSum) / (2 * absSum);
+            // Just to make sure...
+            percentage = min(max(percentage, 0.0), 1.0);
+
+            // Color the pixel
+            HSLAPixel& pixel = image.getPixel(x, y);
+            hslaColor hsla{ pixel.h, pixel.s, pixel.l, pixel.a };
+            rgbaColor rgba = hsl2rgb(hsla);
+            rgba.r = (1 - percentage) * rgba.r + percentage * color.r;
+            rgba.g = (1 - percentage) * rgba.g + percentage * color.g;
+            rgba.b = (1 - percentage) * rgba.b + percentage * color.b;
+            hsla = rgb2hsl(rgba);
+            pixel.h = hsla.h;
+            pixel.l = hsla.l;
+            pixel.s = hsla.s;
+            pixel.a = hsla.a;
+        }
+    }
 }
 
 void SFMap::drawLine(PNG& image, const Coord& start, const Coord& end, double width,

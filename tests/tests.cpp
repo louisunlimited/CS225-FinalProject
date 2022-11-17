@@ -3,8 +3,7 @@
 #include "filereader.h"
 
 TEST_CASE("Test FileReader readEdge", "[FileReader]") {
-    FileReader fr;
-    vector<std::pair<int, int>> edges = fr.readEdge("../data/SF.cedge.txt");
+    vector<std::pair<int, int>> edges = FileReader::readEdge("../data/SF.cedge.txt");
 
     // check edge read
     REQUIRE(edges.size() == 223001);
@@ -19,8 +18,7 @@ TEST_CASE("Test FileReader readEdge", "[FileReader]") {
 }
 
 TEST_CASE("Test FileReader readPoliceStation", "[FileReader]") {
-    FileReader fr;
-    vector<Coord> police = fr.readPoliceStation("../data/Map_of_Police_Stations__2011_.csv");
+    vector<Coord> police = FileReader::readPoliceStation("../data/Map_of_Police_Stations__2011_.csv");
 
     // check police station read
     REQUIRE(police.size() == 10);
@@ -28,4 +26,13 @@ TEST_CASE("Test FileReader readPoliceStation", "[FileReader]") {
     REQUIRE(police[0].long_ == -122.4098629092911);
     REQUIRE(police[9].lat_ == 37.7801611403781);
     REQUIRE(police[9].long_ == -122.432390435179);
+}
+
+TEST_CASE("Test SFMap constructor", "[SFMap][ctor]") {
+    // vector<Coord> nodes = FileReader.readNormalizedNode("../data/SF.cnode.txt");
+    // FileReader.convertNode(nodes, ...);
+    // vector<pair<int, int>> edges = FileReader.readEdge("../data/SF.cedge.txt");
+    // vector<Coord> police = FileReader.readPoliceStation("../data/Map_of_Police_Stations__2011_.csv");
+
+    // SFMap sfmap(nodes, edges, police);
 }
