@@ -14,9 +14,22 @@ vector<Coord> makeCoords() {
     return coords;
 }
 
+SFMap loadMap() {
+    vector<Coord> nodes = FileReader::readRawNode("../data/SF.cnode.txt");
+    Coord anchor1(37.5108, -122.1117);
+    Coord normalizedAnchor1(5037.15, 4518.17);
+    Coord anchor2(37.9956, -123.0232);
+    Coord normalizedAnchor2(2261.93, 0);
+    FileReader::convertNode(nodes, anchor1, normalizedAnchor1, anchor2, normalizedAnchor2);
+    vector<pair<int, int>> edges = FileReader::readEdge("../data/SF.cedge.txt");
+    vector<Coord> police = FileReader::readPoliceStation("../data/Map_of_Police_Stations__2011_.csv");
+    return SFMap(nodes, edges, police);
+}
+
+SFMap sfmap = loadMap();
+
 TEST_CASE("Test FileReader readEdge", "[FileReader]") {
-    FileReader fr;
-    vector<std::pair<int, int>> edges = fr.readEdge("../data/SF.cedge.txt");
+    vector<pair<int, int>> edges = FileReader::readEdge("../data/SF.cedge.txt");
 
     // check edge read
     REQUIRE(edges.size() == 223001);
@@ -31,8 +44,7 @@ TEST_CASE("Test FileReader readEdge", "[FileReader]") {
 }
 
 TEST_CASE("Test FileReader readPoliceStation", "[FileReader]") {
-    FileReader fr;
-    vector<Coord> police = fr.readPoliceStation("../data/Map_of_Police_Stations__2011_.csv");
+    vector<Coord> police = FileReader::readPoliceStation("../data/Map_of_Police_Stations__2011_.csv");
 
     // check police station read
     REQUIRE(police.size() == 10);
@@ -44,6 +56,7 @@ TEST_CASE("Test FileReader readPoliceStation", "[FileReader]") {
 
 TEST_CASE("readRawNode", "[FileReader]") {
     vector<Coord> nodes = FileReader::readRawNode("../data/SF.cnode.txt");
+
     REQUIRE(nodes.size() == 174956);
     REQUIRE(nodes[0].long_ == 1905.934692);
     REQUIRE(nodes[0].lat_ == 2760.598145);
@@ -56,48 +69,32 @@ TEST_CASE("readRawNode", "[FileReader]") {
 }
 
 TEST_CASE("convertNode", "[FileReader]") {
-    vector<Coord> nodes = makeCoords(); // coords from 0 to 9
+    vector<Coord> nodes_ = makeCoords(); // coords from 0 to 9
 
-    Coord anchor1, anchor2;
-    anchor1.long_ = 1;
-    anchor1.lat_ = 1;
-    anchor2.long_ = 2;
-    anchor2.lat_ = 2;
-    Coord normalizedAnchor1, normalizedAnchor2;
-    normalizedAnchor1.long_ = 2;
-    normalizedAnchor1.lat_ = 2;
-    normalizedAnchor2.long_ = 8;
-    normalizedAnchor2.lat_ = 8;
+    Coord anch1, anch2;
+    anch1.long_ = 1;
+    anch1.lat_ = 1;
+    anch2.long_ = 2;
+    anch2.lat_ = 2;
+    Coord nAnch1, nAnch2;
+    nAnch1.long_ = 2;
+    nAnch1.lat_ = 2;
+    nAnch2.long_ = 8;
+    nAnch2.lat_ = 8;
 
-    FileReader::convertNode(nodes, anchor1, normalizedAnchor1, anchor2, normalizedAnchor2);
-    REQUIRE(nodes.size() == 10); 
-    REQUIRE(nodes[2].long_ == 1);
-    REQUIRE(nodes[2].lat_ == 1);
-    REQUIRE(nodes[8].long_ == 2);
-    REQUIRE(nodes[8].lat_ == 2);
-    REQUIRE(nodes[9].long_ > 2.1);
-    REQUIRE(nodes[9].lat_ > 2.1);
-
+    FileReader::convertNode(nodes_, anch1, nAnch1, anch2, nAnch2);
+    REQUIRE(nodes_.size() == 10); 
+    REQUIRE(nodes_[2].long_ == 1);
+    REQUIRE(nodes_[2].lat_ == 1);
+    REQUIRE(nodes_[8].long_ == 2);
+    REQUIRE(nodes_[8].lat_ == 2);
+    REQUIRE(nodes_[9].long_ > 2.1);
+    REQUIRE(nodes_[9].lat_ > 2.1);
 }
 
 TEST_CASE("Test SFMap drawMap", "[SFMap][png]") {
-    vector<Coord> nodes = FileReader::readRawNode("../data/SF.cnode.txt");
-    // FileReader.convertNode(nodes, ...);
-    vector<pair<int, int>> edges = FileReader::readEdge("../data/SF.cedge.txt");
-    vector<Coord> police = FileReader::readPoliceStation("../data/Map_of_Police_Stations__2011_.csv");
-
-    SFMap sfmap(nodes, edges, police);
     PNG image = sfmap.drawMap(false);
     image.writeToFile("map.png");
-}
-
-TEST_CASE("Test SFMap drawMap zoomed", "[SFMap][png][target]") {
-    vector<Coord> nodes = FileReader::readRawNode("../data/SF.cnode.txt");
-    // FileReader.convertNode(nodes, ...);
-    vector<pair<int, int>> edges = FileReader::readEdge("../data/SF.cedge.txt");
-    vector<Coord> police = FileReader::readPoliceStation("../data/Map_of_Police_Stations__2011_.csv");
-
-    SFMap sfmap(nodes, edges, police);
-    PNG image = sfmap.drawMap(8, Coord(6000, 6000), false);
-    image.writeToFile("map(x8).png");
+    PNG zoomedImage = sfmap.drawMap(12, Coord(37.7983, -122.3778), false);
+    zoomedImage.writeToFile("map-zoomed.png");
 }

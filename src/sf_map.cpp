@@ -83,7 +83,7 @@ PNG SFMap::drawMap(double zoom, const Coord& center, bool drawLines) const {
     //               ↓ (y)
 
     // Check for invalid inputs
-    if (zoom < 1 || zoom > 20) {
+    if (zoom < 1 || zoom > MAX_ZOOM) {
         throw invalid_argument("Zoom factor must be in the range 1.0 ~ 20.0 inclusive");
     }
 

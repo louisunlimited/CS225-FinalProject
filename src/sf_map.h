@@ -115,11 +115,9 @@ class SFMap {
         /**
          * 2. Emergency Contact Access Point:
          *
-         * 
-         * @param  N/A
          * @return A colored PNG containing the map of the entire San Francisco
          */
-        cs225::PNG accessPoint();
+        PNG accessPoint() const;
 
         /**
          * Potential Helper for 2?
@@ -184,10 +182,12 @@ class SFMap {
         double _maxLong;
 
         // CONSTANTS FOR DRAW MAP
-        /* pixels per degree */
-        const double SCALE = 0.2;  // 1000
+        /* Pixels per degree */
+        const double SCALE = 1000;
+        /* Maximum zoom factor */
+        const double MAX_ZOOM = 15;
         /* Map margin (in degree) */
-        const double MARGIN = 50;  // 0.01
+        const double MARGIN = 0.01;
         /* Radius of node */
         const double RADIUS = 1.0;
         /* Width of edge */
