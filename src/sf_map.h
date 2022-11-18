@@ -190,13 +190,13 @@ class SFMap {
 
         // CONSTANTS FOR DRAW MAP
         /* pixels per degree */
-        const double SCALE = 1000;
+        const double SCALE = 0.2;  // 1000
         /* Map margin (in degree) */
-        const double MARGIN = 0.01;
+        const double MARGIN = 50;  // 0.01
         /* Radius of node */
-        const double RADIUS = 8;
+        const double RADIUS = 1.0;
         /* Width of edge */
-        const double LINE_WIDTH = 8;
+        const double LINE_WIDTH = 1.0;
 
         // HELPER FUNCTIONS
         /**

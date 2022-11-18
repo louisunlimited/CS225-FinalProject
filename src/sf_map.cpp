@@ -1,3 +1,4 @@
+#include <iostream>
 #include "sf_map.h"
 
 SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges) {
@@ -118,7 +119,7 @@ PNG SFMap::drawMap(double zoom, const Coord& center, bool drawLines) const {
                     // Find the zoomed location (in pxl) of the pair of nodes
                     Coord start = coord2Pixel(node.coord, lowerLeft, zoom);
                     Coord end = coord2Pixel(neighbor->coord, lowerLeft, zoom);
-                    drawLine(image, start, end, LINE_WIDTH, black);
+                    drawLine(image, start, end, LINE_WIDTH * sqrt(zoom), black);
                 }
             }
         }
@@ -128,10 +129,11 @@ PNG SFMap::drawMap(double zoom, const Coord& center, bool drawLines) const {
     for (const MapNode& node : _nodes) {
         // Skip if node not in the zoomed rectangle
         if (node.coord.lat_ < zMinLat || node.coord.lat_ > zMinLat + zHeight
-            || node.coord.long_ < zMinLong || node.coord.long_ > zMinLong + zWidth) continue;
+            || node.coord.long_ < zMinLong || node.coord.long_ > zMinLong + zWidth)
+                continue;
         // Find the zoomed location (in pxl) of the node
         Coord zoomed = coord2Pixel(node.coord, lowerLeft, zoom);
-        drawCircle(image, zoomed, RADIUS, black);
+        drawCircle(image, zoomed, RADIUS * sqrt(zoom), black);
     }
 
     return image;
@@ -280,11 +282,14 @@ void SFMap::drawCircle(PNG& image, const Coord& center, double radius,
 
     for (int x = left; x < right; x++) {
         for (int y = top; y < bottom; y++) {
+            // Skip if (x, y) out of bounds
+            if (x < 0 || x >= (int)image.width() || y < 0 || y >= (int)image.height()) continue;
+
             // An approximation of the area of the pixel (x, y) that is inside the circle
-            double score_tl = radius - normalizedDist(Coord(x, y), center);
-            double score_tr = radius - normalizedDist(Coord(x + 1, y), center);
-            double score_bl = radius - normalizedDist(Coord(x, y + 1), center);
-            double score_br = radius - normalizedDist(Coord(x + 1, y + 1), center);
+            double score_tl = radius - normalizedDist(Coord(y, x), center);
+            double score_tr = radius - normalizedDist(Coord(y, x + 1), center);
+            double score_bl = radius - normalizedDist(Coord(y + 1, x), center);
+            double score_br = radius - normalizedDist(Coord(y + 1, x + 1), center);
             double sum = score_tl + score_tr + score_bl + score_br;
             double absSum = abs(score_tl) + abs(score_tr) + abs(score_bl) + abs(score_br);
             double percentage = (sum + absSum) / (2 * absSum);

@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include "filereader.h"
+#include "sf_map.h"
 
 vector<Coord> makeCoords() {
     vector<Coord> coords;
@@ -79,11 +80,24 @@ TEST_CASE("convertNode", "[FileReader]") {
 
 }
 
-TEST_CASE("Test SFMap constructor", "[SFMap][ctor]") {
-    // vector<Coord> nodes = FileReader.readNormalizedNode("../data/SF.cnode.txt");
+TEST_CASE("Test SFMap drawMap", "[SFMap][png]") {
+    vector<Coord> nodes = FileReader::readRawNode("../data/SF.cnode.txt");
     // FileReader.convertNode(nodes, ...);
-    // vector<pair<int, int>> edges = FileReader.readEdge("../data/SF.cedge.txt");
-    // vector<Coord> police = FileReader.readPoliceStation("../data/Map_of_Police_Stations__2011_.csv");
+    vector<pair<int, int>> edges = FileReader::readEdge("../data/SF.cedge.txt");
+    vector<Coord> police = FileReader::readPoliceStation("../data/Map_of_Police_Stations__2011_.csv");
 
-    // SFMap sfmap(nodes, edges, police);
+    SFMap sfmap(nodes, edges, police);
+    PNG image = sfmap.drawMap(false);
+    image.writeToFile("map.png");
+}
+
+TEST_CASE("Test SFMap drawMap zoomed", "[SFMap][png][target]") {
+    vector<Coord> nodes = FileReader::readRawNode("../data/SF.cnode.txt");
+    // FileReader.convertNode(nodes, ...);
+    vector<pair<int, int>> edges = FileReader::readEdge("../data/SF.cedge.txt");
+    vector<Coord> police = FileReader::readPoliceStation("../data/Map_of_Police_Stations__2011_.csv");
+
+    SFMap sfmap(nodes, edges, police);
+    PNG image = sfmap.drawMap(8, Coord(6000, 6000), false);
+    image.writeToFile("map(x8).png");
 }
