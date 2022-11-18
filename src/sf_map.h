@@ -101,24 +101,19 @@ class SFMap {
         vector<double> getDistances(int start);
 
         /**
-         * 2. Optimum route for chasing criminals:
+         * 2. Emergency Contact Access Point:
          *
-         * First, k-d tree is used to find the nearest node to the two given locations. Then
-         * we apply A* search algorithm to find the shortest path between the two nodes.
-         *
-         * @param start starting coordinate
-         * @param end destination coordinate
-         * @param zoom zoom factor of the PNG
+         * 
+         * @param  N/A
          * @return A colored PNG containing the map of the entire San Francisco
          */
-        cs225::PNG shortestPath(const Coord& start, const Coord& end, double zoom);
+        cs225::PNG accessPoint();
 
         /**
-         * Helper for 2.
+         * Potential Helper for 2?
          *
-         * @return A list of nodes (including both ends) representing the path
+         * @return 
          */
-        vector<MapNode*> shortestPathAsVec(const Coord& start, const Coord& end);
 
         /**
          * 3. Police training simulator
