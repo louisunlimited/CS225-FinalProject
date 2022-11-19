@@ -183,15 +183,15 @@ class SFMap {
 
         // CONSTANTS FOR DRAW MAP
         /* Pixels per degree */
-        const double SCALE = 1000;
+        const double SCALE = 1500;
         /* Maximum zoom factor */
         const double MAX_ZOOM = 15;
         /* Map margin (in degree) */
         const double MARGIN = 0.01;
         /* Radius of node */
-        const double RADIUS = 1.0;
+        const double RADIUS = 1.2;
         /* Width of edge */
-        const double LINE_WIDTH = 1.0;
+        const double LINE_WIDTH = 1;
 
         // HELPER FUNCTIONS
         /**
@@ -229,6 +229,7 @@ class SFMap {
             const rgbaColor& color) const;
         void drawLine(PNG& image, const Coord& start, const Coord& end, double width,
             const rgbaColor& color) const;
+        void colorPixel(HSLAPixel& pixel, const rgbaColor& color, double percentage) const;
 
         /**
          * Helper for 3.

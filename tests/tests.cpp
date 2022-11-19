@@ -93,8 +93,8 @@ TEST_CASE("convertNode", "[FileReader]") {
 }
 
 TEST_CASE("Test SFMap drawMap", "[SFMap][png]") {
-    PNG image = sfmap.drawMap(false);
+    PNG image = sfmap.drawMap(true);
     image.writeToFile("map.png");
-    PNG zoomedImage = sfmap.drawMap(12, Coord(37.7983, -122.3778), false);
+    PNG zoomedImage = sfmap.drawMap(12, Coord(37.7983, -122.3778), true);
     zoomedImage.writeToFile("map-zoomed.png");
 }
