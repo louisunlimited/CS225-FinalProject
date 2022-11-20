@@ -43,3 +43,12 @@ Hezi Jiang: I finished the function "importance" and its helper  function "impor
 Xiping Sun: I wrote test cases for DFS and importance and participated in the discussion of choosing a new algorithm.
 
 For next week, during thanksgiving, our goal will be: Implementing test cases for the importance of places; Finding the next best position for a new police station; Implement GIF output; and Integrate image output into existing features.
+
+## Week 4
+
+Func 2 & 4, finish PNG for all func. GIf. If have time, test cases.
+
+Func 2 : Louis
+func 4 : Hezi
+Png + gif : Daniel
+Testcase : MST + DTree + Dijkstra + DFS : xiping
