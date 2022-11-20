@@ -1,5 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <iostream>
 #include "filereader.h"
 #include "sf_map.h"
 
@@ -90,6 +91,26 @@ TEST_CASE("convertNode", "[FileReader]") {
     REQUIRE(nodes_[8].lat_ == 2);
     REQUIRE(nodes_[9].long_ > 2.1);
     REQUIRE(nodes_[9].lat_ > 2.1);
+}
+
+TEST_CASE("SFMap constructor constructs the right amount of nodes", "[SFMap]") {
+    REQUIRE(sfmap.size() == 174956);
+}
+
+TEST_CASE("Test SFMap drawMap small", "[SFMap][png]") {
+    // make a custom set of coords
+    vector<Coord> nodes = makeCoords(); // coords from 0 to 9
+    vector<pair<int, int>> edges = {{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 7}, {7, 8}, {8, 9}};
+    vector<Coord> police = makeCoords(); // coords from 0 to 9
+    SFMap smallmap(nodes, edges);
+
+    PNG smallImage = smallmap.drawMap(false);
+    smallImage.writeToFile("small.png");
+}
+
+TEST_CASE("Test SFMap drawMap SF", "[SFMap][png]") {
+    PNG sfImage = sfmap.drawMap(false);
+    sfImage.writeToFile("sf.png");
 }
 
 TEST_CASE("Test SFMap drawMap", "[SFMap][png]") {
