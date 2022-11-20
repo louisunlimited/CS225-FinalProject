@@ -1,6 +1,7 @@
 #include <iostream>
 #include "sf_map.h"
 
+/***    Constructors   ***/
 SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges) {
     // The validation criteria is slightly modified. The detailed description is in the header
     // files next to the `getValidSubset` method.
@@ -57,10 +58,6 @@ SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges,
     }
 }
 
-int SFMap::size() const {
-    return _nodes.size();
-}
-
 void SFMap::addPoliceStation(const Coord& coord) {
     // Find nearest node to the police station
     int index = tree.search(coord);
@@ -72,6 +69,7 @@ void SFMap::addPoliceStation(const Coord& coord) {
     }
 }
 
+/***    Draw Png   ***/
 PNG SFMap::drawMap(double zoom, const Coord& center, bool drawLines) const {
     // Lat. and long. increases in the  direction below:
     //               ↑ (lat)
@@ -145,18 +143,16 @@ PNG SFMap::drawMap(bool drawLines) const {
     return drawMap(1, Coord(0, 0), drawLines);
 }
 
+/***    Goal 1   ***/
 vector<double> SFMap::importanceAsVec() {
     // TODO
     vector<double> result;
     return result;
 }
 
-vector<double> SFMap::getParents(int start) const {
-    // TODO
-    vector<double> parents;
-    return parents;
-}
+/***    Goal 2   ***/
 
+/***    Goal 3   ***/
 vector<int> SFMap::escapeRouteAsVec(const Coord& start, double minDist) const {
     // find start node
     const MapNode* startNode = &_nodes[tree.search(start)];
@@ -173,4 +169,11 @@ vector<int> SFMap::escapeRouteAsVec(const Coord& start, double minDist) const {
         throw runtime_error("Cannot find escape route");
     }
     return currNodes;
+}
+
+/***    Goal 4   ***/
+
+/***    Other helpers   ***/
+int SFMap::size() const {
+    return _nodes.size();
 }
