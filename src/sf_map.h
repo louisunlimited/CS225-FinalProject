@@ -77,6 +77,9 @@ class SFMap {
          */
         PNG drawMap(bool drawLines) const;
 
+
+        // Four main functions
+
         /**
          * 1. Identify the importance of places in the city:
          *
@@ -94,23 +97,6 @@ class SFMap {
          * @return A list of importance of each node
          */
         vector<double> importanceAsVec();
-
-        /**
-         * For testing
-         *
-         * @return A vector of distance between start and all other nodes
-         *  e.g. result[i] = the node before the ith node on the shortest path between start and
-         *  the ith nodes.
-         */
-        vector<double> getParents(int start) const;
-
-        /**
-         * For testing
-         *
-         * @return A vector of distance between start and all other nodes
-         *  e.g. result[i] = distance of shortest path between start and the ith nodes.
-         */
-        vector<double> getDistances(int start) const;
 
         /**
          * 2. Emergency Contact Access Point:
@@ -166,6 +152,32 @@ class SFMap {
          */
         int nextPoliceStationAsIndex(Coord start) const;
 
+
+        // Functions used exclusively for testing
+
+        /**
+         * Set the scaling factor of the map (changes the size of the output image)
+         * @param scale New scaling factor
+         */
+        void setScale(double scale);
+
+        /**
+         * For testing
+         *
+         * @return A vector of distance between start and all other nodes
+         *  e.g. result[i] = the node before the ith node on the shortest path between start and
+         *  the ith nodes.
+         */
+        vector<double> getParents(int start) const;
+
+        /**
+         * For testing
+         *
+         * @return A vector of distance between start and all other nodes
+         *  e.g. result[i] = distance of shortest path between start and the ith nodes.
+         */
+        vector<double> getDistances(int start) const;
+
     private:
         /* Coordinates */
         vector<MapNode> _nodes;
@@ -182,8 +194,10 @@ class SFMap {
         double _maxLong;
 
         // CONSTANTS FOR DRAW MAP
+        // NOTE: some const qualifiers are removed so that they can be adjusted for
+        //       better visualization of certain testcases
         /* Pixels per degree */
-        const double SCALE = 1500;
+        double SCALE = 1500;
         /* Maximum zoom factor */
         const double MAX_ZOOM = 15;
         /* Map margin (in degree) */

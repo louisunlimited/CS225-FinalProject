@@ -103,8 +103,9 @@ TEST_CASE("Test SFMap drawMap small", "[SFMap][png]") {
     vector<pair<int, int>> edges = {{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 7}, {7, 8}, {8, 9}};
     vector<Coord> police = makeCoords(); // coords from 0 to 9
     SFMap smallmap(nodes, edges);
+    smallmap.setScale(50);
 
-    PNG smallImage = smallmap.drawMap(false);
+    PNG smallImage = smallmap.drawMap(true);
     smallImage.writeToFile("small.png");
 }
 
