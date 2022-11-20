@@ -1,12 +1,12 @@
 #pragma once
 
 #include <string>
-#include <tuple>
 #include <vector>
-#include "coord.h"
 #include <fstream>
+#include <sstream>
 #include <iostream>
 
+#include "coord.h"
 
 using namespace std;
 
@@ -17,15 +17,17 @@ class FileReader {
          *
          * @param fileName The relative path to the target file
          */
-        static vector<Coord> readNormalizedNode(string fileName);
+        static vector<Coord> readRawNode(string fileName);
 
         /**
          * Convert normalized data into actual coordinates.
          *
          * @param normalizedCoords Normalized coordinates
+         * @param anchor The actual latitude and logitude of the point
+         * @param normalizedAnchor The normalized coordinates of the point
          * @return Actual coordinates
          */
-        static vector<Coord> convertNode(vector<Coord> normalizedCoords,
+        static void convertNode(vector<Coord>& normalizedCoords,
             Coord anchor1, Coord normalizedAnchor1,
             Coord anchor2, Coord normalizedAnchor2);
 
