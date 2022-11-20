@@ -23,6 +23,8 @@ class FileReader {
          * Convert normalized data into actual coordinates.
          *
          * @param normalizedCoords Normalized coordinates
+         * @param anchor The actual latitude and logitude of the point
+         * @param normalizedAnchor The normalized coordinates of the point
          * @return Actual coordinates
          */
         static void convertNode(vector<Coord>& normalizedCoords,
