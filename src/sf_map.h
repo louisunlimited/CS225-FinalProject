@@ -1,13 +1,20 @@
 #pragma once
 
+#include <algorithm>
+#include <cmath>
+#include <stack>
 #include <string>
-#include <tuple>
 #include <vector>
+#include <unordered_map>
+#include <stdexcept>
+#include <queue>
+#include <limits.h>
 #include "cs225/PNG.h"
 #include "cs225/RGB_HSL.h"
 #include "animation.h"
 #include "coord.h"
 #include "kdtree.h"
+
 
 using namespace std;
 
@@ -32,7 +39,7 @@ class SFMap {
          * @param nodes The node data
          * @param edges The edge data
          */
-        SFMap(vector<Coord> nodes, vector<tuple<int, int>> edges);
+        SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges);
 
         /**
          * Constructor. Same as above but contains police station data.
@@ -41,7 +48,14 @@ class SFMap {
          * @param edges The edge data
          * @param police Coordinates of the police station
          */
-        SFMap(vector<Coord> nodes, vector<tuple<int, int>> edges, vector<Coord> police);
+        SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges, const vector<Coord>& police);
+
+        /**
+         * Find the number of nodes in the graph
+         *
+         * @return The number of nodes
+         */
+        int size() const;
 
         /**
          * Add a new police station. Snap to nearest node. Ignore if it is at the same location
@@ -49,12 +63,21 @@ class SFMap {
          *
          * @param coord The coordinate of the new police station
          */
-        void addPoliceStation(Coord coord);
+        void addPoliceStation(const Coord& coord);
 
         /**
          * Return a map of the city of San Francisco. 5000 pixels represents 1 degree
+         *
+         * @param zoom The zoom factor between 1.0 and 20.0, inclusive
+         * @param center The center point to zoom on
+         * @param drawLines
          */
-        cs225::PNG drawMap(double zoom);
+        PNG drawMap(double zoom, const Coord& center, bool drawLines) const;
+
+        /**
+         * Return a map of San Francisco without zooming
+         */
+        PNG drawMap(bool drawLines) const;
 
         /**
          * 1. Identify the importance of places in the city:
@@ -65,32 +88,44 @@ class SFMap {
          * @param color RGB value of the output image
          * @return A colored PNG containing the map of the entire San Francisco
          */
-        cs225::PNG importance(cs225::rgbaColor color);
+        PNG importance(const rgbaColor& color);
 
         /**
          * Helper for 1.
+         *
          * @return A list of importance of each node
          */
         vector<double> importanceAsVec();
 
         /**
-         * 2. Optimum route for chasing criminals:
+         * For testing
          *
-         * First, k-d tree is used to find the nearest node to the two given locations. Then
-         * we apply A* search algorithm to find the shortest path between the two nodes.
-         *
-         * @param start starting coordinate
-         * @param end destination coordinate
-         * @param zoom zoom factor of the PNG
-         * @return A colored PNG containing the map of the entire San Francisco
+         * @return A vector of distance between start and all other nodes
+         *  e.g. result[i] = the node before the ith node on the shortest path between start and
+         *  the ith nodes.
          */
-        cs225::PNG shortestPath(Coord start, Coord end, double zoom);
+        vector<double> getParents(int start) const;
 
         /**
-         * Helper for 2.
-         * @return A list of nodes (including both ends) representing the path
+         * For testing
+         *
+         * @return A vector of distance between start and all other nodes
+         *  e.g. result[i] = distance of shortest path between start and the ith nodes.
          */
-        vector<MapNode*> shortestPathAsVec(Coord start, Coord end);
+        vector<double> getDistances(int start) const;
+
+        /**
+         * 2. Emergency Contact Access Point:
+         *
+         * @return A colored PNG containing the map of the entire San Francisco
+         */
+        PNG accessPoint() const;
+
+        /**
+         * Potential Helper for 2?
+         *
+         * @return 
+         */
 
         /**
          * 3. Police training simulator
@@ -103,13 +138,14 @@ class SFMap {
          * @param minDist minimum distance the criminal escapes (in km)
          * @return An animation of the escaping criminal
          */
-        Animation escapeRoute(Coord start, double minDist);
+        Animation escapeRoute(const Coord& start, double minDist) const;
 
         /**
          * Helper for 3.
+         *
          * @return A list of nodes (including both ends) representing the escape route
          */
-        vector<MapNode*> escapeRouteAsVec(Coord start, double minDist);
+        vector<int> escapeRouteAsVec(const Coord& start, double minDist) const;
 
         /**
          * 4. Finding the next best position for a new police station
@@ -123,13 +159,14 @@ class SFMap {
          * @param zoom zoom factor of the PNG
          * @return A PNG with highlighted location for the next possible police station
          */
-        cs225::PNG nextPoliceStation(double zoom);
+        PNG nextPoliceStation(double zoom) const;
 
         /**
          * Helper for 4.
-         * @return A node pointer representing the next best location for the new police station
+         *
+         * @return A integer representing the index of the best node for the new police station
          */
-        MapNode* nextPoliceStationAsCoord(Coord start);
+        int nextPoliceStationAsIndex(Coord start) const;
 
     private:
         /* Coordinates */
@@ -139,18 +176,64 @@ class SFMap {
         /* Police stations */
         vector<MapNode*> _police;
         /* K-d tree */
-        // KDTree tree;
+        KDTree tree;
         /* Map range */
-        double _min_lat;
-        double _max_lat;
-        double _min_long;
-        double _max_long;
+        double _minLat;
+        double _maxLat;
+        double _minLong;
+        double _maxLong;
 
-        // CONSTANTS
-        /* Map margin (in pixel) */
-        const double MARGIN = 80;
+        // CONSTANTS FOR DRAW MAP
+        /* Pixels per degree */
+        const double SCALE = 1000;
+        /* Maximum zoom factor */
+        const double MAX_ZOOM = 15;
+        /* Map margin (in degree) */
+        const double MARGIN = 0.01;
         /* Radius of node */
-        const double RADIUS = 5;
+        const double RADIUS = 1.0;
         /* Width of edge */
-        const double WIDTH = 5;
+        const double LINE_WIDTH = 1.0;
+
+        // HELPER FUNCTIONS
+        /**
+         * The current data is valid if there exists a subset of the nodes such that
+         *  1) has size at least 90% of the total nodes
+         *  2) all nodes lies in a circle of diameter 1000 km
+         *  3) is a connected graph
+         * The subset with the largest size will be returned as a valid subset.
+         *
+         * @return A vector of boolean values representing whether each node is valid
+         */
+        vector<bool> getValidSubset() const;
+
+        /**
+         * Helper for the above helper.
+         * Given a connected graph, remove the least number of nodes such that
+         *  1) remaining graph is still connected
+         *  2) all nodes lies in a circle of diameter 1000 km
+         */
+        void getValidSubsetHelper(vector<bool>& validPoints) const;
+
+        /**
+         * Cleans up the data according to the return value of `getValidSubset`. It removes
+         * all invalid nodes and the edges connected to them.
+         *
+         * @param validPoints A vector of boolean values representing whether each node is valid
+         */
+        void cleanData(const vector<bool>& validPoints);
+
+        /**
+         * Helpers for drawMap.
+         */
+        Coord coord2Pixel(const Coord& coord, const Coord& lowerLeft, double zoom) const;
+        void drawCircle(PNG& image, const Coord& center, double radius,
+            const rgbaColor& color) const;
+        void drawLine(PNG& image, const Coord& start, const Coord& end, double width,
+            const rgbaColor& color) const;
+
+        /**
+         * Helper for 3.
+         */
+        bool findRoute(vector<int>& currNodes, double remainDist, vector<bool>& visited) const;
 };
