@@ -105,18 +105,38 @@ TEST_CASE("Test SFMap drawMap small", "[SFMap][png]") {
     SFMap smallmap(nodes, edges);
     smallmap.setScale(50);
 
-    PNG smallImage = smallmap.drawMap(true);
+    PNG smallImage = smallmap.drawMap([](int index) {
+            return rgbaColor{ 0, 0, 128, 255 };
+        }, [](int index1, int index2) {
+            return rgbaColor{ 0, 0, 0, 255 };
+        });
     smallImage.writeToFile("small.png");
 }
 
 TEST_CASE("Test SFMap drawMap SF", "[SFMap][png]") {
-    PNG sfImage = sfmap.drawMap(false);
+    PNG sfImage = sfmap.drawMap([](int index) {
+            return rgbaColor{ 0, 0, 128, 255 };
+        }, [](int index1, int index2) {
+            return rgbaColor{ 0, 0, 0, 0 };
+        });
     sfImage.writeToFile("sf.png");
 }
 
-TEST_CASE("Test SFMap drawMap", "[SFMap][png]") {
-    PNG image = sfmap.drawMap(true);
-    image.writeToFile("map.png");
-    PNG zoomedImage = sfmap.drawMap(12, Coord(37.7983, -122.3778), true);
+TEST_CASE("Test SFMap drawMap zoomed", "[SFMap][png]") {
+    PNG zoomedImage = sfmap.drawMap(12, Coord(37.7983, -122.3778), [](int index) {
+            return rgbaColor{ 0, 0, 128, 255 };
+        }, [](int index1, int index2) {
+            return rgbaColor{ 0, 0, 0, 255 };
+        });
     zoomedImage.writeToFile("map-zoomed.png");
+}
+
+TEST_CASE("Test SFMap drawMap colorPicker", "[SFMap][png]") {
+    PNG colorpickerImage = sfmap.drawMap([](int index) {
+            unsigned char i = 255.0 * index / 174955;
+            return rgbaColor{ (unsigned char)(255 - i), 0, i, 255 };
+        }, [](int index1, int index2) {
+            return rgbaColor{ 0, 0, 0, 255 };
+        });
+    colorpickerImage.writeToFile("map-colorpicker.png");
 }

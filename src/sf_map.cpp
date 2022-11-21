@@ -70,7 +70,9 @@ void SFMap::addPoliceStation(const Coord& coord) {
 }
 
 /***    Draw Png   ***/
-PNG SFMap::drawMap(double zoom, const Coord& center, bool drawLines) const {
+PNG SFMap::drawMap(double zoom, const Coord& center, function<rgbaColor(int)> nodeColor,
+    function<rgbaColor(int, int)> edgeColor) const {
+
     // Lat. and long. increases in the  direction below:
     //               ↑ (lat)
     //               |
@@ -104,23 +106,20 @@ PNG SFMap::drawMap(double zoom, const Coord& center, bool drawLines) const {
 
     // Create the canvas
     PNG image(pWidth, pHeight);
-    rgbaColor black{ 0, 0, 0, 255 };
-    rgbaColor blue{ 0, 0, 128, 255 };
 
-    // Draw lines
-    if (drawLines) {
-        for (int i = 0; i < size(); i++) {
-            const MapNode& node = _nodes[i];
-            for (const MapNode* neighbor : _neighbors[i]) {
-                if (neighbor->index > i) {
-                    // DO NOT SKIP even if node/neighbor is out of bounds
-                    // Because a segment of the path may lie inside the zoomed rectangle
-                    // Find the zoomed location (in pxl) of the pair of nodes
-                    Coord start = coord2Pixel(node.coord, lowerLeft, zoom);
-                    Coord end = coord2Pixel(neighbor->coord, lowerLeft, zoom);
-                    // if (start.long_ )
-                    drawLine(image, start, end, LINE_WIDTH * sqrt(zoom), black);
-                }
+    // Draw edges
+    for (int i = 0; i < size(); i++) {
+        const MapNode& node = _nodes[i];
+        for (const MapNode* neighbor : _neighbors[i]) {
+            if (neighbor->index > i) {
+                // DO NOT SKIP even if node/neighbor is out of bounds
+                // Because a segment of the path may lie inside the zoomed rectangle
+                // Find the zoomed location (in pxl) of the pair of nodes
+                rgbaColor color = edgeColor(i, neighbor->index);
+                if (color.a == 0) continue;  // if alpha value is 0, then the edge will not be shown
+                Coord start = coord2Pixel(node.coord, lowerLeft, zoom);
+                Coord end = coord2Pixel(neighbor->coord, lowerLeft, zoom);
+                drawLine(image, start, end, LINE_WIDTH * sqrt(zoom), color);
             }
         }
     }
@@ -131,16 +130,19 @@ PNG SFMap::drawMap(double zoom, const Coord& center, bool drawLines) const {
         if (node.coord.lat_ < zMinLat || node.coord.lat_ > zMinLat + zHeight
             || node.coord.long_ < zMinLong || node.coord.long_ > zMinLong + zWidth)
                 continue;
+
+        rgbaColor color = nodeColor(node.index);
+        if (color.a == 0) continue;  // if alpha value is 0, then the edge will not be shown
         // Find the zoomed location (in pxl) of the node
         Coord zoomed = coord2Pixel(node.coord, lowerLeft, zoom);
-        drawCircle(image, zoomed, RADIUS * sqrt(zoom), blue);
+        drawCircle(image, zoomed, RADIUS * sqrt(zoom), color);
     }
 
     return image;
 }
 
-PNG SFMap::drawMap(bool drawLines) const {
-    return drawMap(1, Coord(0, 0), drawLines);
+PNG SFMap::drawMap(function<rgbaColor(int)> nodeColor, function<rgbaColor(int, int)> edgeColor) const {
+    return drawMap(1, Coord(0, 0), nodeColor, edgeColor);
 }
 
 /***    Goal 1   ***/
