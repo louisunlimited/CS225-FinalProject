@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include <cmath>
@@ -14,8 +12,13 @@ struct Coord {
     double lat_;
     double long_;
 
-    double& operator[](int d);
+    Coord();
+    Coord(double lat_, double long_);
+    Coord(const Coord& other);
+    Coord& operator=(const Coord& other);
+    ~Coord();
 
+    double& operator[](int d);
     double at(int d) const;
 };
 

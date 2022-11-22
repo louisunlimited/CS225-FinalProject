@@ -6,7 +6,7 @@ We have acquired a dataset on the San Fransico Road Network, and we are thinking
 
 1. **Identify the importance of places in the city:** With the help of our project, police can identify the importance of places in the city and can focus on the places that are more important. This can be achieved by using Dijkstra's Algorithm to find all shortest paths from a given node to all other nodes in the graph and calculate the weight of how many times a node is visited. The corresponding weights represent the importance of places in the city.
 
-2. **Optimum route for chasing criminals:** With the help of this function, police can find the best route to chase a target (a criminal), which can help them save time and increase the probability of catching criminals. After getting three parameters, the starting coordinate, the destination coordinate, and the zoom factor, we will first use the k-d tree to find the nearest node to the two given locations (the starting coordinate and the destination coordinate). Then we will apply the A* search algorithm to find the nodes that can form the shortest path between the two given nodes. In the end, the function will generate a map containing the path, which will be scaled by the third parameter, the zoom factor.
+2. **Emergency Contact Access Point:** Access point can be used to quickly identify locations of potential criminal activities and hence notify the police. With the help of this function, police can quickly identify possible positions to place an access point for 911 and receive an optimum solution for cable management. Given the map data, we will try to find a minimum spanning tree (MST) that spans all potential location for the access points. We would output a graph containing all the locations for the access point (nodes of MST) and the optimum route for underground cables to run(edges of the MST).
 
 3. **Police Training Simulator:** Want to become better at chasing criminals? Use this simulator to try to simulate a criminal's running route and try to catch them. After getting the starting coordinates for the path, we would output a GIF showing the criminals' running path. We will use DFS to simulate this route.
 
@@ -58,18 +58,15 @@ We have acquired a dataset on the San Fransico Road Network, and we are thinking
 
     - Space: $O(|V|)$ (Note that the shortest paths are not stored simultaneously)
 
-2. Optimum route for chasing criminals
+2. Emergency Contact Access Point
 
-    **Algorithm**: First, `k-d tree` is used to find the nearest node to the two given locations. Then we apply `A* search algorithm` to find the shortest path between the two nodes.
+    **Algorithm**: Prim's algorithm will be used to construct a minimum spanning tree with desired positions (possibly nodes with degree $d \neq 2$) on top of the graph. Then, we would output a PNG with the access point and cable routes drawn.
 
     **Input**:
-
-    - Starting coordinate: `Coord(double, double)`
-    - Destination coordinate: `Coord(double, double)`
-    - Zoom factor: `double`
+    - There will be no input apart from the Map data we have.
 
     **Output**:
-    - A `PNG` containing the map showing the path from the starting node to the target node. The image is scaled by the given factor.
+    - A `PNG` containing the map showing access point locations and cable routes.
 
     **Complexity**:
     - Time: $O((|V| + |E|)log(|V|))$
@@ -127,7 +124,7 @@ Note: Mid-Project Checkin (Nov 14-18)
 
 1. Test case for DFS
 
-2. Optimum route for chasing criminals
+2. Emergency Contact Access Point
 
 3. Identify the importance of places in the city
 
@@ -154,4 +151,3 @@ Note: Mid-Project Checkin (Nov 14-18)
 1. Finalize README.md
 
 2. Final lint/other checks
-
