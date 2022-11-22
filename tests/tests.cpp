@@ -53,11 +53,25 @@ TEST_CASE("Test escapeRoute with meidum graph", "[escapeRoute]") {
     FileReader fr;
     vector<Coord> nodes = fr.readNormalizedNode("../tests/medium.node.txt");
     vector<pair<int, int>> edges = fr.readEdge("../tests/medium.edge.txt");
+    // call constructor
+    SFMap b(nodes, edges);
+    REQUIRE(b.escapeRouteAsVec(nodes[1], 5).at(1)->index == 3);
+    REQUIRE(b.escapeRouteAsVec(nodes[1], 10).at(2)->index == 5);
+    REQUIRE(b.escapeRouteAsVec(nodes[1], 11).at(2)->index == 5);
+    REQUIRE(b.escapeRouteAsVec(nodes[1], 12).at(3)->index == 4);
 }
 
 // check DFS
 TEST_CASE("Test escapeRoute with large graph", ["escapeRoute"]) {
     FileReader fr;
+    vector<Coord> nodes = fr.readNormalizedNode("../tests/large.node.txt");
+    vector<pair<int, int>> edges = fr.readEdge("../tests/large.edge.txt");
+    // call constructor
+    SFMap c(nodes, edges);
+    REQUIRE(c.escapeRouteAsVec(nodes[120], 20).at(1)->index == 108);
+    REQUIRE(c.escapeRouteAsVec(nodes[120], 22).at(2)->index == 107);
+    REQUIRE(c.escapeRouteAsVec(nodes[120], 23).at(2)->index == 107);
+    REQUIRE(c.escapeRouteAsVec(nodes[120], 24).at(3)->index == 106);
 }
 
 // check Dijkstra
