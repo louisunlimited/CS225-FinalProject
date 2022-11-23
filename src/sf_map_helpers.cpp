@@ -169,8 +169,8 @@ void SFMap::drawLine(PNG& image, const Coord& start, const Coord& end, double wi
                 if (y < 0 || y >= (int)image.height()) continue;
 
                 // Calculate the percentage of the grid (x, y) inside the line
-                double dist1 = thickness - abs(y - yCenter);
-                double dist2 = thickness - abs(y + 1 - yCenter);
+                double dist1 = thickness * 0.5 - abs(y - yCenter);
+                double dist2 = thickness * 0.5 - abs(y + 1 - yCenter);
                 double sum = dist1 + dist2;
                 double absSum = abs(dist1) + abs(dist2);
                 double percentage = (sum + absSum) / (2 * absSum);
@@ -202,8 +202,8 @@ void SFMap::drawLine(PNG& image, const Coord& start, const Coord& end, double wi
                 if (x < 0 || x >= (int)image.width()) continue;
 
                 // Calculate the percentage of the grid (x, y) inside the line
-                double dist1 = thickness - abs(x - xCenter);
-                double dist2 = thickness - abs(x + 1 - xCenter);
+                double dist1 = thickness * 0.5 - abs(x - xCenter);
+                double dist2 = thickness * 0.5 - abs(x + 1 - xCenter);
                 double sum = dist1 + dist2;
                 double absSum = abs(dist1) + abs(dist2);
                 double percentage = (sum + absSum) / (2 * absSum);
