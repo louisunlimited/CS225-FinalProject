@@ -4,6 +4,8 @@
 #include "filereader.h"
 #include "sf_map.h"
 
+using namespace std;
+
 vector<Coord> makeCoords() {
     vector<Coord> coords;
     for (int i = 0; i < 10; i++) {
@@ -28,9 +30,6 @@ SFMap loadMap() {
 }
 
 SFMap sfmap = loadMap();
-#include "sf_map.h"
-#include<iostream>
-using namespace std;
 
 TEST_CASE("Test FileReader readEdge", "[FileReader]") {
     vector<pair<int, int>> edges = FileReader::readEdge("../data/SF.cedge.txt");
@@ -129,35 +128,34 @@ TEST_CASE("Test SFMap drawMap", "[SFMap][png]") {
 
 //check DFS
 TEST_CASE("Test escapeRoute with small graph", "[escapeRouteAsVec]") {
-    FileReader fr;
-    vector<Coord> nodes = fr.readRawNode("../tests/small.node.txt");
-    vector<pair<int, int>> edges = fr.readEdge("../tests/small.edge.txt");
+    vector<Coord> nodes = FileReader::readRawNode("../tests/small.node.txt");
+    vector<pair<int, int>> edges = FileReader::readEdge("../tests/small.edge.txt");
     // call constructor
     SFMap a(nodes, edges);
-    REQUIRE(a.escapeRouteAsVec(nodes[1] , 4).at(0) == 2);
+    vector<int> ans = a.escapeRouteAsVec(nodes[1] , 4);
+    cout << ans.size() << endl;
+    REQUIRE(ans.at(0) == 2);
     REQUIRE(a.escapeRouteAsVec(nodes[1] , 6).at(1) == 3);
-    REQUIRE(a.escapeRouteAsVec(nodes[0] , 12).at(a.escapeRouteAsVec(nodes[0], 12).size() - 1) == 3);
+    REQUIRE(a.escapeRouteAsVec(nodes[0] , 12).back() == 3);
     REQUIRE(a.escapeRouteAsVec(nodes[1] , 18).at(2) == 6);
 }
 
 // check DFS
 TEST_CASE("Test escapeRoute with meidum graph", "[escapeRouteAsVec]") {
-    FileReader fr;
-    vector<Coord> nodes = fr.readRawNode("../tests/medium.node.txt");
-    vector<pair<int, int>> edges = fr.readEdge("../tests/medium.edge.txt");
+    vector<Coord> nodes = FileReader::readRawNode("../tests/medium.node.txt");
+    vector<pair<int, int>> edges = FileReader::readEdge("../tests/medium.edge.txt");
     // call constructor
     SFMap b(nodes, edges);
     REQUIRE(b.escapeRouteAsVec(nodes[2], 5).at(0) == 3);
     REQUIRE(b.escapeRouteAsVec(nodes[2], 10).at(1) == 5);
-    REQUIRE(b.escapeRouteAsVec(nodes[1], 11).at(b.escapeRouteAsVec(nodes[0], 12).size() - 1) == 5);
+    REQUIRE(b.escapeRouteAsVec(nodes[1], 11).back() == 5);
     REQUIRE(b.escapeRouteAsVec(nodes[2], 12).at(2) == 4);
 }
 
 // check DFS
 TEST_CASE("Test escapeRoute with large graph", "[escapeRouteAsVec]") {
-    FileReader fr;
-    vector<Coord> nodes = fr.readRawNode("../tests/large.node.txt");
-    vector<pair<int, int>> edges = fr.readEdge("../tests/large.edge.txt");
+    vector<Coord> nodes = FileReader::readRawNode("../tests/large.node.txt");
+    vector<pair<int, int>> edges = FileReader::readEdge("../tests/large.edge.txt");
     // call constructor
     SFMap c(nodes, edges);
     REQUIRE(c.escapeRouteAsVec(nodes[121], 20).at(0) == 108);
