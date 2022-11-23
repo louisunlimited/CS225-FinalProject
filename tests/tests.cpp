@@ -128,59 +128,59 @@ TEST_CASE("Test SFMap drawMap", "[SFMap][png]") {
 
 
 //check DFS
-TEST_CASE("Test escapeRoute with small graph", "[escapeRoute]") {
+TEST_CASE("Test escapeRoute with small graph", "[escapeRouteAsVec]") {
     FileReader fr;
-    vector<Coord> nodes = fr.readNormalizedNode("../tests/small.node.txt");
+    vector<Coord> nodes = fr.readRawNode("../tests/small.node.txt");
     vector<pair<int, int>> edges = fr.readEdge("../tests/small.edge.txt");
     // call constructor
     SFMap a(nodes, edges);
-    REQUIRE(a.escapeRouteAsVec(nodes[0] , 4).at(1)->index == 2);
-    REQUIRE(a.escapeRouteAsVec(nodes[0] , 6).at(2)->index == 3);
-    REQUIRE(a.escapeRouteAsVec(nodes[0] , 12).at(a.escapeRouteAsVec(nodes[0], 12).size() - 1)->index == 3);
-    REQUIRE(a.escapeRouteAsVec(nodes[0] , 18).at(3)->index == 6);
+    REQUIRE(a.escapeRouteAsVec(nodes[1] , 4).at(0) == 2);
+    REQUIRE(a.escapeRouteAsVec(nodes[1] , 6).at(1) == 3);
+    REQUIRE(a.escapeRouteAsVec(nodes[0] , 12).at(a.escapeRouteAsVec(nodes[0], 12).size() - 1) == 3);
+    REQUIRE(a.escapeRouteAsVec(nodes[1] , 18).at(2) == 6);
 }
 
 // check DFS
-TEST_CASE("Test escapeRoute with meidum graph", "[escapeRoute]") {
+TEST_CASE("Test escapeRoute with meidum graph", "[escapeRouteAsVec]") {
     FileReader fr;
-    vector<Coord> nodes = fr.readNormalizedNode("../tests/medium.node.txt");
+    vector<Coord> nodes = fr.readRawNode("../tests/medium.node.txt");
     vector<pair<int, int>> edges = fr.readEdge("../tests/medium.edge.txt");
     // call constructor
     SFMap b(nodes, edges);
-    REQUIRE(b.escapeRouteAsVec(nodes[1], 5).at(1)->index == 3);
-    REQUIRE(b.escapeRouteAsVec(nodes[1], 10).at(2)->index == 5);
-    REQUIRE(b.escapeRouteAsVec(nodes[1], 11).at(2)->index == 5);
-    REQUIRE(b.escapeRouteAsVec(nodes[1], 12).at(3)->index == 4);
+    REQUIRE(b.escapeRouteAsVec(nodes[2], 5).at(0) == 3);
+    REQUIRE(b.escapeRouteAsVec(nodes[2], 10).at(1) == 5);
+    REQUIRE(b.escapeRouteAsVec(nodes[1], 11).at(b.escapeRouteAsVec(nodes[0], 12).size() - 1) == 5);
+    REQUIRE(b.escapeRouteAsVec(nodes[2], 12).at(2) == 4);
 }
 
 // check DFS
-TEST_CASE("Test escapeRoute with large graph", ["escapeRoute"]) {
+TEST_CASE("Test escapeRoute with large graph", "[escapeRouteAsVec]") {
     FileReader fr;
-    vector<Coord> nodes = fr.readNormalizedNode("../tests/large.node.txt");
+    vector<Coord> nodes = fr.readRawNode("../tests/large.node.txt");
     vector<pair<int, int>> edges = fr.readEdge("../tests/large.edge.txt");
     // call constructor
     SFMap c(nodes, edges);
-    REQUIRE(c.escapeRouteAsVec(nodes[120], 20).at(1)->index == 108);
-    REQUIRE(c.escapeRouteAsVec(nodes[120], 22).at(2)->index == 107);
-    REQUIRE(c.escapeRouteAsVec(nodes[120], 23).at(2)->index == 107);
-    REQUIRE(c.escapeRouteAsVec(nodes[120], 24).at(3)->index == 106);
+    REQUIRE(c.escapeRouteAsVec(nodes[121], 20).at(0) == 108);
+    REQUIRE(c.escapeRouteAsVec(nodes[121], 22).at(1) == 107);
+    REQUIRE(c.escapeRouteAsVec(nodes[120], 23).at(c.escapeRouteAsVec(nodes[0], 12).size() - 1) == 107);
+    REQUIRE(c.escapeRouteAsVec(nodes[121], 24).at(2) == 106);
 }
 
-// check Dijkstra
-TEST_CASE("Test importance with small graph", ["importance"]) {
-    FileReader fr;
-    vector<Coord> nodes = fr.readNormalizedNode("../tests/small.node.txt");
-    vector<pair<int, int>> edges = fr.readEdge("../tests/small.edge.txt");
-}
+// // check Dijkstra
+// TEST_CASE("Test importance with small graph", ["importance"]) {
+//     FileReader fr;
+//     vector<Coord> nodes = fr.readRawNode("../tests/small.node.txt");
+//     vector<pair<int, int>> edges = fr.readEdge("../tests/small.edge.txt");
+// }
 
-// check Dijkstra
-TEST_CASE("Test importance with medium graph", ["importance"]) {
-    FileReader fr;
-    vector<Coord> nodes = fr.readNormalizedNode("../tests/medium.node.txt");
-    vector<pair<int, int>> edges = fr.readEdge("../tests/medium.edge.txt");
-}
+// // check Dijkstra
+// TEST_CASE("Test importance with medium graph", ["importance"]) {
+//     FileReader fr;
+//     vector<Coord> nodes = fr.readRawNode("../tests/medium.node.txt");
+//     vector<pair<int, int>> edges = fr.readEdge("../tests/medium.edge.txt");
+// }
 
-// check Dijkstra
-TEST_CASE("Test importance with large graph", ["importance"]) {
-    FileReader fr;
-}
+// // check Dijkstra
+// TEST_CASE("Test importance with large graph", ["importance"]) {
+//     FileReader fr;
+// }
