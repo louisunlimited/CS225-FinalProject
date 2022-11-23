@@ -164,21 +164,45 @@ TEST_CASE("Test escapeRoute with large graph", "[escapeRouteAsVec]") {
     REQUIRE(c.escapeRouteAsVec(nodes[121], 24).at(2) == 106);
 }
 
-// // check Dijkstra
-// TEST_CASE("Test importance with small graph", ["importance"]) {
-//     FileReader fr;
-//     vector<Coord> nodes = fr.readRawNode("../tests/small.node.txt");
-//     vector<pair<int, int>> edges = fr.readEdge("../tests/small.edge.txt");
-// }
+// check Dijkstra
+TEST_CASE("Test getParents with small graph", "[getParents]") {
+    FileReader fr;
+    vector<Coord> nodes = fr.readRawNode("../tests/small.node.txt");
+    vector<pair<int, int>> edges = fr.readEdge("../tests/small.edge.txt");
+    // call constructor
+    SFMap a(nodes, edges);
+    vector<double> result = a.getParents(1);
+    // node1 - node2
+    REQUIRE(result[1] == 4);
+    // node1 - node9
+    REQUIRE(result[8] == 17);
 
-// // check Dijkstra
-// TEST_CASE("Test importance with medium graph", ["importance"]) {
-//     FileReader fr;
-//     vector<Coord> nodes = fr.readRawNode("../tests/medium.node.txt");
-//     vector<pair<int, int>> edges = fr.readEdge("../tests/medium.edge.txt");
-// }
+}
 
-// // check Dijkstra
-// TEST_CASE("Test importance with large graph", ["importance"]) {
-//     FileReader fr;
-// }
+// check Dijkstra
+TEST_CASE("Test getParents with medium graph", "[getParents]") {
+    FileReader fr;
+    vector<Coord> nodes = fr.readRawNode("../tests/medium.node.txt");
+    vector<pair<int, int>> edges = fr.readEdge("../tests/medium.edge.txt");
+    // call constructor
+    SFMap b(nodes, edges);
+    vector<double> result = b.getParents(4);
+    // node4 - node6
+    REQUIRE(result[5] == 4);
+    // node4 - node48
+    REQUIRE(result[47] == 33.5);
+}
+
+// check Dijkstra
+TEST_CASE("Test getParents with large graph", "[getParents]") {
+    FileReader fr;
+    vector<Coord> nodes = fr.readRawNode("../tests/large.node.txt");
+    vector<pair<int, int>> edges = fr.readEdge("../tests/large.edge.txt");
+    // call constructor
+    SFMap c(nodes, edges);
+    vector<double> result = c.getParents(121);
+    // node121 - node108
+    REQUIRE(result[107] == 20);
+    // node121 - node70
+    REQUIRE(result[70] == 70);
+}
