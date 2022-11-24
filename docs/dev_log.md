@@ -46,9 +46,14 @@ For next week, during thanksgiving, our goal will be: Implementing test cases fo
 
 ## Week 4
 
-Func 2 & 4, finish PNG for all func. GIf. If have time, test cases.
+This week during thanks giving, we tried to finish all the functions and wrap things up. We aimed to fininsh function 2 and 4 and we made a considerable amount of progress towards this goal. Apart from these, we also started building testcases for all functions. We ran into some issues when trying to build custom datasets for testcases but were able to figure out a way around it.
 
-Func 2 : Louis
-func 4 : Hezi
-Png + gif : Daniel
-Testcase : MST + DTree + Dijkstra + DFS : xiping
+Louis Qian: I fininshed the first version of minimum spanning tree and started to work on testcases for this. I also did code review and helped merge a few branches.
+
+Tianyue Cao: I finished the PNG helper function and colorpicker. I also fixed bugs in the constructor and in the testcases.
+
+Xiping Sun: I set up six data bases for testing, and finished testing escapeRouteAsVect and getParents.
+
+Hezi Jiang: I finished the goal 4, find the next best position for a new police station. I also finish the getParents helper function.
+
+For next week, we hope to do a overview of what we have done and try to finish any leftovers due. Then we will, hopefully, start preparing for the final presentaion.
