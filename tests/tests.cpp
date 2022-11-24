@@ -156,12 +156,12 @@ TEST_CASE("Test escapeRoute with small graph", "[escapeRouteAsVec]") {
     vector<pair<int, int>> edges = FileReader::readEdge("../tests/small.edge.txt");
     // call constructor
     SFMap a(nodes, edges);
-    vector<int> ans = a.escapeRouteAsVec(nodes[1] , 4);
+    vector<int> ans = a.escapeRouteAsVec(nodes[0] , 4);
     cout << ans.size() << endl;
-    REQUIRE(ans.at(1) == 2);
-    REQUIRE(a.escapeRouteAsVec(nodes[1], 6).at(2) == 3);
-    REQUIRE(a.escapeRouteAsVec(nodes[0], 12).back() == 3);
-    REQUIRE(a.escapeRouteAsVec(nodes[1], 18).at(3) == 6);
+    REQUIRE(ans.at(1) == 1);
+    REQUIRE(a.escapeRouteAsVec(nodes[0], 6).at(2) == 2);
+    REQUIRE(a.escapeRouteAsVec(nodes[0], 12).back() == 2);
+    REQUIRE(a.escapeRouteAsVec(nodes[0], 18).at(3) == 5);
 }
 
 // check DFS
@@ -170,10 +170,10 @@ TEST_CASE("Test escapeRoute with medium graph", "[escapeRouteAsVec]") {
     vector<pair<int, int>> edges = FileReader::readEdge("../tests/medium.edge.txt");
     // call constructor
     SFMap b(nodes, edges);
-    REQUIRE(b.escapeRouteAsVec(nodes[2], 5).at(0) == 3);
-    REQUIRE(b.escapeRouteAsVec(nodes[2], 10).at(1) == 5);
-    REQUIRE(b.escapeRouteAsVec(nodes[1], 11).back() == 5);
-    REQUIRE(b.escapeRouteAsVec(nodes[2], 12).at(2) == 4);
+    REQUIRE(b.escapeRouteAsVec(nodes[1], 5).at(1) == 2);
+    REQUIRE(b.escapeRouteAsVec(nodes[1], 10).at(2) == 4);
+    REQUIRE(b.escapeRouteAsVec(nodes[1], 11).back() == 4);
+    REQUIRE(b.escapeRouteAsVec(nodes[2], 12).at(3) == 3);
 }
 
 // check DFS
@@ -182,10 +182,10 @@ TEST_CASE("Test escapeRoute with large graph", "[escapeRouteAsVec]") {
     vector<pair<int, int>> edges = FileReader::readEdge("../tests/large.edge.txt");
     // call constructor
     SFMap c(nodes, edges);
-    REQUIRE(c.escapeRouteAsVec(nodes[121], 20).at(0) == 108);
-    REQUIRE(c.escapeRouteAsVec(nodes[121], 22).at(1) == 107);
-    REQUIRE(c.escapeRouteAsVec(nodes[120], 23).back() == 107);
-    REQUIRE(c.escapeRouteAsVec(nodes[121], 24).at(2) == 106);
+    REQUIRE(c.escapeRouteAsVec(nodes[120], 20).at(1) == 107);
+    REQUIRE(c.escapeRouteAsVec(nodes[120], 22).at(2) == 106);
+    REQUIRE(c.escapeRouteAsVec(nodes[120], 23).back() == 106);
+    REQUIRE(c.escapeRouteAsVec(nodes[121], 24).at(3) == 105);
 }
 
 // check Dijkstra
