@@ -165,10 +165,12 @@ class SFMap {
         // Functions used exclusively for testing
 
         /**
-         * Set the scaling factor of the map (changes the size of the output image)
-         * @param scale New scaling factor
+         * Set the "constants" for drawing the map
          */
         void setScale(double scale);
+        void setMargin(double margin);
+        void setRadius(double radius);
+        void setLineWidth(double lineWidth);
 
         /**
          * For testing
@@ -177,7 +179,7 @@ class SFMap {
          *  e.g. result[i] = the node before the ith node on the shortest path between start and
          *  the ith nodes.
          */
-        vector<double> getParents(int start) const;
+        vector<int> getParents(int start) const;
 
         /**
          * For testing
@@ -218,11 +220,11 @@ class SFMap {
         /* Maximum zoom factor */
         const double MAX_ZOOM = 15;
         /* Map margin (in degree) */
-        const double MARGIN = 0.01;
+        double MARGIN = 0.01;
         /* Radius of node */
-        const double RADIUS = 1.2;
+        double RADIUS = 1.2;
         /* Width of edge */
-        const double LINE_WIDTH = 1;
+        double LINE_WIDTH = 1;
 
         // HELPER FUNCTIONS
         /**
