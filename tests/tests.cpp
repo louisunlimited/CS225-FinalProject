@@ -135,9 +135,9 @@ TEST_CASE("Test escapeRoute with small graph", "[escapeRouteAsVec]") {
     vector<int> ans = a.escapeRouteAsVec(nodes[1] , 4);
     cout << ans.size() << endl;
     REQUIRE(ans.at(0) == 2);
-    REQUIRE(a.escapeRouteAsVec(nodes[1] , 6).at(1) == 3);
-    REQUIRE(a.escapeRouteAsVec(nodes[0] , 12).back() == 3);
-    REQUIRE(a.escapeRouteAsVec(nodes[1] , 18).at(2) == 6);
+    REQUIRE(a.escapeRouteAsVec(nodes[1], 6).at(1) == 3);
+    REQUIRE(a.escapeRouteAsVec(nodes[0], 12).back() == 3);
+    REQUIRE(a.escapeRouteAsVec(nodes[1], 18).at(2) == 6);
 }
 
 // check DFS
@@ -160,7 +160,7 @@ TEST_CASE("Test escapeRoute with large graph", "[escapeRouteAsVec]") {
     SFMap c(nodes, edges);
     REQUIRE(c.escapeRouteAsVec(nodes[121], 20).at(0) == 108);
     REQUIRE(c.escapeRouteAsVec(nodes[121], 22).at(1) == 107);
-    REQUIRE(c.escapeRouteAsVec(nodes[120], 23).at(c.escapeRouteAsVec(nodes[0], 12).size() - 1) == 107);
+    REQUIRE(c.escapeRouteAsVec(nodes[120], 23).back() == 107);
     REQUIRE(c.escapeRouteAsVec(nodes[121], 24).at(2) == 106);
 }
 
@@ -171,11 +171,13 @@ TEST_CASE("Test getParents with small graph", "[getParents]") {
     vector<pair<int, int>> edges = fr.readEdge("../tests/small.edge.txt");
     // call constructor
     SFMap a(nodes, edges);
-    vector<double> result = a.getParents(1);
-    // node1 - node2
-    REQUIRE(result[1] == 4);
-    // node1 - node9
-    REQUIRE(result[8] == 17);
+    vector<double> result = a.getParents(0);
+    // 1 --> 2
+    REQUIRE(result[1] == 0);
+    // 1 --> 4 --> 7 --> 8
+    REQUIRE(result[7] == 6);
+    // 1 --> 2 --> 5 --> 9
+    REQUIRE(result[8] == 4);
 
 }
 
