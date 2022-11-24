@@ -7,10 +7,23 @@
 #include "sf_map.h"
 
 void SFMap::setScale(double scale) {
-    if (scale <= 0) {
-        throw invalid_argument("Scaling factor must be positive");
-    }
+    if (scale <= 0) throw invalid_argument("Scaling factor must be positive");
     SCALE = scale;
+}
+
+void SFMap::setMargin(double margin) {
+    if (margin < 0) throw invalid_argument("Margin must be non-negative");
+    MARGIN = margin;
+}
+
+void SFMap::setRadius(double radius) {
+    if (radius <= 0) throw invalid_argument("Radius of node must be positive");
+    RADIUS = radius;
+}
+
+void SFMap::setLineWidth(double lineWidth) {
+    if (lineWidth <= 0) throw invalid_argument("Line width must be positive");
+    LINE_WIDTH = lineWidth;
 }
 
 vector<bool> SFMap::getValidSubset() const {
@@ -111,7 +124,7 @@ Coord SFMap::coord2Pixel(const Coord& coord, const Coord& lowerLeft, double zoom
     pixel.lat_ = (coord.lat_ - lowerLeft.lat_) * zoom * SCALE;
     pixel.long_ = (coord.long_ - lowerLeft.long_) * zoom * SCALE;
     // Invert the latitude due to mismatch of the y-orientation of the image and map
-    pixel.lat_ = (_maxLat - _minLat) * SCALE - pixel.lat_;
+    pixel.lat_ = (_maxLat - _minLat + MARGIN * 2) * SCALE - pixel.lat_;
 
     return pixel;
 }

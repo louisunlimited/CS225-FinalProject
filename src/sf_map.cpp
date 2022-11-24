@@ -36,11 +36,6 @@ SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges) {
         _minLong = min(_minLong, node.coord.long_);
         _maxLong = max(_maxLong, node.coord.long_);
     }
-    // The map should be slightly larger than the actual range of all nodes
-    _minLat -= MARGIN;
-    _maxLat += MARGIN;
-    _minLong -= MARGIN;
-    _maxLong += MARGIN;
 
     // Construct KDTree
     vector<pair<Coord, int>> coords;
@@ -87,8 +82,14 @@ PNG SFMap::drawMap(double zoom, const Coord& center, function<rgbaColor(int)> no
         throw invalid_argument("Zoom factor must be in the range 1.0 ~ 20.0 inclusive");
     }
 
-    double mHeight = _maxLat - _minLat;  // height of map (in deg)
-    double mWidth = _maxLong - _minLong;  // height of map (in deg)
+    // The image should be slightly larger than the map
+    double minLat = _minLat - MARGIN;
+    double maxLat = _maxLat + MARGIN;
+    double minLong = _minLong - MARGIN;
+    double maxLong = _maxLong + MARGIN;
+
+    double mHeight = maxLat - minLat;  // height of map (in deg)
+    double mWidth = maxLong - minLong;  // height of map (in deg)
     int pHeight = mHeight * SCALE;  // height of image (in pxl)
     int pWidth = mWidth * SCALE;  // width of image (in pxl)
     double zHeight = mHeight / zoom;  // height of zoomed map (in deg)
@@ -99,9 +100,9 @@ PNG SFMap::drawMap(double zoom, const Coord& center, function<rgbaColor(int)> no
 
     // Find the lower left corner of the zoomed rectangle's borders
     // The zoomed rectangle will be placed such that `center` is at the center of it.
-    // Note that it should not get out of bounds as defined by _minLat, _maxLat
-    double zMinLat = min(max(center.lat_ - 0.5 * zHeight, _minLat), _maxLat - zHeight);
-    double zMinLong = min(max(center.long_ - 0.5 * zWidth, _minLong), _maxLong - zWidth);
+    // Note that it should not get out of bounds as defined by minLat, maxLat
+    double zMinLat = min(max(center.lat_ - 0.5 * zHeight, minLat), maxLat - zHeight);
+    double zMinLong = min(max(center.long_ - 0.5 * zWidth, minLong), maxLong - zWidth);
     Coord lowerLeft = Coord(zMinLat, zMinLong);
 
     // Create the canvas
