@@ -1,21 +1,50 @@
 #include "filereader.h"
 
-vector<Coord> FileReader::readNormalizedNode(string fileName) {
+using namespace std;
+
+vector<Coord> FileReader::readRawNode(string fileName) {
     vector<Coord> nodes;
+    fstream file(fileName);
+    string line;
+    while (getline(file, line)) {
+        string long_, lat_;
+        // split by space and get the last two elements
+        istringstream iss(line);
+        for (int i = 0; i < 2; i++) {
+            iss >> long_;
+        }
+        iss >> lat_;
+        Coord node;
+        node.long_ = stod(long_);
+        node.lat_ = stod(lat_);
+        nodes.push_back(node);
+    }
     return nodes;
 }
 
-vector<Coord> FileReader::convertNode(vector<Coord> normalizedCoords,
+void FileReader::convertNode(vector<Coord>& normalizedCoords,
     Coord anchor1, Coord normalizedAnchor1,
     Coord anchor2, Coord normalizedAnchor2) {
+    double anchor1Long = anchor1.long_;
+    double anchor1Lat = anchor1.lat_;
+    double anchor2Long = anchor2.long_;
+    double anchor2Lat = anchor2.lat_;
+    double normalizedAnchor1Long = normalizedAnchor1.long_;
+    double normalizedAnchor1Lat = normalizedAnchor1.lat_;
+    double normalizedAnchor2Long = normalizedAnchor2.long_;
+    double normalizedAnchor2Lat = normalizedAnchor2.lat_;
 
-    vector<Coord> nodes;
-    return nodes;
+    double k = (anchor2Lat - anchor1Lat) / (normalizedAnchor2Lat - normalizedAnchor1Lat);
+    double k1 = (anchor2Long - anchor1Long) / (normalizedAnchor2Long - normalizedAnchor1Long);
+
+    for (auto& coord : normalizedCoords) {
+        coord.long_ = k1 * (coord.long_ - normalizedAnchor1Long) + anchor1Long;
+        coord.lat_ = k * (coord.lat_ - normalizedAnchor1Lat) + anchor1Lat;
+    }
 }
 
-// Jiang Hezi
-vector<std::pair<int, int>> FileReader::readEdge(string fileName) {
-    vector<std::pair<int, int>> edges;
+vector<pair<int, int>> FileReader::readEdge(string fileName) {
+    vector<pair<int, int>> edges;
     ifstream read_file(fileName);
 	string line;
     
@@ -38,7 +67,7 @@ vector<std::pair<int, int>> FileReader::readEdge(string fileName) {
                 lastindex = i + 1;
             }
         }
-        edges.push_back(std::pair<int, int>(startnode, endnode));
+        edges.push_back(pair<int, int>(startnode, endnode));
 	}
     return edges;
 }
@@ -46,22 +75,19 @@ vector<std::pair<int, int>> FileReader::readEdge(string fileName) {
 vector<Coord> FileReader::readPoliceStation(string fileName) {
     vector<Coord> police;
 
-
     ifstream read_file(fileName);
     string line;
     getline(read_file, line);
-
     while (getline(read_file, line)) {
-
         unsigned int lastindex = line.size() - 1;
         while (lastindex > 0) {
             if (line[lastindex] != '(') {
-                lastindex --;
+                lastindex--;
             } else {
                 break;
             }
         }
-        lastindex ++;
+        lastindex++;
         double latitude = 0.0;
         double longtitude = 0.0;
         for (unsigned int i = lastindex; i < line.size(); i++) {
@@ -71,12 +97,9 @@ vector<Coord> FileReader::readPoliceStation(string fileName) {
                 longtitude = stod(line.substr(lastindex, line.size() - 2 - lastindex));
                 break;
             }
-        } // create new coord object
-        Coord policestation;
-        policestation.lat_ = latitude;
-        policestation.long_ = longtitude;
-        
-        police.push_back(policestation);
+        }
+
+        police.push_back(Coord(latitude, longtitude));
     }
     return police;
 }

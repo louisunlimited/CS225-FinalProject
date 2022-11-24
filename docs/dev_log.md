@@ -29,3 +29,31 @@ Xiping Sun: I participated in discussing data handling, and finished DFS in the 
 Hezi Jiang: I finished reading the data from the two data file and the police station position. I convert it to the vector for future use.
 
 Everything went fairly well. Our frist goal for next week is to modify our project proposal accoring to the feedback, which, require us to rethink question 4 again with a different algorithm. Then, as our regular work flow goes, we will be trying to finish the follwing: Test case for DFS; Optimum route for chasing criminals; Identify the importance of places in the city; Implement PNG output.
+
+## Week 3
+
+This week, we started to build upon what we had last week, implementing more complex and challenging functions. We tried to finish PNG and calculate the betweeness centrality for our first objective.
+
+Louis Qian: I worked a bit more on `readNode` since we believe the original version was not properly coded. I also started working on writing testcases for some of the functions.
+
+Tianyue Cao: I started working on drawing the map on a PNG. This funtion will use a colorpicker for the node and edge colors such that it can be used by other functions.
+
+Hezi Jiang: I finished the function "importance" and its helper  function "importanceAsVec" in the file sf_map.cpp. This function use the  Dijkstra's algorithm to identify the importance of places in the city and color the graph using different color accordingly.
+
+Xiping Sun: I wrote test cases for DFS and importance and participated in the discussion of choosing a new algorithm.
+
+For next week, during thanksgiving, our goal will be: Implementing test cases for the importance of places; Finding the next best position for a new police station; Implement GIF output; and Integrate image output into existing features.
+
+## Week 4
+
+This week during thanks giving, we tried to finish all the functions and wrap things up. We aimed to fininsh function 2 and 4 and we made a considerable amount of progress towards this goal. Apart from these, we also started building testcases for all functions. We ran into some issues when trying to build custom datasets for testcases but were able to figure out a way around it.
+
+Louis Qian: I fininshed the first version of minimum spanning tree and started to work on testcases for this. I also did code review and helped merge a few branches.
+
+Tianyue Cao: I finished the PNG helper function and colorpicker. I also fixed bugs in the constructor and in the testcases.
+
+Xiping Sun: I set up six data bases for testing, and finished testing escapeRouteAsVect and getParents.
+
+Hezi Jiang: I finished the goal 4, find the next best position for a new police station. I also finish the getParents helper function.
+
+For next week, we hope to do a overview of what we have done and try to finish any leftovers due. Then we will, hopefully, start preparing for the final presentaion.
