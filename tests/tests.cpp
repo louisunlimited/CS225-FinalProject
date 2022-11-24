@@ -151,10 +151,10 @@ TEST_CASE("Test escapeRoute with small graph", "[escapeRouteAsVec]") {
     SFMap a(nodes, edges);
     vector<int> ans = a.escapeRouteAsVec(nodes[1] , 4);
     cout << ans.size() << endl;
-    REQUIRE(ans.at(0) == 2);
-    REQUIRE(a.escapeRouteAsVec(nodes[1], 6).at(1) == 3);
+    REQUIRE(ans.at(1) == 2);
+    REQUIRE(a.escapeRouteAsVec(nodes[1], 6).at(2) == 3);
     REQUIRE(a.escapeRouteAsVec(nodes[0], 12).back() == 3);
-    REQUIRE(a.escapeRouteAsVec(nodes[1], 18).at(2) == 6);
+    REQUIRE(a.escapeRouteAsVec(nodes[1], 18).at(3) == 6);
 }
 
 // check DFS
