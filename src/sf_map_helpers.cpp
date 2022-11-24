@@ -66,38 +66,44 @@ void SFMap::getValidSubsetHelper(vector<bool>& validPoints) const {
 }
 
 void SFMap::cleanData(const vector<bool>& validPoints) {
-    // Count number of valid points. Throw exception if no valid points.
-    int n = 0;
-    for (bool isValid : validPoints) if (isValid) n++;
-    if (n == 0) throw invalid_argument(
-        "The data received contains an insufficient number of valid nodes");
-
-    // Clean adjacency list
-    for (int i = validPoints.size() - 1; i >= 0; i--) {
-        // Remove entire adjacency vector if i is invalid
-        if (!validPoints[i]) {
-            _neighbors.erase(_neighbors.begin() + i);
-            continue;
-        }
-        // Otherwise check if each adjacent node is invalid
-        for (int j = _neighbors[i].size() - 1; j >= 0; j--) {
-            if (!validPoints[_neighbors[i][j]->index]) {
-                _neighbors[i].erase(_neighbors[i].begin() + j);
-            }
-        }
-    }
-
-    // Clean nodes
-    int index = n - 1;
-    for (int i = _nodes.size() - 1; i >= 0; i--) {
-        if (!validPoints[_nodes[i].index]) {
-            _nodes.erase(_nodes.begin() + i);
+    // Create new list of nodes and map i to newIndexes
+    int n = size();
+    int newIndex = 0;
+    vector<MapNode> newNodes;
+    vector<int> toNewIndex;
+    for (int i = 0; i < n; i++) {
+        if (validPoints[i]) {
+            newNodes.push_back(MapNode(newIndex, _nodes[i].coord, _nodes[i].isPoliceStation));
+            toNewIndex.push_back(newIndex);
+            newIndex++;
         } else {
-            _nodes[i].index = index--;
+            toNewIndex.push_back(-1);
         }
     }
 
-    if (index != -1) cout << "ERROR in cleanData: index != -1" << endl;
+    // Create new adjacency list (using index instead of pointers)
+    vector<vector<int>> newNeighbors;
+    for (int i = 0; i < n; i++) {
+        // Skip entire adjacency vector if i is invalid
+        if (!validPoints[i]) continue;
+
+        vector<int> neighbors;
+        for (MapNode* neighbor : _neighbors[i]) {
+            if (validPoints[neighbor->index]) neighbors.push_back(toNewIndex[neighbor->index]);
+        }
+        newNeighbors.push_back(neighbors);
+    }
+
+    // Move new values to _nodes and _neighbors
+    _nodes = newNodes;
+    _neighbors.clear();
+    for (const vector<int>& neighbors : newNeighbors) {
+        vector<MapNode*> neighborsAsPtr;
+        for (int neighbor : neighbors) {
+            neighborsAsPtr.push_back(&_nodes[neighbor]);
+        }
+        _neighbors.push_back(neighborsAsPtr);
+    }
 }
 
 Coord SFMap::coord2Pixel(const Coord& coord, const Coord& lowerLeft, double zoom) const {
