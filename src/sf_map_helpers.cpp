@@ -263,8 +263,8 @@ bool SFMap::findRoute(vector<int>& currNodes, double remainDist, vector<bool>& v
     return false;
 }
 
-vector<double> SFMap::getParents(int start) const {
+vector<int> SFMap::getParents(int start) const {
     // TODO
-    vector<double> parents;
+    vector<int> parents;
     return parents;
 }

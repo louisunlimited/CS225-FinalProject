@@ -171,12 +171,13 @@ TEST_CASE("Test getParents with small graph", "[getParents]") {
     vector<pair<int, int>> edges = fr.readEdge("../tests/small.edge.txt");
     // call constructor
     SFMap a(nodes, edges);
-    vector<double> result = a.getParents(0);
-    // 1 --> 2
+    vector<int> result = a.getParents(0);
+    REQUIRE(result.size() == 10);
+    // 0 --> 1
     REQUIRE(result[1] == 0);
-    // 1 --> 4 --> 7 --> 8
+    // 0 --> 3 --> 6 --> 7
     REQUIRE(result[7] == 6);
-    // 1 --> 2 --> 5 --> 9
+    // 0 --> 1 --> 4 --> 8
     REQUIRE(result[8] == 4);
 
 }
@@ -188,7 +189,7 @@ TEST_CASE("Test getParents with medium graph", "[getParents]") {
     vector<pair<int, int>> edges = fr.readEdge("../tests/medium.edge.txt");
     // call constructor
     SFMap b(nodes, edges);
-    vector<double> result = b.getParents(4);
+    vector<int> result = b.getParents(4);
     // node4 - node6
     REQUIRE(result[5] == 4);
     // node4 - node48
@@ -202,7 +203,7 @@ TEST_CASE("Test getParents with large graph", "[getParents]") {
     vector<pair<int, int>> edges = fr.readEdge("../tests/large.edge.txt");
     // call constructor
     SFMap c(nodes, edges);
-    vector<double> result = c.getParents(121);
+    vector<int> result = c.getParents(121);
     // node121 - node108
     REQUIRE(result[107] == 20);
     // node121 - node70
