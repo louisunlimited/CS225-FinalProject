@@ -65,17 +65,24 @@ class SFMap {
 
         /**
          * Return a map of the city of San Francisco. 5000 pixels represents 1 degree
+         * The color pickers are closures that takes the node(s) index as input and output the
+         * color as a rgbaColor object
+         *
+         * NOTE: if the alpha value of the rgbaColor object is 0, then the node/edge will not be
+         * shown. Otherwise the alpha value does not have an effect.
          *
          * @param zoom The zoom factor between 1.0 and 20.0, inclusive
          * @param center The center point to zoom on
-         * @param drawLines
+         * @param nodeColor The color picker for coloring nodes
+         * @param edgeColor The color picker for coloring edges
          */
-        PNG drawMap(double zoom, const Coord& center, bool drawLines) const;
+        PNG drawMap(double zoom, const Coord& center, function<rgbaColor(int)> nodeColor,
+            function<rgbaColor(int, int)> edgeColor) const;
 
         /**
          * Return a map of San Francisco without zooming
          */
-        PNG drawMap(bool drawLines) const;
+        PNG drawMap(function<rgbaColor(int)> nodeColor, function<rgbaColor(int, int)> edgeColor) const;
 
 
         // Four main functions
