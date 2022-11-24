@@ -1,4 +1,8 @@
 #include <iostream>
+#include <vector>
+#include "coord.h"
+#include "filereader.h"
+#include "sf_map.h"
 
 using namespace std;
 

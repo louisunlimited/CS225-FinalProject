@@ -29,6 +29,13 @@ SFMap loadMap() {
     return SFMap(nodes, edges, police);
 }
 
+void configSmallGraph(SFMap& m) {
+    m.setScale(50);
+    m.setMargin(1);
+    m.setRadius(4);
+    m.setLineWidth(2);
+}
+
 SFMap sfmap = loadMap();
 
 TEST_CASE("Test FileReader readEdge", "[FileReader]") {
@@ -183,45 +190,51 @@ TEST_CASE("Test escapeRoute with large graph", "[escapeRouteAsVec]") {
 
 // check Dijkstra
 TEST_CASE("Test getParents with small graph", "[getParents]") {
-    FileReader fr;
-    vector<Coord> nodes = fr.readRawNode("../tests/small.node.txt");
-    vector<pair<int, int>> edges = fr.readEdge("../tests/small.edge.txt");
+    vector<Coord> nodes = FileReader::readRawNode("../tests/small.node.txt");
+    vector<pair<int, int>> edges = FileReader::readEdge("../tests/small.edge.txt");
     // call constructor
     SFMap a(nodes, edges);
-    vector<int> result = a.getParents(0);
+    vector<int> result = a.getParents(1);
     REQUIRE(result.size() == 10);
-    // 0 --> 1
-    REQUIRE(result[1] == 0);
-    // 0 --> 3 --> 6 --> 7
+    // parent of the start node should be -1
+    REQUIRE(result[1] == -1);
+    // 1 --> 0
+    REQUIRE(result[0] == 1);
+    // 1 --> 4 --> 3 --> 6 --> 7
     REQUIRE(result[7] == 6);
-    // 0 --> 1 --> 4 --> 8
+    // 1 --> 4 --> 8
     REQUIRE(result[8] == 4);
 }
 
 // check Dijkstra
 TEST_CASE("Test getParents with medium graph", "[getParents]") {
-    FileReader fr;
-    vector<Coord> nodes = fr.readRawNode("../tests/medium.node.txt");
-    vector<pair<int, int>> edges = fr.readEdge("../tests/medium.edge.txt");
+    vector<Coord> nodes = FileReader::readRawNode("../tests/medium.node.txt");
+    vector<pair<int, int>> edges = FileReader::readEdge("../tests/medium.edge.txt");
     // call constructor
     SFMap b(nodes, edges);
-    vector<int> result = b.getParents(4);
-    // node4 - node6
-    REQUIRE(result[5] == 4);
-    // node4 - node48
-    REQUIRE(result[47] == 33.5);
+    vector<int> result = b.getParents(3);
+    REQUIRE(result.size() == 50);
+    // parent of the start node should be -1
+    REQUIRE(result[3] == -1);
+    // 3 --> 5
+    REQUIRE(result[5] == 3);
+    // 3 --> ... --> 46 --> 47
+    REQUIRE(result[47] == 46);
+    // 3 --> 4 --> 7 --> 8
+    REQUIRE(result[8] == 7);
 }
 
 // check Dijkstra
-TEST_CASE("Test getParents with large graph", "[getParents]") {
-    FileReader fr;
-    vector<Coord> nodes = fr.readRawNode("../tests/large.node.txt");
-    vector<pair<int, int>> edges = fr.readEdge("../tests/large.edge.txt");
-    // call constructor
-    SFMap c(nodes, edges);
-    vector<int> result = c.getParents(121);
-    // node121 - node108
-    REQUIRE(result[107] == 20);
-    // node121 - node70
-    REQUIRE(result[70] == 70);
-}
+// large dataset is disabled because its image is currently unavailable
+// TEST_CASE("Test getParents with large graph", "[getParents]") {
+//     vector<Coord> nodes = FileReader::readRawNode("../tests/large.node.txt");
+//     vector<pair<int, int>> edges = FileReader::readEdge("../tests/large.edge.txt");
+//     // call constructor
+//     SFMap c(nodes, edges);
+//     vector<int> result = c.getParents(121);
+//     REQUIRE(result.size() == 200);
+//     // node121 - node108
+//     REQUIRE(result[107] == 20);
+//     // node121 - node70
+//     REQUIRE(result[70] == 70);
+// }
