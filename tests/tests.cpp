@@ -158,7 +158,7 @@ TEST_CASE("Test escapeRoute with small graph", "[escapeRouteAsVec]") {
 }
 
 // check DFS
-TEST_CASE("Test escapeRoute with meidum graph", "[escapeRouteAsVec]") {
+TEST_CASE("Test escapeRoute with medium graph", "[escapeRouteAsVec]") {
     vector<Coord> nodes = FileReader::readRawNode("../tests/medium.node.txt");
     vector<pair<int, int>> edges = FileReader::readEdge("../tests/medium.edge.txt");
     // call constructor
@@ -196,7 +196,6 @@ TEST_CASE("Test getParents with small graph", "[getParents]") {
     REQUIRE(result[7] == 6);
     // 0 --> 1 --> 4 --> 8
     REQUIRE(result[8] == 4);
-
 }
 
 // check Dijkstra
@@ -225,3 +224,4 @@ TEST_CASE("Test getParents with large graph", "[getParents]") {
     REQUIRE(result[107] == 20);
     // node121 - node70
     REQUIRE(result[70] == 70);
+}

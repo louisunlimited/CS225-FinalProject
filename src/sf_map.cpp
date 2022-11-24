@@ -165,8 +165,9 @@ vector<int> SFMap::escapeRouteAsVec(const Coord& start, double minDist) const {
     }
 
     // set DFS path
-    vector<int> currNodes;
-    vector<bool> visited = vector(0, false);
+    vector<int> currNodes = { startNode->index };
+    vector<bool> visited = vector(_nodes.size(), false);
+    visited[startNode->index] = true;
     if (!findRoute(currNodes, minDist, visited)) {
         throw runtime_error("Cannot find escape route");
     }
