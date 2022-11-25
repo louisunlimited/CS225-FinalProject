@@ -26,6 +26,10 @@ void SFMap::setLineWidth(double lineWidth) {
     LINE_WIDTH = lineWidth;
 }
 
+void SFMap::setMetric(function<double(const Coord&, const Coord&)> metric) {
+    _dist = metric;
+}
+
 vector<bool> SFMap::getValidSubset() const {
     int n = _nodes.size();
     // The result
@@ -267,7 +271,7 @@ bool SFMap::findRoute(vector<int>& currNodes, double remainDist, vector<bool>& v
 
         // recursion
         currNodes.push_back(newNode.index);
-        if (findRoute(currNodes, remainDist - dist(newNode.coord, lastNode.coord), visited)) {
+        if (findRoute(currNodes, remainDist - _dist(newNode.coord, lastNode.coord), visited)) {
             return true;
         }
         currNodes.pop_back();
@@ -277,38 +281,34 @@ bool SFMap::findRoute(vector<int>& currNodes, double remainDist, vector<bool>& v
 }
 
 vector<int> SFMap::getParents(int start) const {
-    // TODO
-    vector<double> dist(_nodes.size(), 10000.0);
+    // No need to remember the distances because we are using a priority queue
+    // This guarantees that we are always visiting the end point of the shortest path possible
     vector<int> prev(_nodes.size(), -1);
-    std::priority_queue<std::tuple<double, int, int>, vector<std::tuple<double, int, int>>, \
-        std::greater<std::tuple<double, int, int>>> myprq;
-    myprq.push(std::tuple<double, int, int>(0.0, start, -1));
+    priority_queue<tuple<double, int, int>, vector<tuple<double, int, int>>,
+        greater<tuple<double, int, int>>> myprq;
+    myprq.push(tuple(0.0, start, -1));
 
     while (!myprq.empty()) {
-        std::tuple<double, int, int> topTuple = myprq.top();
+        auto [curdist, curindex, previndex] = myprq.top();
         myprq.pop();
 
-        double curdist = std::get<0>(topTuple);
-        int curindex = std::get<1>(topTuple);
-        MapNode curnode = _nodes[curindex];
-        if (prev[curindex] == -1 && dist[curindex] > curdist) {
-            // curnode is not visited before
-            prev[curindex] = std::get<2>(topTuple);
-            dist[curindex] = curdist;
-            for (auto neighbor : _neighbors[curindex]) {
-                if (prev[neighbor->index] == -1) { //not visited
-                    // calculate distance = curdist + edgeweight
-                    // todo calculate edgeweight by yourself
-                    double edgeweight = sqrt((curnode.coord.lat_ - neighbor->coord.lat_) * (curnode.coord.lat_ - neighbor->coord.lat_) + \
-                        (curnode.coord.long_ - neighbor->coord.long_) * (curnode.coord.long_ - neighbor->coord.long_));
-                    double distance = curdist + edgeweight;
-                    myprq.push(std::tuple<double, int, int>(distance, neighbor->index, curindex));
-                }
-            }
-        }
-        else {
-            continue;
+        // if curnode is visited before then the current distance must be larger
+        // therefore skip the remaining
+        if (prev[curindex] != -1) continue;
+
+        const MapNode& curnode = _nodes[curindex];
+        prev[curindex] = previndex;
+
+        for (const MapNode* neighbor : _neighbors[curindex]) {
+            // skip if visited
+            if (neighbor->index == start || prev[neighbor->index] != -1) continue;
+
+            // _dist is the metric used in this map
+            double edgeweight = _dist(curnode.coord, neighbor->coord);
+            double distance = curdist + edgeweight;
+            myprq.push(tuple(distance, neighbor->index, curindex));
         }
     }
+
     return prev;
-} 
+}

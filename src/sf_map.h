@@ -171,6 +171,7 @@ class SFMap {
         void setMargin(double margin);
         void setRadius(double radius);
         void setLineWidth(double lineWidth);
+        void setMetric(function<double(const Coord&, const Coord&)> metric);
 
         /**
          * For testing
