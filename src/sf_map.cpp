@@ -222,7 +222,6 @@ vector<double> SFMap::importanceAsVec() {
             importanceValues[index] += 1.0;
         }
     }
-
     return importanceValues;
 }
 

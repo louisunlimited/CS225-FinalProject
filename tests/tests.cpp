@@ -219,6 +219,7 @@ TEST_CASE("Test getParents with medium graph", "[getParents]") {
     // 3 --> 5
     REQUIRE(result[5] == 3);
     // 3 --> ... --> 46 --> 47
+    // REQUIRE(result[47] == 46);
     REQUIRE(result[46] == 45);
     // 3 --> 4 --> 7 --> 8
     REQUIRE(result[8] == 7);
