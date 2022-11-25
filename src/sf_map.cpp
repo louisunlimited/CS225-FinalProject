@@ -23,6 +23,8 @@ SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges) {
         }
     }
 
+    _dist = dist;
+
     // Filter out the non-valid points
     vector<bool> validPoints = getValidSubset();
     cleanData(validPoints);
@@ -42,7 +44,7 @@ SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges) {
     for (const MapNode& node : _nodes) {
         coords.push_back(pair(node.coord, node.index));
     }
-    tree = KDTree(coords, dist);
+    tree = KDTree(coords, normalizedDist);
 }
 
 SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges,

@@ -204,6 +204,8 @@ class SFMap {
         vector<vector<MapNode*>> _neighbors;
         /* Police stations */
         vector<MapNode*> _police;
+        /* Metric for measuring distance */
+        function<double(const Coord&, const Coord&)> _dist;
         /* K-d tree */
         KDTree tree;
         /* Map range */
