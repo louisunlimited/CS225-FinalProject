@@ -217,6 +217,7 @@ vector<double> SFMap::importanceAsVec() {
     // then we get a list of importance of each node
     vector<double> importanceValues(_nodes.size(), 0.0);
     for (auto node : _nodes) {
+        // call getParents function
         auto prev = getParents(node.index);
         for (auto index : prev) {
             importanceValues[index] += 1.0;

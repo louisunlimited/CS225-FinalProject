@@ -175,7 +175,7 @@ class SFMap {
         /**
          * For testing
          *
-         * @return A vector of distance between start and all other nodes
+         * @return A vector of parents between start and all other nodes
          *  e.g. result[i] = the node before the ith node on the shortest path between start and
          *  the ith nodes.
          */

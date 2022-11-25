@@ -280,8 +280,6 @@ vector<int> SFMap::getParents(int start) const {
     // TODO
     vector<double> dist(_nodes.size(), 10000.0);
     vector<int> prev(_nodes.size(), -1);
-    // dist[start] = 0;
-    // prev[start] = start;
     std::priority_queue<std::tuple<double, int, int>, vector<std::tuple<double, int, int>>, \
         std::greater<std::tuple<double, int, int>>> myprq;
     myprq.push(std::tuple<double, int, int>(0.0, start, -1));
