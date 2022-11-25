@@ -151,7 +151,7 @@ TEST_CASE("Test SFMap drawMap colorPicker", "[SFMap][png]") {
     colorpickerImage.writeToFile("map-colorpicker.png");
 }
 
-// //check DFS
+// // check DFS
 // TEST_CASE("Test escapeRoute with small graph", "[escapeRouteAsVec]") {
 //     vector<Coord> nodes = FileReader::readRawNode("../tests/small.node.txt");
 //     vector<pair<int, int>> edges = FileReader::readEdge("../tests/small.edge.txt");
@@ -225,7 +225,7 @@ TEST_CASE("Test getParents with medium graph", "[getParents]") {
     // 3 --> 5
     REQUIRE(result[5] == 3);
     // 3 --> ... --> 46 --> 47
-    REQUIRE(result[47] == 46);
+    REQUIRE(result[46] == 45);
     // 3 --> 4 --> 7 --> 8
     REQUIRE(result[8] == 7);
 }

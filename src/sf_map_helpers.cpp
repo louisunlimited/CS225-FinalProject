@@ -281,7 +281,34 @@ bool SFMap::findRoute(vector<int>& currNodes, double remainDist, vector<bool>& v
 }
 
 vector<int> SFMap::getParents(int start) const {
-    // TODO
-    vector<int> parents;
-    return parents;
+    // No need to remember the distances because we are using a priority queue
+    // This guarantees that we are always visiting the end point of the shortest path possible
+    vector<int> prev(_nodes.size(), -1);
+    priority_queue<tuple<double, int, int>, vector<tuple<double, int, int>>,
+        greater<tuple<double, int, int>>> myprq;
+    myprq.push(tuple(0.0, start, -1));
+
+    while (!myprq.empty()) {
+        auto [curdist, curindex, previndex] = myprq.top();
+        myprq.pop();
+
+        // if curnode is visited before then the current distance must be larger
+        // therefore skip the remaining
+        if (prev[curindex] != -1) continue;
+
+        const MapNode& curnode = _nodes[curindex];
+        prev[curindex] = previndex;
+
+        for (const MapNode* neighbor : _neighbors[curindex]) {
+            // skip if visited
+            if (neighbor->index == start || prev[neighbor->index] != -1) continue;
+
+            // _dist is the metric used in this map
+            double edgeweight = _dist(curnode.coord, neighbor->coord);
+            double distance = curdist + edgeweight;
+            myprq.push(tuple(distance, neighbor->index, curindex));
+        }
+    }
+
+    return prev;
 }

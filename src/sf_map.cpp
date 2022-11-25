@@ -149,10 +149,95 @@ PNG SFMap::drawMap(function<rgbaColor(int)> nodeColor, function<rgbaColor(int, i
 }
 
 /***    Goal 1   ***/
-vector<double> SFMap::importanceAsVec() {
-    // TODO
-    vector<double> result;
-    return result;
+cs225::PNG SFMap::importance(const cs225::rgbaColor& color) const {
+    vector<double> importanceValues = importanceAsVec();
+
+    double zoom = 1.0;
+    Coord center;
+    center.lat_ = 0.0;
+    center.long_ = 0.0;
+    double mHeight = _maxLat - _minLat;
+    double mWidth = _maxLong - _minLong;
+    int pHeight = mHeight * SCALE;
+    int pWidth = mWidth * SCALE;
+    double zHeight = mHeight / zoom;
+    double zWidth = mWidth / zoom;
+    if (mHeight == 0 || mWidth == 0) {
+        throw invalid_argument("Map too narrow to be drawn");
+    }
+
+    double zMinLat = min(max(center.lat_ - 0.5 * zHeight, _minLat), _maxLat - zHeight);
+    double zMinLong = min(max(center.long_ - 0.5 * zWidth, _minLong), _maxLong - zWidth);
+    Coord lowerLeft;
+    lowerLeft.lat_ = zMinLat;
+    lowerLeft.long_ = zMinLong;
+
+    cs225::PNG image(pWidth, pHeight);
+    for (int i = 0; i < size(); i++) {
+        const MapNode& node = _nodes[i];
+        for (const MapNode* neighbor : _neighbors[i]) {
+            if (neighbor->index > i) {
+                Coord start = coord2Pixel(node.coord, lowerLeft, zoom);
+                Coord end = coord2Pixel(neighbor->coord, lowerLeft, zoom);
+                drawLine(image, start, end, LINE_WIDTH * sqrt(zoom), color);
+            }
+        }
+    }
+
+    double maxImportanceValue = -1.0;
+    for (auto value : importanceValues) {
+        if (value > maxImportanceValue) {
+            maxImportanceValue = value;
+        }
+    }
+
+    int index = 0;
+    for (const MapNode& node : _nodes) {
+        if (node.coord.lat_ < zMinLat || node.coord.lat_ > zMinLat + zHeight
+            || node.coord.long_ < zMinLong || node.coord.long_ > zMinLong + zWidth) {
+                continue;
+        }
+        Coord zoomed = coord2Pixel(node.coord, lowerLeft, zoom);
+        // set different colors to different nodes based on their importanceValues
+        double importanceValue = importanceValues[index];
+        hslaColor hsla = rgb2hsl(color);
+
+        // todo, change hsla's s value based on importancevalue
+        hsla.s = importanceValue / maxImportanceValue;
+
+        cs225::rgbaColor newcolor = hsl2rgb(hsla);
+        drawCircle(image, zoomed, RADIUS * sqrt(zoom), newcolor);
+        index ++;
+    }
+
+    return image;
+}
+
+vector<double> SFMap::importanceAsVec() const {
+    // for each node as a start node
+    // do Dijkstra's algorithm and add all nodes' visited times in the vector
+    // then we get a list of importance of each node
+    int n = size();
+    vector<double> importanceValues(n, 0);
+
+    for (int index = 0; index < n; index++) {
+        // call getParents function
+        vector<int> parents = getParents(index);
+        for (int i = 0; i < n; i++) {
+            if (i == index) continue;
+            int j = i;
+            while (j != -1) {
+                importanceValues[j] += 1;
+                j = parents[j];
+            }
+        }
+    }
+
+    // Divide by total number of shortest paths such that importance values are between 0 and 1
+    int total = n * (n - 1);
+    for (double& val : importanceValues) val /= total;
+
+    return importanceValues;
 }
 
 /***    Goal 2   ***/

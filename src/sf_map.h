@@ -7,6 +7,8 @@
 #include <vector>
 #include <unordered_map>
 #include <stdexcept>
+#include <queue>
+#include <limits.h>
 #include "cs225/PNG.h"
 #include "cs225/RGB_HSL.h"
 #include "animation.h"
@@ -96,14 +98,14 @@ class SFMap {
          * @param color RGB value of the output image
          * @return A colored PNG containing the map of the entire San Francisco
          */
-        PNG importance(const rgbaColor& color);
+        PNG importance(const rgbaColor& color) const;
 
         /**
          * Helper for 1.
          *
          * @return A list of importance of each node
          */
-        vector<double> importanceAsVec();
+        vector<double> importanceAsVec() const;
 
         /**
          * 2. Emergency Contact Access Point:
@@ -174,7 +176,7 @@ class SFMap {
         /**
          * For testing
          *
-         * @return A vector of distance between start and all other nodes
+         * @return A vector of parents between start and all other nodes
          *  e.g. result[i] = the node before the ith node on the shortest path between start and
          *  the ith nodes.
          */
@@ -187,6 +189,14 @@ class SFMap {
          *  e.g. result[i] = distance of shortest path between start and the ith nodes.
          */
         vector<double> getDistances(int start) const;
+
+        /**
+         * For testing
+         * [start = new police station]
+         * @return A pair of distances between all points and police stations and an 
+         *         integer representing the index of the point for the furtherest police station.
+         */
+        pair<vector<double>, int> getEccentricity(int start) const;
 
     private:
         /* Coordinates */
