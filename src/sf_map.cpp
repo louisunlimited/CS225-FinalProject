@@ -149,7 +149,7 @@ PNG SFMap::drawMap(function<rgbaColor(int)> nodeColor, function<rgbaColor(int, i
 }
 
 /***    Goal 1   ***/
-cs225::PNG SFMap::importance(const cs225::rgbaColor& color) {
+cs225::PNG SFMap::importance(const cs225::rgbaColor& color) const {
     vector<double> importanceValues = importanceAsVec();
 
     double zoom = 1.0;
@@ -213,18 +213,30 @@ cs225::PNG SFMap::importance(const cs225::rgbaColor& color) {
     return image;
 }
 
-vector<double> SFMap::importanceAsVec() {
+vector<double> SFMap::importanceAsVec() const {
     // for each node as a start node
     // do Dijkstra's algorithm and add all nodes' visited times in the vector
     // then we get a list of importance of each node
-    vector<double> importanceValues(_nodes.size(), 0.0);
-    for (auto node : _nodes) {
+    int n = size();
+    vector<double> importanceValues(n, 0);
+
+    for (int index = 0; index < n; index++) {
         // call getParents function
-        auto prev = getParents(node.index);
-        for (auto index : prev) {
-            importanceValues[index] += 1.0;
+        vector<int> parents = getParents(index);
+        for (int i = 0; i < n; i++) {
+            if (i == index) continue;
+            int j = i;
+            while (j != -1) {
+                importanceValues[j] += 1;
+                j = parents[j];
+            }
         }
     }
+
+    // Divide by total number of shortest paths such that importance values are between 0 and 1
+    int total = n * (n - 1);
+    for (double& val : importanceValues) val /= total;
+
     return importanceValues;
 }
 

@@ -98,14 +98,14 @@ class SFMap {
          * @param color RGB value of the output image
          * @return A colored PNG containing the map of the entire San Francisco
          */
-        PNG importance(const rgbaColor& color);
+        PNG importance(const rgbaColor& color) const;
 
         /**
          * Helper for 1.
          *
          * @return A list of importance of each node
          */
-        vector<double> importanceAsVec();
+        vector<double> importanceAsVec() const;
 
         /**
          * 2. Emergency Contact Access Point:
