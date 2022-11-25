@@ -26,6 +26,10 @@ void SFMap::setLineWidth(double lineWidth) {
     LINE_WIDTH = lineWidth;
 }
 
+void SFMap::setMetric(function<double(const Coord&, const Coord&)> metric) {
+    _dist = metric;
+}
+
 vector<bool> SFMap::getValidSubset() const {
     int n = _nodes.size();
     // The result
