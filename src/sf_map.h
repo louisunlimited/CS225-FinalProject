@@ -67,17 +67,27 @@ class SFMap {
 
         /**
          * Return a map of the city of San Francisco. 5000 pixels represents 1 degree
+         * The color pickers are closures that takes the node(s) index as input and output the
+         * color as a rgbaColor object
+         *
+         * NOTE: if the alpha value of the rgbaColor object is 0, then the node/edge will not be
+         * shown. Otherwise the alpha value does not have an effect.
          *
          * @param zoom The zoom factor between 1.0 and 20.0, inclusive
          * @param center The center point to zoom on
-         * @param drawLines
+         * @param nodeColor The color picker for coloring nodes
+         * @param edgeColor The color picker for coloring edges
          */
-        PNG drawMap(double zoom, const Coord& center, bool drawLines) const;
+        PNG drawMap(double zoom, const Coord& center, function<rgbaColor(int)> nodeColor,
+            function<rgbaColor(int, int)> edgeColor) const;
 
         /**
          * Return a map of San Francisco without zooming
          */
-        PNG drawMap(bool drawLines) const;
+        PNG drawMap(function<rgbaColor(int)> nodeColor, function<rgbaColor(int, int)> edgeColor) const;
+
+
+        // Four main functions
 
         /**
          * 1. Identify the importance of places in the city:
@@ -96,23 +106,6 @@ class SFMap {
          * @return A list of importance of each node
          */
         vector<double> importanceAsVec();
-
-        /**
-         * For testing
-         *
-         * @return A vector of distance between start and all other nodes
-         *  e.g. result[i] = the node before the ith node on the shortest path between start and
-         *  the ith nodes.
-         */
-        vector<double> getParents(int start) const;
-
-        /**
-         * For testing
-         *
-         * @return A vector of distance between start and all other nodes
-         *  e.g. result[i] = distance of shortest path between start and the ith nodes.
-         */
-        vector<double> getDistances(int start) const;
 
         /**
          * 2. Emergency Contact Access Point:
@@ -168,6 +161,42 @@ class SFMap {
          */
         int nextPoliceStationAsIndex(Coord start) const;
 
+
+        // Functions used exclusively for testing
+
+        /**
+         * Set the "constants" for drawing the map
+         */
+        void setScale(double scale);
+        void setMargin(double margin);
+        void setRadius(double radius);
+        void setLineWidth(double lineWidth);
+
+        /**
+         * For testing
+         *
+         * @return A vector of distance between start and all other nodes
+         *  e.g. result[i] = the node before the ith node on the shortest path between start and
+         *  the ith nodes.
+         */
+        vector<int> getParents(int start) const;
+
+        /**
+         * For testing
+         *
+         * @return A vector of distance between start and all other nodes
+         *  e.g. result[i] = distance of shortest path between start and the ith nodes.
+         */
+        vector<double> getDistances(int start) const;
+
+        /**
+         * For testing
+         * [start = new police station]
+         * @return A pair of distances between all points and police stations and an 
+         *         integer representing the index of the point for the furtherest police station.
+         */
+        pair<vector<double>, int> getEccentricity(int start) const;
+
     private:
         /* Coordinates */
         vector<MapNode> _nodes;
@@ -184,16 +213,18 @@ class SFMap {
         double _maxLong;
 
         // CONSTANTS FOR DRAW MAP
+        // NOTE: some const qualifiers are removed so that they can be adjusted for
+        //       better visualization of certain testcases
         /* Pixels per degree */
-        const double SCALE = 1500;
+        double SCALE = 1500;
         /* Maximum zoom factor */
         const double MAX_ZOOM = 15;
         /* Map margin (in degree) */
-        const double MARGIN = 0.01;
+        double MARGIN = 0.01;
         /* Radius of node */
-        const double RADIUS = 1.2;
+        double RADIUS = 1.2;
         /* Width of edge */
-        const double LINE_WIDTH = 1;
+        double LINE_WIDTH = 1;
 
         // HELPER FUNCTIONS
         /**
