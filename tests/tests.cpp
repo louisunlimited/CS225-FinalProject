@@ -34,6 +34,7 @@ void configSmallGraph(SFMap& m) {
     m.setMargin(1);
     m.setRadius(4);
     m.setLineWidth(2);
+    m.setMetric(normalizedDist);
 }
 
 SFMap sfmap = loadMap();
@@ -112,7 +113,7 @@ TEST_CASE("Test SFMap drawMap small", "[SFMap][png]") {
     vector<pair<int, int>> edges = {{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 7}, {7, 8}, {8, 9}};
     vector<Coord> police = makeCoords(); // coords from 0 to 9
     SFMap smallmap(nodes, edges);
-    smallmap.setScale(50);
+    configSmallGraph(smallmap);
 
     PNG smallImage = smallmap.drawMap([](int index) {
             return rgbaColor{ 0, 0, 128, 255 };
@@ -156,6 +157,7 @@ TEST_CASE("Test SFMap drawMap colorPicker", "[SFMap][png]") {
 //     vector<pair<int, int>> edges = FileReader::readEdge("../tests/small.edge.txt");
 //     // call constructor
 //     SFMap a(nodes, edges);
+//     configSmallGraph(a);
 //     vector<int> ans = a.escapeRouteAsVec(nodes[0] , 4);
 //     cout << ans.size() << endl;
 //     REQUIRE(ans.at(1) == 1);
@@ -170,6 +172,7 @@ TEST_CASE("Test SFMap drawMap colorPicker", "[SFMap][png]") {
 //     vector<pair<int, int>> edges = FileReader::readEdge("../tests/medium.edge.txt");
 //     // call constructor
 //     SFMap b(nodes, edges);
+//     configSmallGraph(b);
 //     REQUIRE(b.escapeRouteAsVec(nodes[1], 5).at(1) == 2);
 //     REQUIRE(b.escapeRouteAsVec(nodes[1], 10).at(2) == 4);
 //     REQUIRE(b.escapeRouteAsVec(nodes[1], 11).back() == 4);
@@ -182,6 +185,7 @@ TEST_CASE("Test SFMap drawMap colorPicker", "[SFMap][png]") {
 //     vector<pair<int, int>> edges = FileReader::readEdge("../tests/large.edge.txt");
 //     // call constructor
 //     SFMap c(nodes, edges);
+//     configSmallGraph(c);
 //     REQUIRE(c.escapeRouteAsVec(nodes[120], 20).at(1) == 107);
 //     REQUIRE(c.escapeRouteAsVec(nodes[120], 22).at(2) == 106);
 //     REQUIRE(c.escapeRouteAsVec(nodes[120], 23).back() == 106);
@@ -194,6 +198,7 @@ TEST_CASE("Test getParents with small graph", "[getParents]") {
     vector<pair<int, int>> edges = FileReader::readEdge("../tests/small.edge.txt");
     // call constructor
     SFMap a(nodes, edges);
+    configSmallGraph(a);
     vector<int> result = a.getParents(1);
     REQUIRE(result.size() == 10);
     // parent of the start node should be -1
@@ -212,6 +217,7 @@ TEST_CASE("Test getParents with medium graph", "[getParents]") {
     vector<pair<int, int>> edges = FileReader::readEdge("../tests/medium.edge.txt");
     // call constructor
     SFMap b(nodes, edges);
+    configSmallGraph(b);
     vector<int> result = b.getParents(3);
     REQUIRE(result.size() == 50);
     // parent of the start node should be -1
@@ -231,6 +237,7 @@ TEST_CASE("Test getParents with medium graph", "[getParents]") {
 //     vector<pair<int, int>> edges = FileReader::readEdge("../tests/large.edge.txt");
 //     // call constructor
 //     SFMap c(nodes, edges);
+//     configSmallGraph(c);
 //     vector<int> result = c.getParents(121);
 //     REQUIRE(result.size() == 200);
 //     // node121 - node108

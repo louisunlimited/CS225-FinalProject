@@ -171,6 +171,7 @@ class SFMap {
         void setMargin(double margin);
         void setRadius(double radius);
         void setLineWidth(double lineWidth);
+        void setMetric(function<double(const Coord&, const Coord&)> metric);
 
         /**
          * For testing
@@ -204,6 +205,8 @@ class SFMap {
         vector<vector<MapNode*>> _neighbors;
         /* Police stations */
         vector<MapNode*> _police;
+        /* Metric for measuring distance */
+        function<double(const Coord&, const Coord&)> _dist;
         /* K-d tree */
         KDTree tree;
         /* Map range */

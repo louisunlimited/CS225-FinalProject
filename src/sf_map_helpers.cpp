@@ -26,6 +26,10 @@ void SFMap::setLineWidth(double lineWidth) {
     LINE_WIDTH = lineWidth;
 }
 
+void SFMap::setMetric(function<double(const Coord&, const Coord&)> metric) {
+    _dist = metric;
+}
+
 vector<bool> SFMap::getValidSubset() const {
     int n = _nodes.size();
     // The result
@@ -267,7 +271,7 @@ bool SFMap::findRoute(vector<int>& currNodes, double remainDist, vector<bool>& v
 
         // recursion
         currNodes.push_back(newNode.index);
-        if (findRoute(currNodes, remainDist - dist(newNode.coord, lastNode.coord), visited)) {
+        if (findRoute(currNodes, remainDist - _dist(newNode.coord, lastNode.coord), visited)) {
             return true;
         }
         currNodes.pop_back();
