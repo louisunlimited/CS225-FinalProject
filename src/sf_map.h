@@ -14,6 +14,7 @@
 #include "animation.h"
 #include "coord.h"
 #include "kdtree.h"
+#include "mst.h"
 
 
 using namespace std;
@@ -209,6 +210,8 @@ class SFMap {
         function<double(const Coord&, const Coord&)> _dist;
         /* K-d tree */
         KDTree tree;
+        /* MST*/
+        MST mst;
         /* Map range */
         double _minLat;
         double _maxLat;
