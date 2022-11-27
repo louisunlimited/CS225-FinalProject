@@ -170,14 +170,14 @@ TEST_CASE("Test escapeRoute with small graph", "[escapeRouteAsVec]") {
     configSmallGraph(a);
     // nodes[1] -- nodes[2] = 1.345
     vector<int> ans1 = a.escapeRouteAsVec(nodes[1] , 1);
-    double sum1;
+    double sum1{};
     for (size_t i = 0; i + 1 < ans1.size(); i++) {
         sum1 += calDistance(nodes[ans1[i]], nodes[ans1[i+1]]);
     }
     REQUIRE(sum1 >= 1);
     // nodes[1] -- nodes[2] -- nodes[3] = 4.451
     vector<int> ans2 = a.escapeRouteAsVec(nodes[1] , 4);
-    double sum2;
+    double sum2{};
     for (size_t i = 0; i + 1 < ans2.size(); i++) {
         sum2 += calDistance(nodes[ans2[i]], nodes[ans2[i+1]]);
     }
@@ -193,13 +193,13 @@ TEST_CASE("Test escapeRoute with medium graph", "[escapeRouteAsVec]") {
     configSmallGraph(b);
     // nodes[2] -- nodes[3] = 2.8
     vector<int> ans1 = b.escapeRouteAsVec(nodes[2] , 2.5);
-    double sum1;
+    double sum1{};
     for (size_t i = 0; i + 1 < ans1.size(); i++) {
         sum1 += calDistance(nodes[ans1[i]], nodes[ans1[i+1]]);
     }
     REQUIRE(sum1 >= 2.5);
     // nodes[2] -- nodes[3] -- nodes[5] = 3.8
-    double sum2;
+    double sum2{};
     vector<int> ans2 = b.escapeRouteAsVec(nodes[2] , 3.6);
     for (size_t i = 0; i + 1 < ans2.size(); i++) {
         sum2 += calDistance(nodes[ans2[i]], nodes[ans2[i+1]]);
@@ -217,13 +217,13 @@ TEST_CASE("Test escapeRoute with large graph", "[escapeRouteAsVec]") {
     configSmallGraph(c);
     // nodes[34] -- nodes[33] = 0.223
     vector<int> ans1 = c.escapeRouteAsVec(nodes[34] , 0.1);
-    double sum1;
+    double sum1{};
     for (size_t i = 0; i + 1 < ans1.size(); i++) {
         sum1 += calDistance(nodes[ans1[i]], nodes[ans1[i+1]]);
     }
     REQUIRE(sum1 >= 0.1);
     // nodes[34] -- nodes[33] -- nodes[32] = 0.67
-    double sum2;
+    double sum2{};
     vector<int> ans2 = c.escapeRouteAsVec(nodes[34] , 0.5);
     for (size_t i = 0; i + 1 < ans2.size(); i++) {
         sum2 += calDistance(nodes[ans2[i]], nodes[ans2[i+1]]);
