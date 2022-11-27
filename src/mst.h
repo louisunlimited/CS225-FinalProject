@@ -11,6 +11,7 @@ class MST {
         struct MSTNode {
             int index;
             Coord coord;
+            MSTNode* parent;
             MSTNode(int index, Coord coord) {
                 this->index = index;
                 this->coord = coord;
@@ -41,8 +42,10 @@ class MST {
          * @brief Make MST using Prim's algorithm
          * 
          * @param start The starting node
+         * 
+         * @return vector<pair<int, int>> The edges of the MST
          */
-        void primMST(int start);
+        vector<pair<int, int>> primMST(int start);
 
 
     private:
