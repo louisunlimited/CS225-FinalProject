@@ -27,27 +27,29 @@ class MST {
          * @param coords The vector of points to build your MST off of.
          * @param dist The distance function to use.
          */
-        MST(const vector<pair<Coord, int>>& coords, function<double(const Coord&, const Coord&)> dist);
+        MST(const vector<pair<Coord, int>>& coords, const vector<pair<int, int>>& edges, function<double(const Coord&, const Coord&)> dist);
+
+        /**
+         * @brief Finds the minimum edge for a node
+         * 
+         * @param node The node to find the minimum edge for
+         * @return pair<MSTNode*, double> The minimum edge and its weight
+        */
+        MSTNode* findMinEdge(MSTNode* node);
 
         /**
          * @brief Make MST using Prim's algorithm
          * 
          * @param start The starting node
-         * @return vector<pair<int, int>> The MST represented as a vector of edges of the form (parent, child)
          */
-        vector<pair<int, int>> makeMST(int start);
-
-        /**
-         * @brief print the MST
-         */
-        void printMST();
+        void primMST(int start);
 
 
     private:
         /**
-         * @brief Adjaency list representation of the graph
+         * @brief Adjacency list representation of the graph
          */
-        vector<vector<MSTNode*>> adjList;
+        vector<vector<pair<double, MSTNode*>>> adjList;
 
         /**
          * @brief The distance function to use
@@ -57,5 +59,5 @@ class MST {
         /**
          * @brief The vector of points to build your MST off of.
          */
-        vector<MSTNode*> _coords;
+        vector<MSTNode> _coords;
 };
