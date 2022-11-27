@@ -312,3 +312,8 @@ vector<int> SFMap::getParents(int start) const {
 
     return prev;
 }
+
+pair<vector<double>, int> SFMap::getEccentricity(int start) const {
+    pair<vector<double>, int> result;
+    return result;
+}
