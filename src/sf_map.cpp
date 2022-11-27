@@ -50,7 +50,7 @@ SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges) {
 SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges,
     const vector<Coord>& police): SFMap(nodes, edges) {
 
-    for (Coord coord : police) {
+    for (const Coord& coord : police) {
         addPoliceStation(coord);
     }
 }
@@ -149,68 +149,16 @@ PNG SFMap::drawMap(function<rgbaColor(int)> nodeColor, function<rgbaColor(int, i
 }
 
 /***    Goal 1   ***/
-cs225::PNG SFMap::importance(const cs225::rgbaColor& color) const {
-    vector<double> importanceValues = importanceAsVec();
-
-    double zoom = 1.0;
-    Coord center;
-    center.lat_ = 0.0;
-    center.long_ = 0.0;
-    double mHeight = _maxLat - _minLat;
-    double mWidth = _maxLong - _minLong;
-    int pHeight = mHeight * SCALE;
-    int pWidth = mWidth * SCALE;
-    double zHeight = mHeight / zoom;
-    double zWidth = mWidth / zoom;
-    if (mHeight == 0 || mWidth == 0) {
-        throw invalid_argument("Map too narrow to be drawn");
-    }
-
-    double zMinLat = min(max(center.lat_ - 0.5 * zHeight, _minLat), _maxLat - zHeight);
-    double zMinLong = min(max(center.long_ - 0.5 * zWidth, _minLong), _maxLong - zWidth);
-    Coord lowerLeft;
-    lowerLeft.lat_ = zMinLat;
-    lowerLeft.long_ = zMinLong;
-
-    cs225::PNG image(pWidth, pHeight);
-    for (int i = 0; i < size(); i++) {
-        const MapNode& node = _nodes[i];
-        for (const MapNode* neighbor : _neighbors[i]) {
-            if (neighbor->index > i) {
-                Coord start = coord2Pixel(node.coord, lowerLeft, zoom);
-                Coord end = coord2Pixel(neighbor->coord, lowerLeft, zoom);
-                drawLine(image, start, end, LINE_WIDTH * sqrt(zoom), color);
-            }
-        }
-    }
-
-    double maxImportanceValue = -1.0;
-    for (auto value : importanceValues) {
-        if (value > maxImportanceValue) {
-            maxImportanceValue = value;
-        }
-    }
-
-    int index = 0;
-    for (const MapNode& node : _nodes) {
-        if (node.coord.lat_ < zMinLat || node.coord.lat_ > zMinLat + zHeight
-            || node.coord.long_ < zMinLong || node.coord.long_ > zMinLong + zWidth) {
-                continue;
-        }
-        Coord zoomed = coord2Pixel(node.coord, lowerLeft, zoom);
-        // set different colors to different nodes based on their importanceValues
-        double importanceValue = importanceValues[index];
-        hslaColor hsla = rgb2hsl(color);
-
-        // todo, change hsla's s value based on importancevalue
-        hsla.s = importanceValue / maxImportanceValue;
-
-        cs225::rgbaColor newcolor = hsl2rgb(hsla);
-        drawCircle(image, zoomed, RADIUS * sqrt(zoom), newcolor);
-        index ++;
-    }
-
-    return image;
+PNG SFMap::importance(const rgbaColor& color) const {
+    vector<double> imp = importanceAsVec();
+    hslaColor baseColor = rgb2hsl(color);
+    return drawMap([&imp, &baseColor](int index) {
+            hslaColor c = baseColor;
+            c.l = 0.95 - imp[index] * 0.9;
+            return hsl2rgb(c);
+        }, [](int index1, int index2) {
+            return rgbaColor{ 0, 0, 0, 225 };
+        });
 }
 
 vector<double> SFMap::importanceAsVec() const {
@@ -221,10 +169,11 @@ vector<double> SFMap::importanceAsVec() const {
     vector<double> importanceValues(n, 0);
 
     for (int index = 0; index < n; index++) {
+        if (index % 100 == 0) cout << index << " / " << n - 1 << endl;
         // call getParents function
-        vector<int> parents = getParents(index);
+        vector<int> parents = getParents(index, 20);
         for (int i = 0; i < n; i++) {
-            if (i == index) continue;
+            if (parents[i] == -1) continue;
             int j = i;
             while (j != -1) {
                 importanceValues[j] += 1;
@@ -233,9 +182,10 @@ vector<double> SFMap::importanceAsVec() const {
         }
     }
 
-    // Divide by total number of shortest paths such that importance values are between 0 and 1
-    int total = n * (n - 1);
-    for (double& val : importanceValues) val /= total;
+    // Normalize importance values
+    double maxValue = importanceValues[0];
+    for (double val : importanceValues) maxValue = max(maxValue, val);
+    for (double& val : importanceValues) val /= maxValue;
 
     return importanceValues;
 }

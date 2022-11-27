@@ -1,11 +1,14 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <iostream>
+#include <limits>
 #include "filereader.h"
 #include "sf_map.h"
 #include <cmath>
 
 using namespace std;
+
+double INF = numeric_limits<double>::infinity();
 
 vector<Coord> makeCoords() {
     vector<Coord> coords;
@@ -226,7 +229,7 @@ TEST_CASE("Test getParents with small graph", "[getParents][Dijkstra]") {
     // call constructor
     SFMap a(nodes, edges);
     configSmallGraph(a);
-    vector<int> result = a.getParents(1);
+    vector<int> result = a.getParents(1, INF);
     REQUIRE(result.size() == 10);
     // parent of the start node should be -1
     REQUIRE(result[1] == -1);
@@ -244,7 +247,7 @@ TEST_CASE("Test getParents with medium graph", "[getParents][Dijkstra]") {
     // call constructor
     SFMap b(nodes, edges);
     configSmallGraph(b);
-    vector<int> result = b.getParents(3);
+    vector<int> result = b.getParents(3, INF);
     REQUIRE(result.size() == 50);
     // parent of the start node should be -1
     REQUIRE(result[3] == -1);
@@ -254,4 +257,43 @@ TEST_CASE("Test getParents with medium graph", "[getParents][Dijkstra]") {
     REQUIRE(result[46] == 45);
     // 3 --> 4 --> 7 --> 8
     REQUIRE(result[8] == 7);
+}
+
+// check Dijkstra
+// large dataset is disabled because its image is currently unavailable
+// TEST_CASE("Test getParents with large graph", "[getParents]") {
+//     vector<Coord> nodes = FileReader::readRawNode("../tests/large.node.txt");
+//     vector<pair<int, int>> edges = FileReader::readEdge("../tests/large.edge.txt");
+//     // call constructor
+//     SFMap c(nodes, edges);
+//     configSmallGraph(c);
+//     vector<int> result = c.getParents(121);
+//     REQUIRE(result.size() == 200);
+//     // node121 - node108
+//     REQUIRE(result[107] == 20);
+//     // node121 - node70
+//     REQUIRE(result[70] == 70);
+// }
+
+TEST_CASE("Test importance as PNG with medium graph", "[importance]") {
+    vector<Coord> nodes = FileReader::readRawNode("../tests/medium.node.txt");
+    vector<pair<int, int>> edges = FileReader::readEdge("../tests/medium.edge.txt");
+    SFMap m(nodes, edges);
+    configSmallGraph(m);
+    PNG image = m.importance(rgbaColor{ 232, 74, 39, 255 });
+    image.writeToFile("importance-medium.png");
+}
+
+TEST_CASE("Test importance as PNG with large graph", "[importance]") {
+    vector<Coord> nodes = FileReader::readRawNode("../tests/large.node.txt");
+    vector<pair<int, int>> edges = FileReader::readEdge("../tests/large.edge.txt");
+    SFMap m(nodes, edges);
+    configSmallGraph(m);
+    PNG image = m.importance(rgbaColor{ 19, 41, 75, 255 });
+    image.writeToFile("importance-large.png");
+}
+
+TEST_CASE("Test importance as PNG", "[importance]") {
+    PNG image = sfmap.importance(rgbaColor{ 232, 74, 39, 255 });
+    image.writeToFile("importance.png");
 }

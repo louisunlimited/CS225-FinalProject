@@ -180,7 +180,7 @@ class SFMap {
          *  e.g. result[i] = the node before the ith node on the shortest path between start and
          *  the ith nodes.
          */
-        vector<int> getParents(int start) const;
+        vector<int> getParents(int start, double limit) const;
 
         /**
          * For testing
