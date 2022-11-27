@@ -34,33 +34,25 @@ MST::MST(const vector<pair<Coord, int>>& coords, const vector<pair<int, int>>& e
 //     return minEdge;
 // }
 
-void MST::primMST(int start) {
-    // Prim's algorithm, node is selected using findMinEdge
-    vector<int> parent(_coords.size(), -1);
-    vector<int> key(_coords.size(), numeric_limits<int>::max());
-    vector<bool> inMST(_coords.size(), false);
-
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-    pq.push(make_pair(0, start));
-    key[start] = 0;
-
+vector<pair<int, int>> MST::primMST(int start) {
+    vector<pair<int, int>> mst;
+    vector<bool> visited(adjList.size(), false);
+    priority_queue<pair<double, MSTNode*>, vector<pair<double, MSTNode*>>, greater<pair<double, MSTNode*>>> pq;
+    pq.push(make_pair(0, &_coords[start]));
     while (!pq.empty()) {
-        int u = pq.top().second;
+        MSTNode* node = pq.top().second;
         pq.pop();
-        inMST[u] = true;
-        for (auto& edge : adjList[u]) {
-            int v = edge.second->index;
-            double weight = edge.first;
-            if (!inMST[v] && key[v] > weight) {
-                key[v] = weight;
-                pq.push(make_pair(key[v], v));
-                parent[v] = u;
+        if (visited[node->index]) continue;
+        visited[node->index] = true;
+        if (node->parent != nullptr) {
+            mst.push_back(make_pair(node->parent->index, node->index));
+        }
+        for (auto& edge : adjList[node->index]) {
+            if (!visited[edge.second->index]) {
+                edge.second->parent = node;
+                pq.push(edge);
             }
         }
     }
-
-    // print MST
-    for (size_t i = 1; i < _coords.size(); i++) {
-        cout << parent[i] << " - " << i << endl;
-    }
+    return mst;
 }
