@@ -57,3 +57,69 @@ Xiping Sun: I set up six data bases for testing, and finished testing escapeRout
 Hezi Jiang: I finished the goal 4, find the next best position for a new police station. I also finish the getParents helper function.
 
 For next week, we hope to do a overview of what we have done and try to finish any leftovers due. Then we will, hopefully, start preparing for the final presentaion.
+
+## Mid project checkin
+
+• What have you accomplished so far?
+
+Almost everything.
+
+• What tasks do you still need to accomplish?
+
+1. Identify the importance of places in the city
+
+    Improve run time and draw png
+
+2. Emergency Contact Access Point
+
+    Testcase for MST, SFMap data parsing. PNG for this.
+
+3. Police Training Simulator
+
+    GIF
+
+4. Finding the next best position for a new police station
+
+    Correct? Testcase, KDTree?
+
+• Do you have a clear understanding of how to do the remaining tasks?
+
+1. Identify the importance of places in the city
+
+    Try to limit the search distance for Dijkstra.
+
+2. Emergency Contact Access Point
+
+    Build testcases based on nodes,
+
+    SFMap data parsing: deg != 2: adj\[u\].size() != 2
+
+    PNG for this.
+
+3. Police Training Simulator
+
+    one frame per node in vec.
+
+4. Finding the next best position for a new police station
+
+    Find bug in KDTree, testcase...
+
+• Are there any major problems you have encountered while working on the project?
+
+N/A
+
+• Do you have any questions?
+
+Can we still change function inputs.
+
+• Functional code demo
+
+fileReader
+
+Betweeness centrality graph
+
+•  Run of a test suite and a brief explanation of those tests.
+
+Filereader testcase
+
+dijkstra testcase
