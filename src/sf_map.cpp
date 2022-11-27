@@ -45,6 +45,7 @@ SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges) {
         coords.push_back(pair(node.coord, node.index));
     }
     tree = KDTree(coords, normalizedDist);
+    mst = MST(coords, edges, dist);
 }
 
 SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges,
