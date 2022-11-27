@@ -245,3 +245,37 @@ TEST_CASE("Test getParents with medium graph", "[getParents]") {
 //     // node121 - node70
 //     REQUIRE(result[70] == 70);
 // }
+
+// check esscentricity
+TEST_CASE("Test esscentricity with small graph", "[getEccentricity]") {
+    vector<Coord> nodes = FileReader::readRawNode("../tests/small.node.txt");
+    vector<pair<int, int>> edges = FileReader::readEdge("../tests/small.edge.txt");
+    // call constructor
+    SFMap a(nodes, edges);
+    configSmallGraph(a);
+    // origin 3 police stations, now 4
+    // police1 (3,5) police2 (6, 5.5) police3 (8, 2)
+    pair<vector<double>, int> ans1 = a.getEccentricity(4);
+    vector<double> vect1 = ans1.first;
+    // police1 -- 1 = 2.236
+    REQUIRE(vect1[0] == 2.236);
+    // police1 -- 1 = 4.681
+    REQUIRE(vect1[4] == 4.681);
+}
+
+// check esscentricity
+TEST_CASE("Test esscentricity with medium graph", "[getEccentricity]") {
+    vector<Coord> nodes = FileReader::readRawNode("../tests/medium.node.txt");
+    vector<pair<int, int>> edges = FileReader::readEdge("../tests/medium.edge.txt");
+    // call constructor
+    SFMap b(nodes, edges);
+    configSmallGraph(b);
+    // origin 5 police stations, now 6
+    // police1 (3,5) police2 (6, 5.5) police3 (8, 2) police4 (9,6) police5 (10, 8)
+    pair<vector<double>, int> ans1 = b.getEccentricity(6);
+    vector<double> vect1 = ans1.first;
+    // police1 -- 2 = 5.2
+    REQUIRE(vect1[1] == 5.2);
+    // police1 -- 11 = 12.683
+    REQUIRE(vect1[10] == 12.683);
+}
