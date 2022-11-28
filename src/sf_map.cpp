@@ -193,6 +193,85 @@ vector<double> SFMap::importanceAsVec() const {
 /***    Goal 2   ***/
 
 /***    Goal 3   ***/
+Animation SFMap::escapeRoute(const Coord& start, double minDist, double zoom) {
+    Animation animation;
+    vector<int> route = escapeRouteAsVec(start, minDist);
+
+    // Find total distance
+    double total = 0;
+    vector<double> distances = { 0 };
+    for (int i = 0; i < (int)route.size() - 1; i++) {
+        total += _dist(_nodes[route[i]].coord, _nodes[route[i + 1]].coord);
+        distances.push_back(total);
+    }
+    double step = total / (FRAMES - 1);
+
+    // Change size of image
+    const double MAX_DIM = 1000;
+    double originalScale = SCALE;
+    double originalRadius = RADIUS;
+    double originalWidth = LINE_WIDTH;
+    double latDiff = _maxLat - _minLat;
+    double longDiff = _maxLong - _minLong;
+    if (SCALE * latDiff > MAX_DIM || SCALE * longDiff > MAX_DIM) {
+        SCALE = MAX_DIM / max(latDiff, longDiff);
+    }
+    RADIUS /= sqrt(originalScale / SCALE);
+    LINE_WIDTH /= sqrt(originalScale / SCALE);
+
+    // Draw frames
+    int j = 0;
+    Coord center = _nodes[route[0]].coord;
+    for (int i = 0; i < FRAMES; i++) {
+        cout << i << " / " << FRAMES << endl;
+
+        // Calculate criminal's current location
+        double curDist = (i == FRAMES - 1) ? total : step * i;
+        while (distances[j + 1] < curDist) j++;
+        double percentage = (curDist - distances[j]) / (distances[j + 1] - distances[j]);
+        const Coord& left = _nodes[route[j]].coord;
+        const Coord& right = _nodes[route[j + 1]].coord;
+        Coord target(left.lat_ * (1 - percentage) + right.lat_ * percentage,
+            left.long_ * (1 - percentage) + right.long_ * percentage);
+        center.lat_ = center.lat_ * (1 - ALPHA) + target.lat_ * ALPHA;
+        center.long_ = center.long_ * (1 - ALPHA) + target.long_ * ALPHA;
+
+        // Draw a single frame
+        PNG image = drawMap(zoom, center, [&route](int index) {
+                if (find(route.begin(), route.end(), index) != route.end()) {
+                    return rgbaColor{ 0, 80, 255, 255 };
+                } else {
+                    return rgbaColor{ 0, 0, 0, 255 };
+                }
+            }, [&route](int index1, int index2) {
+                for (int i = 0; i < (int)route.size() - 1; i++) {
+                    if ((index1 == route[i] && index2 == route[i + 1]) ||
+                        (index2 == route[i] && index1 == route[i + 1])) {
+                        return rgbaColor{ 0, 80, 255, 255 };
+                    }
+                }
+                return rgbaColor{ 0, 0, 0, 255 };
+            });
+
+        // Draw criminal
+        double zHeight = (_maxLat - _minLat + MARGIN * 2) / zoom;
+        double zWidth = (_maxLong - _minLong + MARGIN * 2) / zoom;
+        double zMinLat = min(max(center.lat_ - 0.5 * zHeight, _minLat - MARGIN), _maxLat + MARGIN - zHeight);
+        double zMinLong = min(max(center.long_ - 0.5 * zWidth, _minLong - MARGIN), _maxLong + MARGIN - zWidth);
+        Coord lowerLeft = Coord(zMinLat, zMinLong);
+        Coord zoomedTarget = coord2Pixel(target, lowerLeft, zoom);
+        drawCircle(image, zoomedTarget, RADIUS * sqrt(zoom) * 2, rgbaColor{ 255, 0, 0, 255 });
+
+        animation.addFrame(image);
+    }
+    cout << "100 / 100" << endl;
+
+    SCALE = originalScale;
+    RADIUS = originalRadius;
+    LINE_WIDTH = originalWidth;
+    return animation;
+}
+
 vector<int> SFMap::escapeRouteAsVec(const Coord& start, double minDist) const {
     // find start node
     const MapNode* startNode = &_nodes[tree.search(start)];

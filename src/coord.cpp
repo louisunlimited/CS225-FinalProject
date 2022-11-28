@@ -46,6 +46,11 @@ double Coord::at(int d) const {
     }
 }
 
+ostream& operator<<(ostream& out, const Coord& coord) {
+    out << "(" << coord.lat_ << ", " << coord.long_ << ")";
+    return out;
+}
+
 double dist(Coord x, Coord y) {
     double phi1 = x.lat_ / 180.0 * M_PI;
     double phi2 = y.lat_ / 180.0 * M_PI;

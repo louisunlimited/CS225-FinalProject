@@ -297,3 +297,8 @@ TEST_CASE("Test importance as PNG", "[importance]") {
     PNG image = sfmap.importance(rgbaColor{ 232, 74, 39, 255 });
     image.writeToFile("importance.png");
 }
+
+TEST_CASE("Test escapeRoute as GIF", "[escapeRoute]") {
+    Animation animation = sfmap.escapeRoute(Coord(37.5108, -122.1117), 10, 18);
+    animation.write("escapeRoute.gif");
+}

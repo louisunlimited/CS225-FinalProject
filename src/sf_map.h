@@ -131,7 +131,7 @@ class SFMap {
          * @param minDist minimum distance the criminal escapes (in km)
          * @return An animation of the escaping criminal
          */
-        Animation escapeRoute(const Coord& start, double minDist) const;
+        Animation escapeRoute(const Coord& start, double minDist, double zoom);
 
         /**
          * Helper for 3.
@@ -221,13 +221,17 @@ class SFMap {
         /* Pixels per degree */
         double SCALE = 1500;
         /* Maximum zoom factor */
-        const double MAX_ZOOM = 15;
+        const double MAX_ZOOM = 30;
         /* Map margin (in degree) */
         double MARGIN = 0.01;
         /* Radius of node */
         double RADIUS = 1.2;
         /* Width of edge */
         double LINE_WIDTH = 1;
+        /* Number of frames in escapeRoute */
+        const int FRAMES = 100;
+        /* Camera movement smoothness */
+        const double ALPHA = 0.15;
 
         // HELPER FUNCTIONS
         /**
