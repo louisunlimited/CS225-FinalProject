@@ -49,7 +49,7 @@ KDTree::KDTreeNode* KDTree::findNearest(KDTree::KDTreeNode* subroot, const Coord
     // distance in dimension d
     Coord projCoord = subroot->coord;
     projCoord[nd] = query.at(nd);
-    int proj = _dist(query, projCoord);
+    double proj = _dist(query, projCoord);
 
     if (smallerDimVal(query, subroot->coord, d)) {
         // Explore left subtree
@@ -117,7 +117,8 @@ KDTree::KDTreeNode* KDTree::buildTree(vector<pair<Coord, int>>& coords, int d) {
 }
 
 void KDTree::clear() {
-    std::stack<KDTreeNode*> s;
+    if (_root == nullptr) return;
+    stack<KDTreeNode*> s;
     s.push(_root);
     while (!s.empty()) {
         KDTreeNode* next = s.top();
@@ -130,8 +131,8 @@ void KDTree::clear() {
 }
 
 bool KDTree::shouldReplace(const Coord& target, const Coord& curBest, const Coord& potential) const {
-    int curDist = _dist(target, curBest);
-    int potDist = _dist(target, potential);
+    double curDist = _dist(target, curBest);
+    double potDist = _dist(target, potential);
     return potDist < curDist;
 }
 
