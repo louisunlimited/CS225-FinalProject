@@ -264,6 +264,28 @@ vector<int> SFMap::escapeRouteAsVec(const Coord& start, double minDist) const {
 
 /***    Goal 4   ***/
 
+int SFMap::nextPoliceStationAsIndex() const {
+    // traverse all nodes to find the best potential police station
+    // for each nodes, get Dijkstra distances to all other nodes and find eccentricity from 
+    // these distances. compare eccentricity and find the smallest eccentricity and its corresponding 
+    // node as the best potential police station
+    double min_eccentricity = std::numeric_limits<double>::max();
+    int potential_police_station = -1;
+    for (auto node : _nodes) {
+        if (node.isPoliceStation) {
+            continue;
+        }
+        auto tmp = getEccentricity(node.index);
+        if (tmp.first < min_eccentricity) {
+            min_eccentricity = tmp.first;
+            potential_police_station = node.index;
+        }
+
+    }
+    return potential_police_station;
+}
+
+
 /***    Other helpers   ***/
 int SFMap::size() const {
     return _nodes.size();

@@ -159,7 +159,7 @@ class SFMap {
          *
          * @return A integer representing the index of the best node for the new police station
          */
-        int nextPoliceStationAsIndex(Coord start) const;
+        int nextPoliceStationAsIndex() const;
 
 
         // Functions used exclusively for testing
@@ -196,7 +196,7 @@ class SFMap {
          * @return A pair of distances between all points and police stations and an 
          *         integer representing the index of the point for the furtherest police station.
          */
-        pair<vector<double>, int> getEccentricity(int start) const;
+        pair<double, int> getEccentricity(int start) const;
 
     private:
         /* Coordinates */
