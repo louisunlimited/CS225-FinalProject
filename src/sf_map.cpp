@@ -149,13 +149,11 @@ PNG SFMap::drawMap(function<rgbaColor(int)> nodeColor, function<rgbaColor(int, i
 }
 
 /***    Goal 1   ***/
-PNG SFMap::importance(const rgbaColor& color) const {
+PNG SFMap::importance() const {
     vector<double> imp = importanceAsVec();
-    hslaColor baseColor = rgb2hsl(color);
-    return drawMap([&imp, &baseColor](int index) {
-            hslaColor c = baseColor;
-            c.l = 0.95 - imp[index] * 0.9;
-            return hsl2rgb(c);
+    return drawMap([&imp](int index) {
+            // red = 360, blue = 240
+            return hsl2rgb(hslaColor{ 240 + 120 * (imp[index]), 0.8, 0.5, 1 });
         }, [](int index1, int index2) {
             return rgbaColor{ 0, 0, 0, 225 };
         });
@@ -169,9 +167,9 @@ vector<double> SFMap::importanceAsVec() const {
     vector<double> importanceValues(n, 0);
 
     for (int index = 0; index < n; index++) {
-        if (index % 100 == 0) cout << index << " / " << n - 1 << endl;
+        if (index % 100 == 0) cout << index << " / " << n << endl;
         // call getParents function
-        vector<int> parents = getParents(index, 20);
+        vector<int> parents = getParents(index, 30);
         for (int i = 0; i < n; i++) {
             if (parents[i] == -1) continue;
             int j = i;
@@ -181,6 +179,7 @@ vector<double> SFMap::importanceAsVec() const {
             }
         }
     }
+    cout << n << " / " << n << endl;
 
     // Normalize importance values
     double maxValue = importanceValues[0];
@@ -264,7 +263,7 @@ Animation SFMap::escapeRoute(const Coord& start, double minDist, double zoom) {
 
         animation.addFrame(image);
     }
-    cout << "100 / 100" << endl;
+    cout << FRAMES << " / " << FRAMES << endl;
 
     SCALE = originalScale;
     RADIUS = originalRadius;

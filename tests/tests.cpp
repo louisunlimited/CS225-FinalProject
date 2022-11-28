@@ -280,7 +280,7 @@ TEST_CASE("Test importance as PNG with medium graph", "[importance]") {
     vector<pair<int, int>> edges = FileReader::readEdge("../tests/medium.edge.txt");
     SFMap m(nodes, edges);
     configSmallGraph(m);
-    PNG image = m.importance(rgbaColor{ 232, 74, 39, 255 });
+    PNG image = m.importance();
     image.writeToFile("importance-medium.png");
 }
 
@@ -289,12 +289,12 @@ TEST_CASE("Test importance as PNG with large graph", "[importance]") {
     vector<pair<int, int>> edges = FileReader::readEdge("../tests/large.edge.txt");
     SFMap m(nodes, edges);
     configSmallGraph(m);
-    PNG image = m.importance(rgbaColor{ 19, 41, 75, 255 });
+    PNG image = m.importance();
     image.writeToFile("importance-large.png");
 }
 
 TEST_CASE("Test importance as PNG", "[importance]") {
-    PNG image = sfmap.importance(rgbaColor{ 232, 74, 39, 255 });
+    PNG image = sfmap.importance();
     image.writeToFile("importance.png");
 }
 

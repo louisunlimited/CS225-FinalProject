@@ -98,7 +98,7 @@ class SFMap {
          * @param color RGB value of the output image
          * @return A colored PNG containing the map of the entire San Francisco
          */
-        PNG importance(const rgbaColor& color) const;
+        PNG importance() const;
 
         /**
          * Helper for 1.
@@ -148,7 +148,6 @@ class SFMap {
          * the graph using Dijkstra's algorithm. We aim to find the best solution that gives
          * the minimum of such distance.
          *
-         * @param start starting coordinate
          * @param zoom zoom factor of the PNG
          * @return A PNG with highlighted location for the next possible police station
          */
@@ -176,11 +175,14 @@ class SFMap {
         /**
          * For testing
          *
+         * @param start The starting coordinate
+         * @param threshold The maximum allowed distance. Any nodes beyond this distance will not
+         *  be considered.
          * @return A vector of parents between start and all other nodes
          *  e.g. result[i] = the node before the ith node on the shortest path between start and
          *  the ith nodes.
          */
-        vector<int> getParents(int start, double limit) const;
+        vector<int> getParents(int start, double threshold) const;
 
         /**
          * For testing
