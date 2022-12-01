@@ -313,6 +313,7 @@ vector<int> SFMap::getParents(int start) const {
     return prev;
 }
 
+// goal 4 helper
 vector<double> SFMap::getDistances(int start) const {
     vector<int> prev(_nodes.size(), -1);
     vector<double> distances(_nodes.size(), std::numeric_limits<double>::max());
@@ -347,6 +348,7 @@ vector<double> SFMap::getDistances(int start) const {
     return distances;
 }
 
+// goal 4 helper
 pair<double, int> SFMap::getEccentricity(int start) const {
     vector<double> distances = getDistances(start);
     double max_dist = -1.0;

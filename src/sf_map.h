@@ -195,7 +195,7 @@ class SFMap {
          * [start = new police station]
          * @return A pair of distances between all points and police stations and an 
          *         integer representing the index of the point for the furtherest police station.
-         */
+         */ // wrong
         pair<double, int> getEccentricity(int start) const;
 
     private:

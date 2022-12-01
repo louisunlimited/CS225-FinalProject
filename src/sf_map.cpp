@@ -264,6 +264,9 @@ vector<int> SFMap::escapeRouteAsVec(const Coord& start, double minDist) const {
 
 /***    Goal 4   ***/
 
+// PNG SFMap::nextPoliceStation(double zoom) const {
+//     return;
+// }
 int SFMap::nextPoliceStationAsIndex() const {
     // traverse all nodes to find the best potential police station
     // for each nodes, get Dijkstra distances to all other nodes and find eccentricity from 
