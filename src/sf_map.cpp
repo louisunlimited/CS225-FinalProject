@@ -267,27 +267,66 @@ vector<int> SFMap::escapeRouteAsVec(const Coord& start, double minDist) const {
 // PNG SFMap::nextPoliceStation(double zoom) const {
 //     return;
 // }
+
 int SFMap::nextPoliceStationAsIndex() const {
-    // traverse all nodes to find the best potential police station
-    // for each nodes, get Dijkstra distances to all other nodes and find eccentricity from 
-    // these distances. compare eccentricity and find the smallest eccentricity and its corresponding 
-    // node as the best potential police station
-    double min_eccentricity = std::numeric_limits<double>::max();
-    int potential_police_station = -1;
-    for (auto node : _nodes) {
-        if (node.isPoliceStation) {
-            continue;
-        }
-        auto tmp = getEccentricity(node.index);
-        if (tmp.first < min_eccentricity) {
-            min_eccentricity = tmp.first;
-            potential_police_station = node.index;
-        }
+    // Algorithm as described in the PDF file
+    double eSup = numeric_limits<double>::max();
+    vector<double> eInf = vector(size(), 0.0);
 
+    // Construct list of potential locations
+    vector<int> potential;
+    int curBest = -1;  // Current best choice of police station
+    for (int i = 0; i < size(); i++) {
+        if (!_nodes[i].isPoliceStation) potential.push_back(i);
     }
-    return potential_police_station;
-}
 
+    while (!potential.empty()) {
+        cout << potential.size() << " potential locations... ";
+
+        // Find next location to check with minimum eInf
+        int nextId = 0;
+        double lowestInf = eInf[potential[0]];
+        for (int i = 0; i < (int)potential.size(); i++) {
+            if (eInf[potential[i]] < lowestInf) {
+                nextId = i;
+                lowestInf = eInf[potential[i]];
+            }
+        }
+        int next = potential[nextId];  // Next location to check
+        // Remove next from the list of potential locations
+        swap(potential[nextId], potential.back());
+        potential.pop_back();
+
+        cout << "Checking node " << next << ": ";
+
+        // Check if next is better than curBest
+        auto [ev, v] = getEccentricity(next);
+        if (eSup > ev) {
+            eSup = ev;
+            curBest = next;
+        }
+        cout << ev << " (best: " << eSup << ")";
+
+        // Update lower bound of eccentricity
+        vector<double> d = getDistances(vector{ v });
+        for (int i = 0; i < size(); i++) {
+            eInf[i] = max(eInf[i], d[i]);
+        }
+
+        // Remove candidates with inf >= sup (which disqualifies them from being a better location)
+        vector<int> potential_;
+        for (int i : potential) {
+            if (eInf[i] < eSup) {
+                potential_.push_back(i);
+            }
+        }
+        potential = potential_;
+
+        cout << endl;
+    }
+
+    return curBest;
+}
 
 /***    Other helpers   ***/
 int SFMap::size() const {

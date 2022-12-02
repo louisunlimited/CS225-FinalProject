@@ -316,15 +316,14 @@ vector<int> SFMap::getParents(int start) const {
 // goal 4 helper
 vector<double> SFMap::getDistances(vector<int> start) const {
     vector<double> distances(_nodes.size(), numeric_limits<double>::max());
-    priority_queue<tuple<double, int, int>, vector<tuple<double, int, int>>,
-        greater<tuple<double, int, int>>> myprq;
+    priority_queue<pair<double, int>, vector<pair<double, int>>,
+        greater<pair<double, int>>> myprq;
     for (int index : start) {
-        myprq.push(tuple(0.0, index, -1));
-        distances[index] = 0.0;
+        myprq.push(pair(0.0, index));
     }
  
     while (!myprq.empty()) {
-        auto [curdist, curindex, previndex] = myprq.top();
+        auto [curdist, curindex] = myprq.top();
         myprq.pop();
 
         // if the current distance is larger, skip the remaining
@@ -341,7 +340,7 @@ vector<double> SFMap::getDistances(vector<int> start) const {
             // skip if distance is larger
             if (distances[neighbor->index] <= edgeweight) continue;
 
-            myprq.push(tuple(distance, neighbor->index, curindex));
+            myprq.push(pair(distance, neighbor->index));
         }
     }
 

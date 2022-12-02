@@ -255,3 +255,8 @@ TEST_CASE("Test getParents with medium graph", "[getParents][Dijkstra]") {
     // 3 --> 4 --> 7 --> 8
     REQUIRE(result[8] == 7);
 }
+
+TEST_CASE("Test SFMap nextPoliceStationAsIndex", "[SFMap][nextPoliceStation]") {
+    int node = sfmap.nextPoliceStationAsIndex();
+    cout << "Result: node " << node << endl;
+}
