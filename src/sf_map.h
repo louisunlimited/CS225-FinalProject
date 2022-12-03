@@ -160,6 +160,7 @@ class SFMap {
          * @return A integer representing the index of the best node for the new police station
          */
         int nextPoliceStationAsIndex() const;
+        vector<int> nextPoliceStationAsIndexSlow() const;
 
 
         // Functions used exclusively for testing

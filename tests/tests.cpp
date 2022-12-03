@@ -260,3 +260,8 @@ TEST_CASE("Test SFMap nextPoliceStationAsIndex", "[SFMap][nextPoliceStation]") {
     int node = sfmap.nextPoliceStationAsIndex();
     cout << "Result: node " << node << endl;
 }
+
+TEST_CASE("Test SFMap nextPoliceStationAsIndexSlow", "[SFMap][nextPoliceStationSlow]") {
+    vector<int> nodes = sfmap.nextPoliceStationAsIndexSlow();
+    // Save it to file
+}

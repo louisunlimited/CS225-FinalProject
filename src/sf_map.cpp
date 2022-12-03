@@ -328,6 +328,25 @@ int SFMap::nextPoliceStationAsIndex() const {
     return curBest;
 }
 
+vector<int> SFMap::nextPoliceStationAsIndexSlow() const {
+    double min_eccentricity = numeric_limits<double>::max();
+    vector<int> potential;
+    for (const MapNode& node : _nodes) {
+        if (node.index % 10 == 0) cout << node.index << " / " << size() << endl;
+        if (node.isPoliceStation) continue;
+        auto tmp = getEccentricity(node.index);
+        if (tmp.first < min_eccentricity) {
+            min_eccentricity = tmp.first;
+            potential = vector{ node.index };
+        } else if (tmp.first == min_eccentricity) {
+            potential.push_back(node.index);
+        }
+    }
+
+    cout << size() << " / " << size() << endl;
+    return potential;
+}
+
 /***    Other helpers   ***/
 int SFMap::size() const {
     return _nodes.size();
