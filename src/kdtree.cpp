@@ -5,7 +5,11 @@
 
 using namespace std;
 
-KDTree::KDTree() {}
+KDTree::KDTree() {
+    _size = 0;
+    _dist = normalizedDist;
+    _root = nullptr;
+}
 
 KDTree::KDTree(const vector<pair<Coord, int>>& coords, function<double(const Coord&, const Coord&)> dist) {
     _size = coords.size();
