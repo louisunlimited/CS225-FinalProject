@@ -1,11 +1,14 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <iostream>
+#include <limits>
 #include "filereader.h"
 #include "sf_map.h"
 #include <cmath>
 
 using namespace std;
+
+double INF = numeric_limits<double>::infinity();
 
 vector<Coord> makeCoords() {
     vector<Coord> coords;
@@ -237,33 +240,99 @@ TEST_CASE("Test SFMap drawMap colorPicker", "[SFMap][png]") {
 //     REQUIRE(result[8] == 4);
 // }
 
-// TEST_CASE("Test getParents with medium graph", "[getParents][Dijkstra]") {
-//     vector<Coord> nodes = FileReader::readRawNode("../tests/medium.node.txt");
-//     vector<pair<int, int>> edges = FileReader::readEdge("../tests/medium.edge.txt");
-//     // call constructor
-//     SFMap b(nodes, edges);
-//     configSmallGraph(b);
-//     vector<int> result = b.getParents(3);
-//     REQUIRE(result.size() == 50);
-//     // parent of the start node should be -1
-//     REQUIRE(result[3] == -1);
-//     // 3 --> 5
-//     REQUIRE(result[5] == 3);
-//     // 3 --> ... --> 46 --> 47
-//     REQUIRE(result[46] == 45);
-//     // 3 --> 4 --> 7 --> 8
-//     REQUIRE(result[8] == 7);
+TEST_CASE("Test getParents with small graph", "[getParents][Dijkstra]") {
+    vector<Coord> nodes = FileReader::readRawNode("../tests/small.node.txt");
+    vector<pair<int, int>> edges = FileReader::readEdge("../tests/small.edge.txt");
+    // call constructor
+    SFMap a(nodes, edges);
+    configSmallGraph(a);
+    vector<int> result = a.getParents(1, INF);
+    REQUIRE(result.size() == 10);
+    // parent of the start node should be -1
+    REQUIRE(result[1] == -1);
+    // 1 --> 0
+    REQUIRE(result[0] == 1);
+    // 1 --> 4 --> 3 --> 6 --> 7
+    REQUIRE(result[7] == 6);
+    // 1 --> 4 --> 8
+    REQUIRE(result[8] == 4);
+}
+
+TEST_CASE("Test getParents with medium graph", "[getParents][Dijkstra]") {
+    vector<Coord> nodes = FileReader::readRawNode("../tests/medium.node.txt");
+    vector<pair<int, int>> edges = FileReader::readEdge("../tests/medium.edge.txt");
+    // call constructor
+    SFMap b(nodes, edges);
+    configSmallGraph(b);
+    vector<int> result = b.getParents(3, INF);
+    REQUIRE(result.size() == 50);
+    // parent of the start node should be -1
+    REQUIRE(result[3] == -1);
+    // 3 --> 5
+    REQUIRE(result[5] == 3);
+    // 3 --> ... --> 46 --> 47
+    REQUIRE(result[46] == 45);
+    // 3 --> 4 --> 7 --> 8
+    REQUIRE(result[8] == 7);
+}
+
+TEST_CASE("Test SFMap nextPoliceStationAsIndex", "[SFMap][nextPoliceStation]") {
+    int node = sfmap.nextPoliceStationAsIndex();
+    cout << "Result: node " << node << endl;
+}
+
+// TEST_CASE("Test SFMap nextPoliceStationAsIndexSlow", "[SFMap][nextPoliceStationSlow]") {
+//     int index = 0;
+
+//     auto [targets, ecc] = sfmap.nextPoliceStationAsIndexSlow(index, 6);
+//     // Save it to file
+//     cout << "Size: " << targets.size() << endl;
+//     ofstream out("potential-" + to_string(index) + ".txt");
+//     out << "eccentricity: " << ecc << endl;
+//     for (int target : targets) out << target << endl;
+//     out.close();
 // }
 
-TEST_CASE("Test MST with small graph", "[MST]") {
-    // vector<Coord> nodes = FileReader::readRawNode("../tests/small.node.txt");
-    // vector<pair<int, int>> edges = FileReader::readEdge("../tests/small.edge.txt");
-    // SFMap a(nodes, edges);
-    vector<pair<int, int>> result = sfmap.getMST();
-    // print result
-    // for (auto& p : result) {
-    //     cout << p.first << " " << p.second << endl;
-    // }
-    PNG png = sfmap.accessPoint();
-    png.writeToFile("smallMST.png");
+// check Dijkstra
+// large dataset is disabled because its image is currently unavailable
+// TEST_CASE("Test getParents with large graph", "[getParents]") {
+//     vector<Coord> nodes = FileReader::readRawNode("../tests/large.node.txt");
+//     vector<pair<int, int>> edges = FileReader::readEdge("../tests/large.edge.txt");
+//     // call constructor
+//     SFMap c(nodes, edges);
+//     configSmallGraph(c);
+//     vector<int> result = c.getParents(121);
+//     REQUIRE(result.size() == 200);
+//     // node121 - node108
+//     REQUIRE(result[107] == 20);
+//     // node121 - node70
+//     REQUIRE(result[70] == 70);
+// }
+
+TEST_CASE("Test importance as PNG with medium graph", "[importance]") {
+    vector<Coord> nodes = FileReader::readRawNode("../tests/medium.node.txt");
+    vector<pair<int, int>> edges = FileReader::readEdge("../tests/medium.edge.txt");
+    SFMap m(nodes, edges);
+    configSmallGraph(m);
+    PNG image = m.importance();
+    image.writeToFile("importance-medium.png");
+}
+
+TEST_CASE("Test importance as PNG with large graph", "[importance]") {
+    vector<Coord> nodes = FileReader::readRawNode("../tests/large.node.txt");
+    vector<pair<int, int>> edges = FileReader::readEdge("../tests/large.edge.txt");
+    SFMap m(nodes, edges);
+    configSmallGraph(m);
+    PNG image = m.importance();
+    image.writeToFile("importance-large.png");
+}
+
+// TEST_CASE("Test importance as PNG", "[importance]") {
+//     PNG image = sfmap.importance();
+//     image.writeToFile("importance.png");
+// }
+
+TEST_CASE("Test escapeRoute as GIF", "[escapeRoute]") {
+    Animation animation = sfmap.escapeRoute(Coord(37.5108, -122.1117), 10, 18);
+    animation.write("escapeRoute.gif");
 }

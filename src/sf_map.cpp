@@ -44,6 +44,7 @@ SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges) {
     for (const MapNode& node : _nodes) {
         coords.push_back(pair(node.coord, node.index));
     }
+
     tree = KDTree(coords, normalizedDist);
     mst = MST(coords, edges, dist);
     mstEdges = mst.primMST(50000);
@@ -52,7 +53,7 @@ SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges) {
 SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges,
     const vector<Coord>& police): SFMap(nodes, edges) {
 
-    for (Coord coord : police) {
+    for (const Coord& coord : police) {
         addPoliceStation(coord);
     }
 }
@@ -151,68 +152,14 @@ PNG SFMap::drawMap(function<rgbaColor(int)> nodeColor, function<rgbaColor(int, i
 }
 
 /***    Goal 1   ***/
-cs225::PNG SFMap::importance(const cs225::rgbaColor& color) const {
-    vector<double> importanceValues = importanceAsVec();
-
-    double zoom = 1.0;
-    Coord center;
-    center.lat_ = 0.0;
-    center.long_ = 0.0;
-    double mHeight = _maxLat - _minLat;
-    double mWidth = _maxLong - _minLong;
-    int pHeight = mHeight * SCALE;
-    int pWidth = mWidth * SCALE;
-    double zHeight = mHeight / zoom;
-    double zWidth = mWidth / zoom;
-    if (mHeight == 0 || mWidth == 0) {
-        throw invalid_argument("Map too narrow to be drawn");
-    }
-
-    double zMinLat = min(max(center.lat_ - 0.5 * zHeight, _minLat), _maxLat - zHeight);
-    double zMinLong = min(max(center.long_ - 0.5 * zWidth, _minLong), _maxLong - zWidth);
-    Coord lowerLeft;
-    lowerLeft.lat_ = zMinLat;
-    lowerLeft.long_ = zMinLong;
-
-    cs225::PNG image(pWidth, pHeight);
-    for (int i = 0; i < size(); i++) {
-        const MapNode& node = _nodes[i];
-        for (const MapNode* neighbor : _neighbors[i]) {
-            if (neighbor->index > i) {
-                Coord start = coord2Pixel(node.coord, lowerLeft, zoom);
-                Coord end = coord2Pixel(neighbor->coord, lowerLeft, zoom);
-                drawLine(image, start, end, LINE_WIDTH * sqrt(zoom), color);
-            }
-        }
-    }
-
-    double maxImportanceValue = -1.0;
-    for (auto value : importanceValues) {
-        if (value > maxImportanceValue) {
-            maxImportanceValue = value;
-        }
-    }
-
-    int index = 0;
-    for (const MapNode& node : _nodes) {
-        if (node.coord.lat_ < zMinLat || node.coord.lat_ > zMinLat + zHeight
-            || node.coord.long_ < zMinLong || node.coord.long_ > zMinLong + zWidth) {
-                continue;
-        }
-        Coord zoomed = coord2Pixel(node.coord, lowerLeft, zoom);
-        // set different colors to different nodes based on their importanceValues
-        double importanceValue = importanceValues[index];
-        hslaColor hsla = rgb2hsl(color);
-
-        // todo, change hsla's s value based on importancevalue
-        hsla.s = importanceValue / maxImportanceValue;
-
-        cs225::rgbaColor newcolor = hsl2rgb(hsla);
-        drawCircle(image, zoomed, RADIUS * sqrt(zoom), newcolor);
-        index ++;
-    }
-
-    return image;
+PNG SFMap::importance() const {
+    vector<double> imp = importanceAsVec();
+    return drawMap([&imp](int index) {
+            // red = 360, blue = 240
+            return hsl2rgb(hslaColor{ 240 + 120 * (imp[index]), 0.8, 0.5, 1 });
+        }, [](int index1, int index2) {
+            return rgbaColor{ 0, 0, 0, 225 };
+        });
 }
 
 vector<double> SFMap::importanceAsVec() const {
@@ -223,10 +170,11 @@ vector<double> SFMap::importanceAsVec() const {
     vector<double> importanceValues(n, 0);
 
     for (int index = 0; index < n; index++) {
+        if (index % 100 == 0) cout << index << " / " << n << endl;
         // call getParents function
-        vector<int> parents = getParents(index);
+        vector<int> parents = getParents(index, 30);
         for (int i = 0; i < n; i++) {
-            if (i == index) continue;
+            if (parents[i] == -1) continue;
             int j = i;
             while (j != -1) {
                 importanceValues[j] += 1;
@@ -234,10 +182,12 @@ vector<double> SFMap::importanceAsVec() const {
             }
         }
     }
+    cout << n << " / " << n << endl;
 
-    // Divide by total number of shortest paths such that importance values are between 0 and 1
-    int total = n * (n - 1);
-    for (double& val : importanceValues) val /= total;
+    // Normalize importance values
+    double maxValue = importanceValues[0];
+    for (double val : importanceValues) maxValue = max(maxValue, val);
+    for (double& val : importanceValues) val /= maxValue;
 
     return importanceValues;
 }
@@ -305,6 +255,85 @@ vector<pair<int, int>> SFMap::getMST() {
 }
 
 /***    Goal 3   ***/
+Animation SFMap::escapeRoute(const Coord& start, double minDist, double zoom) {
+    Animation animation;
+    vector<int> route = escapeRouteAsVec(start, minDist);
+
+    // Find total distance
+    double total = 0;
+    vector<double> distances = { 0 };
+    for (int i = 0; i < (int)route.size() - 1; i++) {
+        total += _dist(_nodes[route[i]].coord, _nodes[route[i + 1]].coord);
+        distances.push_back(total);
+    }
+    double step = total / (FRAMES - 1);
+
+    // Change size of image
+    const double MAX_DIM = 1000;
+    double originalScale = SCALE;
+    double originalRadius = RADIUS;
+    double originalWidth = LINE_WIDTH;
+    double latDiff = _maxLat - _minLat;
+    double longDiff = _maxLong - _minLong;
+    if (SCALE * latDiff > MAX_DIM || SCALE * longDiff > MAX_DIM) {
+        SCALE = MAX_DIM / max(latDiff, longDiff);
+    }
+    RADIUS /= sqrt(originalScale / SCALE);
+    LINE_WIDTH /= sqrt(originalScale / SCALE);
+
+    // Draw frames
+    int j = 0;
+    Coord center = _nodes[route[0]].coord;
+    for (int i = 0; i < FRAMES; i++) {
+        cout << i << " / " << FRAMES << endl;
+
+        // Calculate criminal's current location
+        double curDist = (i == FRAMES - 1) ? total : step * i;
+        while (distances[j + 1] < curDist) j++;
+        double percentage = (curDist - distances[j]) / (distances[j + 1] - distances[j]);
+        const Coord& left = _nodes[route[j]].coord;
+        const Coord& right = _nodes[route[j + 1]].coord;
+        Coord target(left.lat_ * (1 - percentage) + right.lat_ * percentage,
+            left.long_ * (1 - percentage) + right.long_ * percentage);
+        center.lat_ = center.lat_ * (1 - ALPHA) + target.lat_ * ALPHA;
+        center.long_ = center.long_ * (1 - ALPHA) + target.long_ * ALPHA;
+
+        // Draw a single frame
+        PNG image = drawMap(zoom, center, [&route](int index) {
+                if (find(route.begin(), route.end(), index) != route.end()) {
+                    return rgbaColor{ 0, 80, 255, 255 };
+                } else {
+                    return rgbaColor{ 0, 0, 0, 255 };
+                }
+            }, [&route](int index1, int index2) {
+                for (int i = 0; i < (int)route.size() - 1; i++) {
+                    if ((index1 == route[i] && index2 == route[i + 1]) ||
+                        (index2 == route[i] && index1 == route[i + 1])) {
+                        return rgbaColor{ 0, 80, 255, 255 };
+                    }
+                }
+                return rgbaColor{ 0, 0, 0, 255 };
+            });
+
+        // Draw criminal
+        double zHeight = (_maxLat - _minLat + MARGIN * 2) / zoom;
+        double zWidth = (_maxLong - _minLong + MARGIN * 2) / zoom;
+        double zMinLat = min(max(center.lat_ - 0.5 * zHeight, _minLat - MARGIN), _maxLat + MARGIN - zHeight);
+        double zMinLong = min(max(center.long_ - 0.5 * zWidth, _minLong - MARGIN), _maxLong + MARGIN - zWidth);
+        Coord lowerLeft = Coord(zMinLat, zMinLong);
+        Coord zoomedTarget = coord2Pixel(target, lowerLeft, zoom);
+        drawCircle(image, zoomedTarget, RADIUS * sqrt(zoom) * 2, rgbaColor{ 255, 0, 0, 255 });
+
+        animation.addFrame(image);
+    }
+    cout << FRAMES << " / " << FRAMES << endl;
+
+    SCALE = originalScale;
+    RADIUS = originalRadius;
+    LINE_WIDTH = originalWidth;
+    return animation;
+}
+
 vector<int> SFMap::escapeRouteAsVec(const Coord& start, double minDist) const {
     // find start node
     const MapNode* startNode = &_nodes[tree.search(start)];
@@ -325,6 +354,95 @@ vector<int> SFMap::escapeRouteAsVec(const Coord& start, double minDist) const {
 }
 
 /***    Goal 4   ***/
+
+// PNG SFMap::nextPoliceStation(double zoom) const {
+//     return;
+// }
+
+int SFMap::nextPoliceStationAsIndex() const {
+    // Algorithm as described in the PDF file
+    double eSup = numeric_limits<double>::max();
+    vector<double> eInf = vector(size(), 0.0);
+
+    // Construct list of potential locations
+    vector<int> potential;
+    int curBest = -1;  // Current best choice of police station
+    for (int i = 0; i < size(); i++) {
+        if (!_nodes[i].isPoliceStation) potential.push_back(i);
+    }
+
+    while (!potential.empty()) {
+        cout << potential.size() << " potential locations... ";
+
+        // Find next location to check with minimum eInf
+        int nextId = 0;
+        double lowestInf = eInf[potential[0]];
+        for (int i = 0; i < (int)potential.size(); i++) {
+            if (eInf[potential[i]] < lowestInf) {
+                nextId = i;
+                lowestInf = eInf[potential[i]];
+            }
+        }
+        int next = potential[nextId];  // Next location to check
+        // Remove next from the list of potential locations
+        swap(potential[nextId], potential.back());
+        potential.pop_back();
+
+        cout << "Checking node " << next << ": ";
+
+        // Check if next is better than curBest
+        auto [ev, v] = getEccentricity(next);
+        if (eSup > ev) {
+            eSup = ev;
+            curBest = next;
+        }
+        cout << ev << " (best: " << eSup << ")";
+
+        // Update lower bound of eccentricity
+        vector<double> d = getDistances(vector{ v });
+        for (int i = 0; i < size(); i++) {
+            eInf[i] = max(eInf[i], d[i]);
+        }
+
+        // Remove candidates with inf >= sup (which disqualifies them from being a better location)
+        vector<int> potential_;
+        for (int i : potential) {
+            if (eInf[i] < eSup) {
+                potential_.push_back(i);
+            }
+        }
+        potential = potential_;
+
+        cout << endl;
+    }
+
+    return curBest;
+}
+
+pair<vector<int>, double> SFMap::nextPoliceStationAsIndexSlow(int index, int numProcesses) const {
+    double min_eccentricity = numeric_limits<double>::max();
+    vector<int> potential;
+    for (const MapNode& node : _nodes) {
+        // Filter all nodes by index (for parallel computing)
+        if (node.index % numProcesses != index) continue;
+
+        if (node.index % 1 == 0) {
+            cout << "[" << index << "] ";
+            cout << node.index << " / " << size() << endl;
+        }
+        if (node.isPoliceStation) continue;
+        auto tmp = getEccentricity(node.index);
+        if (tmp.first < min_eccentricity) {
+            min_eccentricity = tmp.first;
+            potential = vector{ node.index };
+        } else if (tmp.first == min_eccentricity) {
+            potential.push_back(node.index);
+        }
+    }
+
+    cout << size() << " / " << size() << endl;
+    return pair(potential, min_eccentricity);
+}
 
 /***    Other helpers   ***/
 int SFMap::size() const {

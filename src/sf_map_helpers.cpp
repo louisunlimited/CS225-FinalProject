@@ -280,7 +280,7 @@ bool SFMap::findRoute(vector<int>& currNodes, double remainDist, vector<bool>& v
     return false;
 }
 
-vector<int> SFMap::getParents(int start) const {
+vector<int> SFMap::getParents(int start, double threshold) const {
     // No need to remember the distances because we are using a priority queue
     // This guarantees that we are always visiting the end point of the shortest path possible
     vector<int> prev(_nodes.size(), -1);
@@ -306,9 +306,66 @@ vector<int> SFMap::getParents(int start) const {
             // _dist is the metric used in this map
             double edgeweight = _dist(curnode.coord, neighbor->coord);
             double distance = curdist + edgeweight;
+            if (distance > threshold) continue;
             myprq.push(tuple(distance, neighbor->index, curindex));
         }
     }
 
     return prev;
+}
+
+// goal 4 helper
+vector<double> SFMap::getDistances(vector<int> start) const {
+    vector<double> distances(_nodes.size(), numeric_limits<double>::max());
+    priority_queue<pair<double, int>, vector<pair<double, int>>,
+        greater<pair<double, int>>> myprq;
+    for (int index : start) {
+        myprq.push(pair(0.0, index));
+    }
+ 
+    while (!myprq.empty()) {
+        auto [curdist, curindex] = myprq.top();
+        myprq.pop();
+
+        // if the current distance is larger, skip the remaining
+        if (distances[curindex] <= curdist) continue;
+
+        const MapNode& curnode = _nodes[curindex];
+        distances[curindex] = curdist;
+
+        for (const MapNode* neighbor : _neighbors[curindex]) {
+            // _dist is the metric used in this map
+            double edgeweight = _dist(curnode.coord, neighbor->coord);
+            double distance = curdist + edgeweight;
+
+            // skip if distance is larger
+            if (distances[neighbor->index] <= edgeweight) continue;
+
+            myprq.push(pair(distance, neighbor->index));
+        }
+    }
+
+    return distances;
+}
+
+// goal 4 helper
+pair<double, int> SFMap::getEccentricity(int start) const {
+    vector<int> police;
+    for (MapNode* node : _police) {
+        police.push_back(node->index);
+    }
+    if (!_nodes[start].isPoliceStation) police.push_back(start);
+    vector<double> distances = getDistances(police);
+
+    // Find maximum
+    double maxDist = distances[0];
+    int maxIndex = 0;
+    for (int i = 0; i < size(); i++) {
+        if (distances[i] > maxDist) {
+            maxDist = distances[i];
+            maxIndex = i;
+        }
+    }
+
+    return pair(maxDist, maxIndex);
 }

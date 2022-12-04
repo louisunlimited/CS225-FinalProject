@@ -99,7 +99,7 @@ class SFMap {
          * @param color RGB value of the output image
          * @return A colored PNG containing the map of the entire San Francisco
          */
-        PNG importance(const rgbaColor& color) const;
+        PNG importance() const;
 
         /**
          * Helper for 1.
@@ -133,7 +133,7 @@ class SFMap {
          * @param minDist minimum distance the criminal escapes (in km)
          * @return An animation of the escaping criminal
          */
-        Animation escapeRoute(const Coord& start, double minDist) const;
+        Animation escapeRoute(const Coord& start, double minDist, double zoom);
 
         /**
          * Helper for 3.
@@ -150,7 +150,6 @@ class SFMap {
          * the graph using Dijkstra's algorithm. We aim to find the best solution that gives
          * the minimum of such distance.
          *
-         * @param start starting coordinate
          * @param zoom zoom factor of the PNG
          * @return A PNG with highlighted location for the next possible police station
          */
@@ -161,7 +160,8 @@ class SFMap {
          *
          * @return A integer representing the index of the best node for the new police station
          */
-        int nextPoliceStationAsIndex(Coord start) const;
+        int nextPoliceStationAsIndex() const;
+        pair<vector<int>, double> nextPoliceStationAsIndexSlow(int index, int numProcesses) const;
 
 
         // Functions used exclusively for testing
@@ -178,27 +178,31 @@ class SFMap {
         /**
          * For testing
          *
+         * @param start The starting coordinate
+         * @param threshold The maximum allowed distance. Any nodes beyond this distance will not
+         *  be considered.
          * @return A vector of parents between start and all other nodes
          *  e.g. result[i] = the node before the ith node on the shortest path between start and
          *  the ith nodes.
          */
-        vector<int> getParents(int start) const;
+        vector<int> getParents(int start, double threshold) const;
 
         /**
          * For testing
          *
+         * @param start List of starting nodes
          * @return A vector of distance between start and all other nodes
          *  e.g. result[i] = distance of shortest path between start and the ith nodes.
          */
-        vector<double> getDistances(int start) const;
+        vector<double> getDistances(vector<int> start) const;
 
         /**
          * For testing
          * [start = new police station]
          * @return A pair of distances between all points and police stations and an 
          *         integer representing the index of the point for the furtherest police station.
-         */
-        pair<vector<double>, int> getEccentricity(int start) const;
+         */ // wrong
+        pair<double, int> getEccentricity(int start) const;
 
     private:
         /* Coordinates */
@@ -226,13 +230,17 @@ class SFMap {
         /* Pixels per degree */
         double SCALE = 1500;
         /* Maximum zoom factor */
-        const double MAX_ZOOM = 15;
+        const double MAX_ZOOM = 30;
         /* Map margin (in degree) */
         double MARGIN = 0.01;
         /* Radius of node */
         double RADIUS = 1.2;
         /* Width of edge */
         double LINE_WIDTH = 1;
+        /* Number of frames in escapeRoute */
+        const int FRAMES = 100;
+        /* Camera movement smoothness */
+        const double ALPHA = 0.15;
 
         // HELPER FUNCTIONS
         /**

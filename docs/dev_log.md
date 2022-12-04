@@ -123,3 +123,17 @@ Betweeness centrality graph
 Filereader testcase
 
 dijkstra testcase
+
+## Week 5
+
+This week we finished goal 4 as well as png & gif outputs for goal 1 and 3. We also continued our work on goal 2 and 4.  Apart from these, we also added a few more testcases and fixed a few bugs in KDTree.
+
+Louis Qian: I continued working on MST but have no real outcomes.
+
+Hezi Jiang: I finished the three helper function for goal 4.
+
+Xiping Sun: I continued working on test cases.
+
+Tianyue Cao: I worked on fixing the kdtree and helped with finishing and testing goal 4. I also finished the png and gif outputs for goal 1 & 3
+
+For the next week, we will be focusing on completing MST and graphic output for goal 4. Then we will be all set for our final presentation apart from minor structural modifications.
