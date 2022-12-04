@@ -255,3 +255,20 @@ TEST_CASE("Test getParents with medium graph", "[getParents][Dijkstra]") {
     // 3 --> 4 --> 7 --> 8
     REQUIRE(result[8] == 7);
 }
+
+TEST_CASE("Test SFMap nextPoliceStationAsIndex", "[SFMap][nextPoliceStation]") {
+    int node = sfmap.nextPoliceStationAsIndex();
+    cout << "Result: node " << node << endl;
+}
+
+// TEST_CASE("Test SFMap nextPoliceStationAsIndexSlow", "[SFMap][nextPoliceStationSlow]") {
+//     int index = 0;
+
+//     auto [targets, ecc] = sfmap.nextPoliceStationAsIndexSlow(index, 6);
+//     // Save it to file
+//     cout << "Size: " << targets.size() << endl;
+//     ofstream out("potential-" + to_string(index) + ".txt");
+//     out << "eccentricity: " << ecc << endl;
+//     for (int target : targets) out << target << endl;
+//     out.close();
+// }

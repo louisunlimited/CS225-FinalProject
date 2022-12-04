@@ -159,7 +159,8 @@ class SFMap {
          *
          * @return A integer representing the index of the best node for the new police station
          */
-        int nextPoliceStationAsIndex(Coord start) const;
+        int nextPoliceStationAsIndex() const;
+        pair<vector<int>, double> nextPoliceStationAsIndexSlow(int index, int numProcesses) const;
 
 
         // Functions used exclusively for testing
@@ -176,6 +177,7 @@ class SFMap {
         /**
          * For testing
          *
+         * @param start Starting node
          * @return A vector of parents between start and all other nodes
          *  e.g. result[i] = the node before the ith node on the shortest path between start and
          *  the ith nodes.
@@ -185,18 +187,19 @@ class SFMap {
         /**
          * For testing
          *
+         * @param start List of starting nodes
          * @return A vector of distance between start and all other nodes
          *  e.g. result[i] = distance of shortest path between start and the ith nodes.
          */
-        vector<double> getDistances(int start) const;
+        vector<double> getDistances(vector<int> start) const;
 
         /**
          * For testing
          * [start = new police station]
          * @return A pair of distances between all points and police stations and an 
          *         integer representing the index of the point for the furtherest police station.
-         */
-        pair<vector<double>, int> getEccentricity(int start) const;
+         */ // wrong
+        pair<double, int> getEccentricity(int start) const;
 
     private:
         /* Coordinates */
