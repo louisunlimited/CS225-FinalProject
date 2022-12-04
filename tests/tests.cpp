@@ -310,10 +310,10 @@ TEST_CASE("Test importance as PNG with large graph", "[importance]") {
     image.writeToFile("importance-large.png");
 }
 
-TEST_CASE("Test importance as PNG", "[importance]") {
-    PNG image = sfmap.importance();
-    image.writeToFile("importance.png");
-}
+// TEST_CASE("Test importance as PNG", "[importance]") {
+//     PNG image = sfmap.importance();
+//     image.writeToFile("importance.png");
+// }
 
 TEST_CASE("Test escapeRoute as GIF", "[escapeRoute]") {
     Animation animation = sfmap.escapeRoute(Coord(37.5108, -122.1117), 10, 18);
