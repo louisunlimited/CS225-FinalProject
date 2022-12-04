@@ -108,21 +108,21 @@ TEST_CASE("SFMap constructor constructs the right amount of nodes", "[SFMap]") {
     REQUIRE(sfmap.size() == 174956);
 }
 
-TEST_CASE("Test SFMap drawMap small", "[SFMap][png]") {
-    // make a custom set of coords
-    vector<Coord> nodes = makeCoords(); // coords from 0 to 9
-    vector<pair<int, int>> edges = {{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 7}, {7, 8}, {8, 9}};
-    vector<Coord> police = makeCoords(); // coords from 0 to 9
-    SFMap smallmap(nodes, edges);
-    configSmallGraph(smallmap);
+// TEST_CASE("Test SFMap drawMap small", "[SFMap][png]") {
+//     // make a custom set of coords
+//     vector<Coord> nodes = makeCoords(); // coords from 0 to 9
+//     vector<pair<int, int>> edges = {{0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 7}, {7, 8}, {8, 9}};
+//     vector<Coord> police = makeCoords(); // coords from 0 to 9
+//     SFMap smallmap(nodes, edges);
+//     configSmallGraph(smallmap);
 
-    PNG smallImage = smallmap.drawMap([](int index) {
-            return rgbaColor{ 0, 0, 128, 255 };
-        }, [](int index1, int index2) {
-            return rgbaColor{ 0, 0, 0, 255 };
-        });
-    smallImage.writeToFile("small.png");
-}
+//     PNG smallImage = smallmap.drawMap([](int index) {
+//             return rgbaColor{ 0, 0, 128, 255 };
+//         }, [](int index1, int index2) {
+//             return rgbaColor{ 0, 0, 0, 255 };
+//         });
+//     smallImage.writeToFile("small.png");
+// }
 
 TEST_CASE("Test SFMap drawMap SF", "[SFMap][png]") {
     PNG sfImage = sfmap.drawMap([](int index) {
@@ -152,106 +152,118 @@ TEST_CASE("Test SFMap drawMap colorPicker", "[SFMap][png]") {
     colorpickerImage.writeToFile("map-colorpicker.png");
 }
 
-TEST_CASE("Test escapeRoute with small graph", "[escapeRouteAsVec][DFS]") {
-    vector<Coord> nodes = FileReader::readRawNode("../tests/small.node.txt");
-    vector<pair<int, int>> edges = FileReader::readEdge("../tests/small.edge.txt");
-    // call constructor
-    SFMap a(nodes, edges);
-    configSmallGraph(a);
-    // nodes[1] -- nodes[2] = 1.345
-    vector<int> ans1 = a.escapeRouteAsVec(nodes[1] , 1);
-    double sum1{};
-    for (size_t i = 0; i + 1 < ans1.size(); i++) {
-        sum1 += normalizedDist(nodes[ans1[i]], nodes[ans1[i+1]]);
-    }
-    REQUIRE(sum1 >= 1);
-    // nodes[1] -- nodes[2] -- nodes[3] = 4.451
-    vector<int> ans2 = a.escapeRouteAsVec(nodes[1] , 4);
-    double sum2{};
-    for (size_t i = 0; i + 1 < ans2.size(); i++) {
-        sum2 += normalizedDist(nodes[ans2[i]], nodes[ans2[i+1]]);
-    }
-    REQUIRE(sum2 >= 4);
-}
+// TEST_CASE("Test escapeRoute with small graph", "[escapeRouteAsVec][DFS]") {
+//     vector<Coord> nodes = FileReader::readRawNode("../tests/small.node.txt");
+//     vector<pair<int, int>> edges = FileReader::readEdge("../tests/small.edge.txt");
+//     // call constructor
+//     SFMap a(nodes, edges);
+//     configSmallGraph(a);
+//     // nodes[1] -- nodes[2] = 1.345
+//     vector<int> ans1 = a.escapeRouteAsVec(nodes[1] , 1);
+//     double sum1{};
+//     for (size_t i = 0; i + 1 < ans1.size(); i++) {
+//         sum1 += normalizedDist(nodes[ans1[i]], nodes[ans1[i+1]]);
+//     }
+//     REQUIRE(sum1 >= 1);
+//     // nodes[1] -- nodes[2] -- nodes[3] = 4.451
+//     vector<int> ans2 = a.escapeRouteAsVec(nodes[1] , 4);
+//     double sum2{};
+//     for (size_t i = 0; i + 1 < ans2.size(); i++) {
+//         sum2 += normalizedDist(nodes[ans2[i]], nodes[ans2[i+1]]);
+//     }
+//     REQUIRE(sum2 >= 4);
+// }
 
-TEST_CASE("Test escapeRoute with medium graph", "[escapeRouteAsVec][DFS]") {
-    vector<Coord> nodes = FileReader::readRawNode("../tests/medium.node.txt");
-    vector<pair<int, int>> edges = FileReader::readEdge("../tests/medium.edge.txt");
-    // call constructor
-    SFMap b(nodes, edges);
-    configSmallGraph(b);
-    // nodes[2] -- nodes[3] = 2.8
-    vector<int> ans1 = b.escapeRouteAsVec(nodes[2] , 2.5);
-    double sum1{};
-    for (size_t i = 0; i + 1 < ans1.size(); i++) {
-        sum1 += normalizedDist(nodes[ans1[i]], nodes[ans1[i+1]]);
-    }
-    REQUIRE(sum1 >= 2.5);
-    // nodes[2] -- nodes[3] -- nodes[5] = 3.8
-    double sum2{};
-    vector<int> ans2 = b.escapeRouteAsVec(nodes[2] , 3.6);
-    for (size_t i = 0; i + 1 < ans2.size(); i++) {
-        sum2 += normalizedDist(nodes[ans2[i]], nodes[ans2[i+1]]);
-    }
-    REQUIRE(sum2 >= 3.6);
+// TEST_CASE("Test escapeRoute with medium graph", "[escapeRouteAsVec][DFS]") {
+//     vector<Coord> nodes = FileReader::readRawNode("../tests/medium.node.txt");
+//     vector<pair<int, int>> edges = FileReader::readEdge("../tests/medium.edge.txt");
+//     // call constructor
+//     SFMap b(nodes, edges);
+//     configSmallGraph(b);
+//     // nodes[2] -- nodes[3] = 2.8
+//     vector<int> ans1 = b.escapeRouteAsVec(nodes[2] , 2.5);
+//     double sum1{};
+//     for (size_t i = 0; i + 1 < ans1.size(); i++) {
+//         sum1 += normalizedDist(nodes[ans1[i]], nodes[ans1[i+1]]);
+//     }
+//     REQUIRE(sum1 >= 2.5);
+//     // nodes[2] -- nodes[3] -- nodes[5] = 3.8
+//     double sum2{};
+//     vector<int> ans2 = b.escapeRouteAsVec(nodes[2] , 3.6);
+//     for (size_t i = 0; i + 1 < ans2.size(); i++) {
+//         sum2 += normalizedDist(nodes[ans2[i]], nodes[ans2[i+1]]);
+//     }
+//     REQUIRE(sum2 >= 3.6);
     
-}
+// }
 
-TEST_CASE("Test escapeRoute with large graph", "[escapeRouteAsVec][DFS]") {
-    vector<Coord> nodes = FileReader::readRawNode("../tests/large.node.txt");
-    vector<pair<int, int>> edges = FileReader::readEdge("../tests/large.edge.txt");
-    // call constructor
-    SFMap c(nodes, edges);
-    configSmallGraph(c);
-    // nodes[34] -- nodes[33] = 0.223
-    vector<int> ans1 = c.escapeRouteAsVec(nodes[34] , 0.1);
-    double sum1{};
-    for (size_t i = 0; i + 1 < ans1.size(); i++) {
-        sum1 += normalizedDist(nodes[ans1[i]], nodes[ans1[i+1]]);
-    }
-    REQUIRE(sum1 >= 0.1);
-    // nodes[34] -- nodes[33] -- nodes[32] = 0.67
-    double sum2{};
-    vector<int> ans2 = c.escapeRouteAsVec(nodes[34] , 0.5);
-    for (size_t i = 0; i + 1 < ans2.size(); i++) {
-        sum2 += normalizedDist(nodes[ans2[i]], nodes[ans2[i+1]]);
-    }
-    REQUIRE(sum2 >= 0.5);
+// TEST_CASE("Test escapeRoute with large graph", "[escapeRouteAsVec][DFS]") {
+//     vector<Coord> nodes = FileReader::readRawNode("../tests/large.node.txt");
+//     vector<pair<int, int>> edges = FileReader::readEdge("../tests/large.edge.txt");
+//     // call constructor
+//     SFMap c(nodes, edges);
+//     configSmallGraph(c);
+//     // nodes[34] -- nodes[33] = 0.223
+//     vector<int> ans1 = c.escapeRouteAsVec(nodes[34] , 0.1);
+//     double sum1{};
+//     for (size_t i = 0; i + 1 < ans1.size(); i++) {
+//         sum1 += normalizedDist(nodes[ans1[i]], nodes[ans1[i+1]]);
+//     }
+//     REQUIRE(sum1 >= 0.1);
+//     // nodes[34] -- nodes[33] -- nodes[32] = 0.67
+//     double sum2{};
+//     vector<int> ans2 = c.escapeRouteAsVec(nodes[34] , 0.5);
+//     for (size_t i = 0; i + 1 < ans2.size(); i++) {
+//         sum2 += normalizedDist(nodes[ans2[i]], nodes[ans2[i+1]]);
+//     }
+//     REQUIRE(sum2 >= 0.5);
+// }
 
-}
+// TEST_CASE("Test getParents with small graph", "[getParents][Dijkstra]") {
+//     vector<Coord> nodes = FileReader::readRawNode("../tests/small.node.txt");
+//     vector<pair<int, int>> edges = FileReader::readEdge("../tests/small.edge.txt");
+//     // call constructor
+//     SFMap a(nodes, edges);
+//     configSmallGraph(a);
+//     vector<int> result = a.getParents(1);
+//     REQUIRE(result.size() == 10);
+//     // parent of the start node should be -1
+//     REQUIRE(result[1] == -1);
+//     // 1 --> 0
+//     REQUIRE(result[0] == 1);
+//     // 1 --> 4 --> 3 --> 6 --> 7
+//     REQUIRE(result[7] == 6);
+//     // 1 --> 4 --> 8
+//     REQUIRE(result[8] == 4);
+// }
 
-TEST_CASE("Test getParents with small graph", "[getParents][Dijkstra]") {
-    vector<Coord> nodes = FileReader::readRawNode("../tests/small.node.txt");
-    vector<pair<int, int>> edges = FileReader::readEdge("../tests/small.edge.txt");
-    // call constructor
-    SFMap a(nodes, edges);
-    configSmallGraph(a);
-    vector<int> result = a.getParents(1);
-    REQUIRE(result.size() == 10);
-    // parent of the start node should be -1
-    REQUIRE(result[1] == -1);
-    // 1 --> 0
-    REQUIRE(result[0] == 1);
-    // 1 --> 4 --> 3 --> 6 --> 7
-    REQUIRE(result[7] == 6);
-    // 1 --> 4 --> 8
-    REQUIRE(result[8] == 4);
-}
+// TEST_CASE("Test getParents with medium graph", "[getParents][Dijkstra]") {
+//     vector<Coord> nodes = FileReader::readRawNode("../tests/medium.node.txt");
+//     vector<pair<int, int>> edges = FileReader::readEdge("../tests/medium.edge.txt");
+//     // call constructor
+//     SFMap b(nodes, edges);
+//     configSmallGraph(b);
+//     vector<int> result = b.getParents(3);
+//     REQUIRE(result.size() == 50);
+//     // parent of the start node should be -1
+//     REQUIRE(result[3] == -1);
+//     // 3 --> 5
+//     REQUIRE(result[5] == 3);
+//     // 3 --> ... --> 46 --> 47
+//     REQUIRE(result[46] == 45);
+//     // 3 --> 4 --> 7 --> 8
+//     REQUIRE(result[8] == 7);
+// }
 
-TEST_CASE("Test getParents with medium graph", "[getParents][Dijkstra]") {
-    vector<Coord> nodes = FileReader::readRawNode("../tests/medium.node.txt");
-    vector<pair<int, int>> edges = FileReader::readEdge("../tests/medium.edge.txt");
-    // call constructor
-    SFMap b(nodes, edges);
-    configSmallGraph(b);
-    vector<int> result = b.getParents(3);
-    REQUIRE(result.size() == 50);
-    // parent of the start node should be -1
-    REQUIRE(result[3] == -1);
-    // 3 --> 5
-    REQUIRE(result[5] == 3);
-    // 3 --> ... --> 46 --> 47
-    REQUIRE(result[46] == 45);
-    // 3 --> 4 --> 7 --> 8
-    REQUIRE(result[8] == 7);
+TEST_CASE("Test MST with small graph", "[MST]") {
+    // vector<Coord> nodes = FileReader::readRawNode("../tests/small.node.txt");
+    // vector<pair<int, int>> edges = FileReader::readEdge("../tests/small.edge.txt");
+    // SFMap a(nodes, edges);
+    vector<pair<int, int>> result = sfmap.getMST();
+    // print result
+    // for (auto& p : result) {
+    //     cout << p.first << " " << p.second << endl;
+    // }
+    PNG png = sfmap.accessPoint();
+    png.writeToFile("smallMST.png");
 }

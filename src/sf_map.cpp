@@ -46,6 +46,7 @@ SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges) {
     }
     tree = KDTree(coords, normalizedDist);
     mst = MST(coords, edges, dist);
+    mstEdges = mst.primMST(50000);
 }
 
 SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges,
@@ -242,6 +243,66 @@ vector<double> SFMap::importanceAsVec() const {
 }
 
 /***    Goal 2   ***/
+PNG SFMap::accessPoint() const {
+    // filter out all nodes with degree != 2
+    // vector<int> accessPoints;
+    // for (int i = 0; i < size(); i++) {
+    //     if (_neighbors[i].size() == 2) {
+    //         continue;
+    //     }
+    //     accessPoints.push_back(i);
+    // }
+
+    // make new edges
+
+    // draw edge in mstEdges
+    double zoom = 1.0;
+    Coord center;
+    center.lat_ = 0.0;
+    center.long_ = 0.0;
+    double mHeight = _maxLat - _minLat;
+    double mWidth = _maxLong - _minLong;
+    int pHeight = mHeight * SCALE;
+    int pWidth = mWidth * SCALE;
+    double zHeight = mHeight / zoom;
+    double zWidth = mWidth / zoom;
+    if (mHeight == 0 || mWidth == 0) {
+        throw invalid_argument("Map too narrow to be drawn");
+    }
+
+    double zMinLat = min(max(center.lat_ - 0.5 * zHeight, _minLat), _maxLat - zHeight);
+    double zMinLong = min(max(center.long_ - 0.5 * zWidth, _minLong), _maxLong - zWidth);
+    Coord lowerLeft;
+    lowerLeft.lat_ = zMinLat;
+    lowerLeft.long_ = zMinLong;
+
+    cs225::PNG image(pWidth, pHeight);
+    // draw edges in mstEdges
+    for (auto edge : mstEdges) {
+        if (edge.first < 0 || edge.second < 0) continue;
+        const MapNode& node = _nodes[edge.first - 1];
+        const MapNode& neighbor = _nodes[edge.second - 1];
+        Coord start = coord2Pixel(node.coord, lowerLeft, zoom);
+        Coord end = coord2Pixel(neighbor.coord, lowerLeft, zoom);
+        drawLine(image, start, end, LINE_WIDTH * sqrt(zoom), cs225::rgbaColor{0, 0, 0, 255});
+    }
+    cout << "mstEdges size: " << mstEdges.size() << endl;
+    // draw nodes
+    for (const MapNode& node : _nodes) {
+        if (node.coord.lat_ < zMinLat || node.coord.lat_ > zMinLat + zHeight
+            || node.coord.long_ < zMinLong || node.coord.long_ > zMinLong + zWidth) {
+                continue;
+        }
+        Coord zoomed = coord2Pixel(node.coord, lowerLeft, zoom);
+        drawCircle(image, zoomed, RADIUS * sqrt(zoom), cs225::rgbaColor{0, 0, 0, 255});
+    }
+
+    return image;
+}
+
+vector<pair<int, int>> SFMap::getMST() {
+    return mst.primMST(1);
+}
 
 /***    Goal 3   ***/
 vector<int> SFMap::escapeRouteAsVec(const Coord& start, double minDist) const {

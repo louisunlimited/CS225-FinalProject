@@ -115,6 +115,7 @@ class SFMap {
          */
         PNG accessPoint() const;
 
+        vector<pair<int, int>> getMST();
         /**
          * Potential Helper for 2?
          *
@@ -212,6 +213,7 @@ class SFMap {
         KDTree tree;
         /* MST*/
         MST mst;
+        vector<pair<int, int>> mstEdges;
         /* Map range */
         double _minLat;
         double _maxLat;
