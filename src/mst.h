@@ -47,6 +47,24 @@ class MST {
          */
         vector<pair<int, int>> primMST(int start);
 
+        /**
+         * @brief Helper for MST to search destination node given a direction as a node
+         * 
+         * @param startNode as the starting node
+         * @param dirNode as the first node on a path
+         * 
+         * @return vector<MSTNode*> as all the nodes along the way
+         */
+        vector<MSTNode*> findValidNode(MSTNode* startNode, MSTNode* dirNode);
+
+        /**
+         * @brief Helper for calculating dist between start and end of a route
+         * 
+         * @param startRoute as the node we are going to
+         * 
+         * @return double as all the directions 
+         */
+        double findDistance(vector<MSTNode*> startRoute);
 
     private:
         /**
