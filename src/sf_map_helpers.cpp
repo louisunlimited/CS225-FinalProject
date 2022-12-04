@@ -313,3 +313,59 @@ vector<int> SFMap::getParents(int start, double threshold) const {
 
     return prev;
 }
+
+// goal 4 helper
+vector<double> SFMap::getDistances(vector<int> start) const {
+    vector<double> distances(_nodes.size(), numeric_limits<double>::max());
+    priority_queue<pair<double, int>, vector<pair<double, int>>,
+        greater<pair<double, int>>> myprq;
+    for (int index : start) {
+        myprq.push(pair(0.0, index));
+    }
+ 
+    while (!myprq.empty()) {
+        auto [curdist, curindex] = myprq.top();
+        myprq.pop();
+
+        // if the current distance is larger, skip the remaining
+        if (distances[curindex] <= curdist) continue;
+
+        const MapNode& curnode = _nodes[curindex];
+        distances[curindex] = curdist;
+
+        for (const MapNode* neighbor : _neighbors[curindex]) {
+            // _dist is the metric used in this map
+            double edgeweight = _dist(curnode.coord, neighbor->coord);
+            double distance = curdist + edgeweight;
+
+            // skip if distance is larger
+            if (distances[neighbor->index] <= edgeweight) continue;
+
+            myprq.push(pair(distance, neighbor->index));
+        }
+    }
+
+    return distances;
+}
+
+// goal 4 helper
+pair<double, int> SFMap::getEccentricity(int start) const {
+    vector<int> police;
+    for (MapNode* node : _police) {
+        police.push_back(node->index);
+    }
+    if (!_nodes[start].isPoliceStation) police.push_back(start);
+    vector<double> distances = getDistances(police);
+
+    // Find maximum
+    double maxDist = distances[0];
+    int maxIndex = 0;
+    for (int i = 0; i < size(); i++) {
+        if (distances[i] > maxDist) {
+            maxDist = distances[i];
+            maxIndex = i;
+        }
+    }
+
+    return pair(maxDist, maxIndex);
+}

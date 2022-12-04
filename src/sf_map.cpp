@@ -44,6 +44,7 @@ SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges) {
     for (const MapNode& node : _nodes) {
         coords.push_back(pair(node.coord, node.index));
     }
+
     tree = KDTree(coords, normalizedDist);
 }
 
@@ -291,6 +292,95 @@ vector<int> SFMap::escapeRouteAsVec(const Coord& start, double minDist) const {
 }
 
 /***    Goal 4   ***/
+
+// PNG SFMap::nextPoliceStation(double zoom) const {
+//     return;
+// }
+
+int SFMap::nextPoliceStationAsIndex() const {
+    // Algorithm as described in the PDF file
+    double eSup = numeric_limits<double>::max();
+    vector<double> eInf = vector(size(), 0.0);
+
+    // Construct list of potential locations
+    vector<int> potential;
+    int curBest = -1;  // Current best choice of police station
+    for (int i = 0; i < size(); i++) {
+        if (!_nodes[i].isPoliceStation) potential.push_back(i);
+    }
+
+    while (!potential.empty()) {
+        cout << potential.size() << " potential locations... ";
+
+        // Find next location to check with minimum eInf
+        int nextId = 0;
+        double lowestInf = eInf[potential[0]];
+        for (int i = 0; i < (int)potential.size(); i++) {
+            if (eInf[potential[i]] < lowestInf) {
+                nextId = i;
+                lowestInf = eInf[potential[i]];
+            }
+        }
+        int next = potential[nextId];  // Next location to check
+        // Remove next from the list of potential locations
+        swap(potential[nextId], potential.back());
+        potential.pop_back();
+
+        cout << "Checking node " << next << ": ";
+
+        // Check if next is better than curBest
+        auto [ev, v] = getEccentricity(next);
+        if (eSup > ev) {
+            eSup = ev;
+            curBest = next;
+        }
+        cout << ev << " (best: " << eSup << ")";
+
+        // Update lower bound of eccentricity
+        vector<double> d = getDistances(vector{ v });
+        for (int i = 0; i < size(); i++) {
+            eInf[i] = max(eInf[i], d[i]);
+        }
+
+        // Remove candidates with inf >= sup (which disqualifies them from being a better location)
+        vector<int> potential_;
+        for (int i : potential) {
+            if (eInf[i] < eSup) {
+                potential_.push_back(i);
+            }
+        }
+        potential = potential_;
+
+        cout << endl;
+    }
+
+    return curBest;
+}
+
+pair<vector<int>, double> SFMap::nextPoliceStationAsIndexSlow(int index, int numProcesses) const {
+    double min_eccentricity = numeric_limits<double>::max();
+    vector<int> potential;
+    for (const MapNode& node : _nodes) {
+        // Filter all nodes by index (for parallel computing)
+        if (node.index % numProcesses != index) continue;
+
+        if (node.index % 1 == 0) {
+            cout << "[" << index << "] ";
+            cout << node.index << " / " << size() << endl;
+        }
+        if (node.isPoliceStation) continue;
+        auto tmp = getEccentricity(node.index);
+        if (tmp.first < min_eccentricity) {
+            min_eccentricity = tmp.first;
+            potential = vector{ node.index };
+        } else if (tmp.first == min_eccentricity) {
+            potential.push_back(node.index);
+        }
+    }
+
+    cout << size() << " / " << size() << endl;
+    return pair(potential, min_eccentricity);
+}
 
 /***    Other helpers   ***/
 int SFMap::size() const {
