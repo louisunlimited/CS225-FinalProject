@@ -35,24 +35,29 @@ MST::MST(const vector<pair<Coord, int>>& coords, const vector<pair<int, int>>& e
 // }
 
 vector<pair<int, int>> MST::primMST(int start) {
-    vector<pair<int, int>> mst;
+    // performs a prim's algorithm on the graph with adjList
+    // returns a vector of edges
+    vector<pair<int, int>> edges;
     vector<bool> visited(adjList.size(), false);
     priority_queue<pair<double, MSTNode*>, vector<pair<double, MSTNode*>>, greater<pair<double, MSTNode*>>> pq;
     pq.push(make_pair(0, &_coords[start]));
+
     while (!pq.empty()) {
-        MSTNode* node = pq.top().second;
+        pair<double, MSTNode*> curr = pq.top();
         pq.pop();
-        if (visited[node->index]) continue;
-        visited[node->index] = true;
-        if (node->parent != nullptr) {
-            mst.push_back(make_pair(node->parent->index, node->index));
+        if (visited[curr.second->index]) {
+            continue;
         }
-        for (auto& edge : adjList[node->index]) {
+        visited[curr.second->index] = true;
+        if (curr.second->parent != nullptr) {
+            edges.push_back(make_pair(curr.second->parent->index, curr.second->index));
+        }
+        for (auto& edge : adjList[curr.second->index]) {
             if (!visited[edge.second->index]) {
-                edge.second->parent = node;
+                edge.second->parent = curr.second;
                 pq.push(edge);
             }
         }
     }
-    return mst;
+    return edges;
 }
