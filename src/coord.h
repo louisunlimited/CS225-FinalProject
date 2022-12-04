@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <iostream>
 #include <stdexcept>
 
 using namespace std;
@@ -20,6 +21,8 @@ struct Coord {
 
     double& operator[](int d);
     double at(int d) const;
+
+    friend ostream& operator<<(ostream& os, const Coord& coord);
 };
 
 /**
