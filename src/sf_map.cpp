@@ -46,10 +46,7 @@ SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges) {
     }
     tree = KDTree(coords, normalizedDist);
     mst = MST(coords, edges, dist);
-<<<<<<< HEAD
     mstEdges = mst.primMST(50000);
-=======
->>>>>>> df23c26 (added MST in const)
 }
 
 SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges,
