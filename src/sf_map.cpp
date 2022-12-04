@@ -44,6 +44,7 @@ SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges) {
     for (const MapNode& node : _nodes) {
         coords.push_back(pair(node.coord, node.index));
     }
+
     tree = KDTree(coords, normalizedDist);
 }
 
@@ -328,11 +329,17 @@ int SFMap::nextPoliceStationAsIndex() const {
     return curBest;
 }
 
-vector<int> SFMap::nextPoliceStationAsIndexSlow() const {
+pair<vector<int>, double> SFMap::nextPoliceStationAsIndexSlow(int index, int numProcesses) const {
     double min_eccentricity = numeric_limits<double>::max();
     vector<int> potential;
     for (const MapNode& node : _nodes) {
-        if (node.index % 10 == 0) cout << node.index << " / " << size() << endl;
+        // Filter all nodes by index (for parallel computing)
+        if (node.index % numProcesses != index) continue;
+
+        if (node.index % 1 == 0) {
+            cout << "[" << index << "] ";
+            cout << node.index << " / " << size() << endl;
+        }
         if (node.isPoliceStation) continue;
         auto tmp = getEccentricity(node.index);
         if (tmp.first < min_eccentricity) {
@@ -344,7 +351,7 @@ vector<int> SFMap::nextPoliceStationAsIndexSlow() const {
     }
 
     cout << size() << " / " << size() << endl;
-    return potential;
+    return pair(potential, min_eccentricity);
 }
 
 /***    Other helpers   ***/

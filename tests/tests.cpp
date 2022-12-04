@@ -261,7 +261,14 @@ TEST_CASE("Test SFMap nextPoliceStationAsIndex", "[SFMap][nextPoliceStation]") {
     cout << "Result: node " << node << endl;
 }
 
-TEST_CASE("Test SFMap nextPoliceStationAsIndexSlow", "[SFMap][nextPoliceStationSlow]") {
-    vector<int> nodes = sfmap.nextPoliceStationAsIndexSlow();
-    // Save it to file
-}
+// TEST_CASE("Test SFMap nextPoliceStationAsIndexSlow", "[SFMap][nextPoliceStationSlow]") {
+//     int index = 0;
+
+//     auto [targets, ecc] = sfmap.nextPoliceStationAsIndexSlow(index, 6);
+//     // Save it to file
+//     cout << "Size: " << targets.size() << endl;
+//     ofstream out("potential-" + to_string(index) + ".txt");
+//     out << "eccentricity: " << ecc << endl;
+//     for (int target : targets) out << target << endl;
+//     out.close();
+// }
