@@ -66,6 +66,7 @@ vector<MST::MSTNode*> MST::findValidNode(MSTNode* startNode, MSTNode* dirNode) {
     // go down the path of the direction node using adjlist
     vector<MSTNode*> path;
     path.push_back(startNode);
+    path.push_back(dirNode);
     MSTNode* curr = dirNode;
     while (adjList[curr->index].size() == 2) {
         // go to the next node
