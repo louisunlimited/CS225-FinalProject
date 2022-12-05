@@ -61,3 +61,30 @@ vector<pair<int, int>> MST::primMST(int start) {
     }
     return edges;
 }
+
+vector<MST::MSTNode*> MST::findValidNode(MSTNode* startNode, MSTNode* dirNode) {
+    // go down the path of the direction node using adjlist
+    vector<MSTNode*> path;
+    path.push_back(startNode);
+    MSTNode* curr = dirNode;
+    while (adjList[curr->index].size() == 2) {
+        // go to the next node
+        if (adjList[curr->index][0].second == path.back()) {
+            curr = adjList[curr->index][1].second;
+        } else {
+            curr = adjList[curr->index][0].second;
+        }
+        path.push_back(curr);
+    }
+    return path;
+}
+
+double MST::findDistance(vector<MSTNode*> startRoute) {
+    // adds up the distance between all the nodes in the route
+    double totalDist = 0;
+    for (size_t i = 0; i < startRoute.size() - 1; i++) {
+        // if we were doing this, we might not need to store double in the adjlist
+        totalDist += _dist(startRoute[i]->coord, startRoute[i + 1]->coord);
+    }
+    return totalDist;
+}
