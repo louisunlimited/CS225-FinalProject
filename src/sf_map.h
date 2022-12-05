@@ -215,7 +215,7 @@ class SFMap {
         function<double(const Coord&, const Coord&)> _dist;
         /* K-d tree */
         KDTree tree;
-        /* MST*/
+        /* MST */
         MST mst;
         vector<pair<int, int>> mstEdges;
         /* Map range */
@@ -279,6 +279,13 @@ class SFMap {
         void drawLine(PNG& image, const Coord& start, const Coord& end, double width,
             const rgbaColor& color) const;
         void colorPixel(HSLAPixel& pixel, const rgbaColor& color, double percentage) const;
+
+        /**
+         * Helper for constructing the MST.
+         *
+         * @return The adjacency list, but replace all MapNode* with its corresponding index.
+         */
+        vector<vector<int>> getAdjList() const;
 
         /**
          * Helper for 3.

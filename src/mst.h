@@ -11,7 +11,6 @@ class MST {
         struct MSTNode {
             int index;
             Coord coord;
-            MSTNode* parent;
             MSTNode(int index, Coord coord) {
                 this->index = index;
                 this->coord = coord;
@@ -28,7 +27,7 @@ class MST {
          * @param coords The vector of points to build your MST off of.
          * @param dist The distance function to use.
          */
-        MST(const vector<pair<Coord, int>>& coords, const vector<pair<int, int>>& edges, function<double(const Coord&, const Coord&)> dist);
+        MST(const vector<pair<Coord, int>>& coords, const vector<vector<int>>& adjList, function<double(const Coord&, const Coord&)> dist);
 
         /**
          * @brief Finds the minimum edge for a node
@@ -70,7 +69,7 @@ class MST {
         /**
          * @brief Adjacency list representation of the graph
          */
-        vector<vector<pair<double, MSTNode*>>> adjList;
+        vector<vector<MSTNode*>> _adjList;
 
         /**
          * @brief The distance function to use
@@ -80,5 +79,5 @@ class MST {
         /**
          * @brief The vector of points to build your MST off of.
          */
-        vector<MSTNode> _coords;
+        vector<MSTNode> _nodes;
 };

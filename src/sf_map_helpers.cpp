@@ -369,3 +369,9 @@ pair<double, int> SFMap::getEccentricity(int start) const {
 
     return pair(maxDist, maxIndex);
 }
+
+vector<vector<int>> SFMap::getAdjList() const {
+    vector<vector<int>> adjList;
+    // TODO
+    return adjList;
+}

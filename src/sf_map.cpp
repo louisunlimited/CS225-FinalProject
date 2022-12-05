@@ -46,7 +46,7 @@ SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges) {
     }
 
     tree = KDTree(coords, normalizedDist);
-    mst = MST(coords, edges, dist);
+    mst = MST(coords, getAdjList(), dist);  // TODO: use result from getEdges
     mstEdges = mst.primMST(50000);
 }
 
