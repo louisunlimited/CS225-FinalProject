@@ -1,7 +1,7 @@
 # CS225-FinalProject
 
-<p>
-    <img src="entry/map-colorpicker.png"/>
+<p align="center">
+    <img src="entry/map-colorpicker.png" width="300"/>
 </p>
 
 ## Data
