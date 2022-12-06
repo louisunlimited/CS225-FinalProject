@@ -20,6 +20,13 @@ MST::MST(const vector<pair<Coord, int>>& coords, const vector<vector<int>>& adjL
             _adjList.back().push_back(&_nodes[neighbor]);
         }
     }
+
+    _MSTNodes = vector<MSTNode*>();
+    for (size_t i = 0; i < _adjList.size(); i++) {
+        if (_adjList[i].size() != 2) {
+            _MSTNodes.push_back(&_nodes[i]);
+        }
+    }
 }
 
 // MST::MSTNode* MST::findMinEdge(MSTNode* node) {
