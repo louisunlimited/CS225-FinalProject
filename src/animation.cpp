@@ -91,9 +91,13 @@ void Animation::write(const std::string& filename) {
 
     // Generate Frames
     for (size_t i = 0; i < frames.size(); i++) {
+        if ( i % 10 == 0) cout << "Writing frame " << i << " of " << frames.size() << endl;
         frames[i].writeToFile(("frames/" + name + getString(i, frames.size()) + ".png").c_str());
     }
-
+    cout << "Writing frame " << frames.size() << " of " << frames.size() << endl;
+    cout << "Done writing frames" << endl;
+    cout << "Please wait while the frames are combined into a single image..." << endl;
+    cout << "This may take a while..." << endl;
     // Combine frames
     (void) !system(("convert frames/" + name + "*.png " + filename).c_str());
 

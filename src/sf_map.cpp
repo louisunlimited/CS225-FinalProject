@@ -263,7 +263,7 @@ Animation SFMap::escapeRoute(const Coord& start, double minDist, double zoom) {
 
     cout << "Drawing GIF for escape route..." << endl;
     for (int i = 0; i < FRAMES; i++) {
-        if (i % 10 == 0) cout << i << " / " << FRAMES << endl;
+        if (i % 10 == 0) cout << "Loading: "<< i << " / " << FRAMES << " finished" << endl;
 
         // Calculate criminal's current location
         double curDist = (i == FRAMES - 1) ? total : step * i;
@@ -304,7 +304,7 @@ Animation SFMap::escapeRoute(const Coord& start, double minDist, double zoom) {
 
         animation.addFrame(image);
     }
-    cout << FRAMES << " / " << FRAMES << endl;
+    cout << "Loading: "<< FRAMES << " / " << FRAMES << " finished" << endl;
 
     SCALE = originalScale;
     RADIUS = originalRadius;
