@@ -222,24 +222,6 @@ TEST_CASE("Test SFMap drawMap colorPicker", "[SFMap][png]") {
 //     REQUIRE(sum2 >= 0.5);
 // }
 
-// TEST_CASE("Test getParents with small graph", "[getParents][Dijkstra]") {
-//     vector<Coord> nodes = FileReader::readRawNode("../tests/small.node.txt");
-//     vector<pair<int, int>> edges = FileReader::readEdge("../tests/small.edge.txt");
-//     // call constructor
-//     SFMap a(nodes, edges);
-//     configSmallGraph(a);
-//     vector<int> result = a.getParents(1);
-//     REQUIRE(result.size() == 10);
-//     // parent of the start node should be -1
-//     REQUIRE(result[1] == -1);
-//     // 1 --> 0
-//     REQUIRE(result[0] == 1);
-//     // 1 --> 4 --> 3 --> 6 --> 7
-//     REQUIRE(result[7] == 6);
-//     // 1 --> 4 --> 8
-//     REQUIRE(result[8] == 4);
-// }
-
 TEST_CASE("Test getParents with small graph", "[getParents][Dijkstra]") {
     vector<Coord> nodes = FileReader::readRawNode("../tests/small.node.txt");
     vector<pair<int, int>> edges = FileReader::readEdge("../tests/small.edge.txt");
@@ -276,6 +258,22 @@ TEST_CASE("Test getParents with medium graph", "[getParents][Dijkstra]") {
     REQUIRE(result[8] == 7);
 }
 
+// check Dijkstra
+// large dataset is disabled because its image is currently unavailable
+// TEST_CASE("Test getParents with large graph", "[getParents]") {
+//     vector<Coord> nodes = FileReader::readRawNode("../tests/large.node.txt");
+//     vector<pair<int, int>> edges = FileReader::readEdge("../tests/large.edge.txt");
+//     // call constructor
+//     SFMap c(nodes, edges);
+//     configSmallGraph(c);
+//     vector<int> result = c.getParents(121);
+//     REQUIRE(result.size() == 200);
+//     // node121 - node108
+//     REQUIRE(result[107] == 20);
+//     // node121 - node70
+//     REQUIRE(result[70] == 70);
+// }
+
 TEST_CASE("Test SFMap nextPoliceStationAsIndex", "[SFMap][nextPoliceStation]") {
     int node = sfmap.nextPoliceStationAsIndex();
     cout << "Result: node " << node << endl;
@@ -291,22 +289,6 @@ TEST_CASE("Test SFMap nextPoliceStationAsIndex", "[SFMap][nextPoliceStation]") {
 //     out << "eccentricity: " << ecc << endl;
 //     for (int target : targets) out << target << endl;
 //     out.close();
-// }
-
-// check Dijkstra
-// large dataset is disabled because its image is currently unavailable
-// TEST_CASE("Test getParents with large graph", "[getParents]") {
-//     vector<Coord> nodes = FileReader::readRawNode("../tests/large.node.txt");
-//     vector<pair<int, int>> edges = FileReader::readEdge("../tests/large.edge.txt");
-//     // call constructor
-//     SFMap c(nodes, edges);
-//     configSmallGraph(c);
-//     vector<int> result = c.getParents(121);
-//     REQUIRE(result.size() == 200);
-//     // node121 - node108
-//     REQUIRE(result[107] == 20);
-//     // node121 - node70
-//     REQUIRE(result[70] == 70);
 // }
 
 TEST_CASE("Test importance as PNG with medium graph", "[importance]") {

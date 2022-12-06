@@ -45,9 +45,8 @@ SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges) {
         coords.push_back(pair(node.coord, node.index));
     }
 
-    tree = KDTree(coords, normalizedDist);
-    mst = MST(coords, getAdjList(), dist);  // TODO: use result from getEdges
-    mstEdges = mst.primMST(50000);
+    _tree = KDTree(coords, normalizedDist);
+    _mst = MST(coords, getAdjList(), dist);  // TODO: use result from getEdges
 }
 
 SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges,
@@ -60,7 +59,7 @@ SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges,
 
 void SFMap::addPoliceStation(const Coord& coord) {
     // Find nearest node to the police station
-    int index = tree.search(coord);
+    int index = _tree.search(coord);
 
     MapNode* node = &_nodes[index];
     if (!node->isPoliceStation) {
@@ -203,55 +202,30 @@ PNG SFMap::accessPoint() const {
     //     accessPoints.push_back(i);
     // }
 
-    // make new edges
+    // Get mst edges
+    vector<pair<int, int>> edges = getMST();
 
     // draw edge in mstEdges
-    double zoom = 1.0;
-    Coord center;
-    center.lat_ = 0.0;
-    center.long_ = 0.0;
-    double mHeight = _maxLat - _minLat;
-    double mWidth = _maxLong - _minLong;
-    int pHeight = mHeight * SCALE;
-    int pWidth = mWidth * SCALE;
-    double zHeight = mHeight / zoom;
-    double zWidth = mWidth / zoom;
-    if (mHeight == 0 || mWidth == 0) {
-        throw invalid_argument("Map too narrow to be drawn");
-    }
-
-    double zMinLat = min(max(center.lat_ - 0.5 * zHeight, _minLat), _maxLat - zHeight);
-    double zMinLong = min(max(center.long_ - 0.5 * zWidth, _minLong), _maxLong - zWidth);
-    Coord lowerLeft;
-    lowerLeft.lat_ = zMinLat;
-    lowerLeft.long_ = zMinLong;
-
-    cs225::PNG image(pWidth, pHeight);
-    // draw edges in mstEdges
-    for (auto edge : mstEdges) {
-        if (edge.first < 0 || edge.second < 0) continue;
-        const MapNode& node = _nodes[edge.first - 1];
-        const MapNode& neighbor = _nodes[edge.second - 1];
-        Coord start = coord2Pixel(node.coord, lowerLeft, zoom);
-        Coord end = coord2Pixel(neighbor.coord, lowerLeft, zoom);
-        drawLine(image, start, end, LINE_WIDTH * sqrt(zoom), cs225::rgbaColor{0, 0, 0, 255});
-    }
-    cout << "mstEdges size: " << mstEdges.size() << endl;
-    // draw nodes
-    for (const MapNode& node : _nodes) {
-        if (node.coord.lat_ < zMinLat || node.coord.lat_ > zMinLat + zHeight
-            || node.coord.long_ < zMinLong || node.coord.long_ > zMinLong + zWidth) {
-                continue;
-        }
-        Coord zoomed = coord2Pixel(node.coord, lowerLeft, zoom);
-        drawCircle(image, zoomed, RADIUS * sqrt(zoom), cs225::rgbaColor{0, 0, 0, 255});
-    }
+    PNG image = drawMap([this](int index) {
+            if (_neighbors[index].size() == 2) {
+                return rgbaColor{ 0, 0, 0, 0 };
+            } else {
+                return rgbaColor{ 225, 0, 0, 255 };
+            }
+        }, [&edges](int index1, int index2) {
+            if (find(edges.begin(), edges.end(), pair(index1, index2)) != edges.end() ||
+                find(edges.begin(), edges.end(), pair(index2, index1)) != edges.end()) {
+                return rgbaColor{ 0, 0, 0, 255 };
+            } else {
+                return rgbaColor{ 0, 0, 0, 0 };
+            }
+        });
 
     return image;
 }
 
 vector<pair<int, int>> SFMap::getMST() {
-    return mst.primMST(1);
+    return _mst.primMST(0);
 }
 
 /***    Goal 3   ***/
@@ -336,7 +310,7 @@ Animation SFMap::escapeRoute(const Coord& start, double minDist, double zoom) {
 
 vector<int> SFMap::escapeRouteAsVec(const Coord& start, double minDist) const {
     // find start node
-    const MapNode* startNode = &_nodes[tree.search(start)];
+    const MapNode* startNode = &_nodes[_tree.search(start)];
 
     // check if start node is police station
     if (startNode->isPoliceStation) {

@@ -214,10 +214,10 @@ class SFMap {
         /* Metric for measuring distance */
         function<double(const Coord&, const Coord&)> _dist;
         /* K-d tree */
-        KDTree tree;
+        KDTree _tree;
         /* MST */
-        MST mst;
-        vector<pair<int, int>> mstEdges;
+        MST _mst;
+        vector<pair<int, int>> _mstEdges;
         /* Map range */
         double _minLat;
         double _maxLat;

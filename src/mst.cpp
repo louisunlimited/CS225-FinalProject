@@ -22,65 +22,77 @@ MST::MST(const vector<pair<Coord, int>>& coords, const vector<vector<int>>& adjL
     }
 }
 
-// MST::MSTNode* MST::findMinEdge(MSTNode* node) {
-//     MSTNode* minEdge = nullptr;
-//     double minWeight = numeric_limits<double>::max();
-//     for (auto& edge : _adjList[node->index]) {
-//         if (edge.first < minWeight) {
-//             minEdge = edge.second;
-//             minWeight = edge.first;
-//         }
-//     }
-//     return minEdge;
-// }
+int MST::size() const {
+    return _nodes.size();
+}
 
-vector<pair<int, int>> MST::primMST(int start) {
-    // performs a prim's algorithm on the graph with _adjList
-    // returns a vector of edges
+vector<pair<int, int>> MST::primMST(int start) const {
+    // Makes sure that start node does not have degree 2
+    if (start < 0 || start >= size()) throw invalid_argument("Start node must be in range");
+    if (_adjList[start].size() == 2) throw invalid_argument("Start node must not have degree 2");
+
     vector<pair<int, int>> edges;
-    // vector<bool> visited(_adjList.size(), false);
-    // priority_queue<pair<double, MSTNode*>, vector<pair<double, MSTNode*>>, greater<pair<double, MSTNode*>>> pq;
-    // pq.push(make_pair(0, &_nodes[start]));
 
-    // while (!pq.empty()) {
-    //     pair<double, MSTNode*> curr = pq.top();
-    //     pq.pop();
-    //     if (visited[curr.second->index]) {
-    //         continue;
-    //     }
-    //     visited[curr.second->index] = true;
-    //     if (curr.second->parent != nullptr) {
-    //         edges.push_back(make_pair(curr.second->parent->index, curr.second->index));
-    //     }
-    //     for (auto& edge : _adjList[curr.second->index]) {
-    //         if (!visited[edge.second->index]) {
-    //             edge.second->parent = curr.second;
-    //             pq.push(edge);
-    //         }
-    //     }
-    // }
+    // Keeps track of already visited nodes
+    vector<bool> visited(size(), false);
+    visited[start] = true;
+
+    // All possible paths that can be added each step
+    priority_queue<pair<double, vector<const MSTNode*>>, vector<pair<double, vector<const MSTNode*>>>,
+        greater<pair<double, vector<const MSTNode*>>>> pq;
+    // Initially only include paths from start node
+    for (const MSTNode* neighbor : _adjList[start]) {
+        vector<const MSTNode*> path = findCompleteRoute(&_nodes[start], neighbor);
+        double dist = findDistance(path);
+        pq.push(pair(dist, path));
+    }
+
+    // Main loop
+    while (!pq.empty()) {
+        auto [distance, path] = pq.top();
+        pq.pop();
+
+        // Check if the path connects to a new node
+        if (visited[path.back()->index]) continue;
+        visited[path.back()->index] = true;
+
+        // Add the path to edges
+        for (int i = 0; i < (int) path.size() - 1; i++) {
+            edges.push_back(pair(path[i]->index, path[i + 1]->index));
+        }
+
+        // Add new possible paths to the priority queue
+        for (const MSTNode* neighbor : _adjList[path.back()->index]) {
+            vector<const MSTNode*> newPath = findCompleteRoute(path.back(), neighbor);
+            // Check visiting a new node
+            if (visited[newPath.back()->index]) continue;
+            double dist = findDistance(newPath);
+            pq.push(pair(dist, newPath));
+        }
+    }
+
     return edges;
 }
 
-vector<MST::MSTNode*> MST::findValidNode(MSTNode* startNode, MSTNode* dirNode) {
+vector<const MST::MSTNode*> MST::findCompleteRoute(const MSTNode* startNode, const MSTNode* dirNode) const {
     // go down the path of the direction node using _adjList
-    vector<MSTNode*> path{ startNode, dirNode };
-    MSTNode* curr = dirNode;
+    vector<const MSTNode*> path{ startNode, dirNode };
+    const MSTNode* curr = dirNode;
     while (_adjList[curr->index].size() == 2) {
         // go to the next node
-        int next = _adjList[curr->index][0] == path.back() ? 1 : 0;
-        curr = _adjList[curr->index][0];
+        int i = _adjList[curr->index][0] == path.back() ? 1 : 0;
+        curr = _adjList[curr->index][i];
         path.push_back(curr);
     }
     return path;
 }
 
-double MST::findDistance(vector<MSTNode*> startRoute) {
-    // adds up the distance between all the nodes in the route
+double MST::findDistance(const vector<const MSTNode*>& route) const {
+    // Adds up the distance between all the nodes in the route
     double totalDist = 0;
-    for (size_t i = 0; i < startRoute.size() - 1; i++) {
-        // if we were doing this, we might not need to store double in the adjlist
-        totalDist += _dist(startRoute[i]->coord, startRoute[i + 1]->coord);
+    for (int i = 0; i < (int)route.size() - 1; i++) {
+        // if we were doing this, we might not need to store double in the adjList
+        totalDist += _dist(route[i]->coord, route[i + 1]->coord);
     }
     return totalDist;
 }

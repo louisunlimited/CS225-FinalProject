@@ -30,12 +30,11 @@ class MST {
         MST(const vector<pair<Coord, int>>& coords, const vector<vector<int>>& adjList, function<double(const Coord&, const Coord&)> dist);
 
         /**
-         * @brief Finds the minimum edge for a node
-         * 
-         * @param node The node to find the minimum edge for
-         * @return pair<MSTNode*, double> The minimum edge and its weight
-        */
-        MSTNode* findMinEdge(MSTNode* node);
+         * Find the number of nodes in the graph
+         *
+         * @return The number of nodes
+         */
+        int size() const;
 
         /**
          * @brief Make MST using Prim's algorithm
@@ -44,7 +43,7 @@ class MST {
          * 
          * @return vector<pair<int, int>> The edges of the MST
          */
-        vector<pair<int, int>> primMST(int start);
+        vector<pair<int, int>> primMST(int start) const;
 
         /**
          * @brief Helper for MST to search destination node given a direction as a node
@@ -54,16 +53,16 @@ class MST {
          * 
          * @return vector<MSTNode*> as all the nodes along the way
          */
-        vector<MSTNode*> findValidNode(MSTNode* startNode, MSTNode* dirNode);
+        vector<const MSTNode*> findCompleteRoute(const MSTNode* startNode, const MSTNode* dirNode) const;
 
         /**
          * @brief Helper for calculating dist between start and end of a route
          * 
-         * @param startRoute as the node we are going to
+         * @param route the route from start to end
          * 
-         * @return double as all the directions 
+         * @return sum of the distance of each segment
          */
-        double findDistance(vector<MSTNode*> startRoute);
+        double findDistance(const vector<const MSTNode*>& route) const;
 
     private:
         /**
