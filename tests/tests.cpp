@@ -41,6 +41,25 @@ void configSmallGraph(SFMap& m) {
     m.setMetric(normalizedDist);
 }
 
+void matchEdges(const vector<pair<int, int>>& result, const vector<pair<int, int>>& ans, int n) {
+    vector<vector<bool>> resultMatrix = vector(n, vector(n, false));
+    for (auto [a, b] : result) {
+        resultMatrix[a][b] = true;
+        resultMatrix[b][a] = true;
+    }
+
+    vector<vector<bool>> ansMatrix = vector(n, vector(n, false));
+    for (auto [a, b] : ans) {
+        ansMatrix[a][b] = true;
+    }
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            REQUIRE(resultMatrix[i][j] == ansMatrix[i][j]);
+        }
+    }
+}
+
 SFMap sfmap = loadMap();
 
 TEST_CASE("Test FileReader readEdge", "[FileReader]") {
@@ -265,7 +284,6 @@ TEST_CASE("Test SFMap nextPoliceStationAsIndex", "[SFMap][nextPoliceStation]") {
 
 // TEST_CASE("Test SFMap nextPoliceStationAsIndexSlow", "[SFMap][nextPoliceStationSlow]") {
 //     int index = 0;
-
 //     auto [targets, ecc] = sfmap.nextPoliceStationAsIndexSlow(index, 6);
 //     // Save it to file
 //     cout << "Size: " << targets.size() << endl;
@@ -304,26 +322,7 @@ TEST_CASE("Test escapeRoute as GIF", "[escapeRoute]") {
     cout << "GIF saved." << endl;
 }
 
-void matchEdges(const vector<pair<int, int>>& result, const vector<pair<int, int>>& ans, int n) {
-    vector<vector<bool>> resultMatrix = vector(n, vector(n, false));
-    for (auto [a, b] : result) {
-        resultMatrix[a][b] = true;
-        resultMatrix[b][a] = true;
-    }
-
-    vector<vector<bool>> ansMatrix = vector(n, vector(n, false));
-    for (auto [a, b] : ans) {
-        ansMatrix[a][b] = true;
-    }
-
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            REQUIRE(resultMatrix[i][j] == ansMatrix[i][j]);
-        }
-    }
-}
-
-TEST_CASE("Test getMST with small graph", "[mst]") {
+TEST_CASE("Test getMST with small graph", "[mst][prim]") {
     vector<Coord> nodes = FileReader::readRawNode("../tests/small.node.txt");
     vector<pair<int, int>> edges = FileReader::readEdge("../tests/small.edge.txt");
     SFMap m(nodes, edges);
