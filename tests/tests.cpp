@@ -293,7 +293,7 @@ TEST_CASE("Test SFMap nextPoliceStationAsIndex", "[SFMap][nextPoliceStation]") {
 //     out.close();
 // }
 
-TEST_CASE("Test importance as PNG with medium graph", "[importance]") {
+TEST_CASE("Test importance as PNG with medium graph", "[importance][png]") {
     vector<Coord> nodes = FileReader::readRawNode("../tests/medium.node.txt");
     vector<pair<int, int>> edges = FileReader::readEdge("../tests/medium.edge.txt");
     SFMap m(nodes, edges);
@@ -302,7 +302,7 @@ TEST_CASE("Test importance as PNG with medium graph", "[importance]") {
     image.writeToFile("importance-medium.png");
 }
 
-TEST_CASE("Test importance as PNG with large graph", "[importance]") {
+TEST_CASE("Test importance as PNG with large graph", "[importance][png]") {
     vector<Coord> nodes = FileReader::readRawNode("../tests/large.node.txt");
     vector<pair<int, int>> edges = FileReader::readEdge("../tests/large.edge.txt");
     SFMap m(nodes, edges);
@@ -311,12 +311,12 @@ TEST_CASE("Test importance as PNG with large graph", "[importance]") {
     image.writeToFile("importance-large.png");
 }
 
-// TEST_CASE("Test importance as PNG", "[importance]") {
+// TEST_CASE("Test importance as PNG", "[importance][png]") {
 //     PNG image = sfmap.importance();
 //     image.writeToFile("importance.png");
 // }
 
-TEST_CASE("Test escapeRoute as GIF", "[escapeRoute]") {
+TEST_CASE("Test escapeRoute as GIF", "[escapeRoute][gif]") {
     Animation animation = sfmap.escapeRoute(Coord(37.5108, -122.1117), 10, 18);
     animation.write("escapeRoute.gif");
     cout << "GIF saved." << endl;
@@ -332,7 +332,7 @@ TEST_CASE("Test getMST with small graph", "[mst][prim]") {
     vector<pair<int, int>> ans{ {0, 1}, {1, 4}, {1, 2}, {4, 3}, {3, 6}, {6, 7}, {2, 5}, {4, 8} };
 }
 
-TEST_CASE("Test accessPoint as PNG", "[accessPoint]") {
+TEST_CASE("Test accessPoint as PNG", "[accessPoint][png]") {
     PNG image = sfmap.accessPoint();
     image.writeToFile("access-point.png");
 }
