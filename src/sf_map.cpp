@@ -47,6 +47,7 @@ SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges) {
 
     _tree = KDTree(coords, normalizedDist);
     _mst = MST(coords, getAdjList(), dist);  // TODO: use result from getEdges
+    // _mstEdges = _mst.primMST(0);
 }
 
 SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges,
@@ -204,6 +205,14 @@ PNG SFMap::accessPoint() const {
 
     // Get mst edges
     vector<pair<int, int>> edges = getMST();
+    // Construct adjList with edges
+    vector<vector<int>> adjList = vector(size(), vector<int>());
+    for (auto [i, j] : edges) {
+        adjList[i].push_back(j);
+        adjList[j].push_back(i);
+    }
+
+    cout << "begin drawing..." << endl;
 
     // draw edge in mstEdges
     PNG image = drawMap([this](int index) {
@@ -212,19 +221,20 @@ PNG SFMap::accessPoint() const {
             } else {
                 return rgbaColor{ 225, 0, 0, 255 };
             }
-        }, [&edges](int index1, int index2) {
-            if (find(edges.begin(), edges.end(), pair(index1, index2)) != edges.end() ||
-                find(edges.begin(), edges.end(), pair(index2, index1)) != edges.end()) {
+        }, [&adjList](int index1, int index2) {
+            if (find(adjList[index1].begin(), adjList[index1].end(), index2) != adjList[index1].end()) {
                 return rgbaColor{ 0, 0, 0, 255 };
             } else {
                 return rgbaColor{ 0, 0, 0, 0 };
             }
         });
 
+    cout << "end drawing..." << endl;
+
     return image;
 }
 
-vector<pair<int, int>> SFMap::getMST() {
+vector<pair<int, int>> SFMap::getMST() const {
     return _mst.primMST(0);
 }
 

@@ -115,7 +115,8 @@ class SFMap {
          */
         PNG accessPoint() const;
 
-        vector<pair<int, int>> getMST();
+        vector<pair<int, int>> getMST() const;
+
         /**
          * Potential Helper for 2?
          *

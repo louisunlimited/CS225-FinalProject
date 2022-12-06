@@ -57,11 +57,12 @@ vector<pair<int, int>> MST::primMST(int start) const {
     // Main loop
     while (!pq.empty()) {
         auto [distance, path] = pq.top();
+        int curIndex = path.back()->index;
         pq.pop();
 
         // Check if the path connects to a new node
-        if (visited[path.back()->index]) continue;
-        visited[path.back()->index] = true;
+        if (visited[curIndex]) continue;
+        visited[curIndex] = true;
 
         // Add the path to edges
         for (int i = 0; i < (int) path.size() - 1; i++) {
@@ -69,7 +70,7 @@ vector<pair<int, int>> MST::primMST(int start) const {
         }
 
         // Add new possible paths to the priority queue
-        for (const MSTNode* neighbor : _adjList[path.back()->index]) {
+        for (const MSTNode* neighbor : _adjList[curIndex]) {
             vector<const MSTNode*> newPath = findCompleteRoute(path.back(), neighbor);
             // Check visiting a new node
             if (visited[newPath.back()->index]) continue;
@@ -82,15 +83,23 @@ vector<pair<int, int>> MST::primMST(int start) const {
 }
 
 vector<const MST::MSTNode*> MST::findCompleteRoute(const MSTNode* startNode, const MSTNode* dirNode) const {
+    const vector<MSTNode*>& neighbors = _adjList[startNode->index];
+    if (find(neighbors.begin(), neighbors.end(), dirNode) == neighbors.end()) {
+        throw invalid_argument("Start node and direction node must be neighbors");
+    }
+
     // go down the path of the direction node using _adjList
-    vector<const MSTNode*> path{ startNode, dirNode };
+    vector<const MSTNode*> path{ startNode };
     const MSTNode* curr = dirNode;
+
     while (_adjList[curr->index].size() == 2) {
         // go to the next node
-        int i = _adjList[curr->index][0] == path.back() ? 1 : 0;
-        curr = _adjList[curr->index][i];
+        int i = (_adjList[curr->index][0] == path.back()) ? 1 : 0;
         path.push_back(curr);
+        curr = _adjList[curr->index][i];
     }
+
+    path.push_back(curr);
     return path;
 }
 

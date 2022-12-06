@@ -318,3 +318,8 @@ TEST_CASE("Test escapeRoute as GIF", "[escapeRoute]") {
     Animation animation = sfmap.escapeRoute(Coord(37.5108, -122.1117), 10, 18);
     animation.write("escapeRoute.gif");
 }
+
+TEST_CASE("Test accessPoint", "[mst]") {
+    PNG image = sfmap.accessPoint();
+    image.writeToFile("access-point.png");
+}
