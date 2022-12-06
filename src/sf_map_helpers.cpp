@@ -372,6 +372,12 @@ pair<double, int> SFMap::getEccentricity(int start) const {
 
 vector<vector<int>> SFMap::getAdjList() const {
     vector<vector<int>> adjList;
-    // TODO
+    for (int i = 0; i < size(); i++) {
+        vector<int> neighbors;
+        for (const MapNode* neighbor : _neighbors[i]) {
+            neighbors.push_back(neighbor->index);
+        }
+        adjList.push_back(neighbors);
+    }
     return adjList;
 }
