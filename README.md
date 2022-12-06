@@ -1,7 +1,7 @@
 # CS225-FinalProject
 
 <p align="center">
-    <img src="entry/map-colorpicker.png" width="300"/>
+    <img src="entry/map-colorpicker.png" width="350"/>
 </p>
 
 ## Data
@@ -34,13 +34,13 @@ cd build
 cmake ..
 ```
 
-### Executable
+## Executable
 
-#### Main
+### Main
 
 To run our wonderful tool, make sure you first run `make` then run `./main` to run our **wonderful** CLI! Follow all the instructions there are you will be all set!
 
-#### Tests
+### Tests
 
 To run all of our testcases, make sure you run `make` first! Then execute `./test_all [optinal tag]` to run all the tests we have! 
 
@@ -57,3 +57,15 @@ We also provide extra tags for you so you don't have to run'em all in one go! Av
 `[prim]`: Prim's algorithm testcase
 
 Apart from the above ones, you can use `[png]` or `[gif]` to run all the png/gif-outputting cases.
+
+If you have questions, please consult the gif below for reference.
+
+<p align="center">
+    <img src="entry/runninginstruction.gif" width="350"/>
+</p>
+
+## Ending
+
+Thank you for choosing our wonderful tool. We hope you have a great day :)
+
+Made with ♡ by Daniel, Hezi, Louis, and Xiping
