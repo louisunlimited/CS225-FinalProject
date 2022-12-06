@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
                 cout << "Saving your image..." << endl;
                 image.writeToFile("importance.png");
             } else if (choice == 2) {
-                system("cp ../entry/importance.png .");
+                (void) system("cp ../entry/importance.png .");
             } else {
                 cout << "Invalid choice, please restart the program X_X" << endl;
                 return 1;
