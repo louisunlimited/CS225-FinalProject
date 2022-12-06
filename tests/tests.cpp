@@ -258,22 +258,6 @@ TEST_CASE("Test getParents with medium graph", "[getParents][Dijkstra]") {
     REQUIRE(result[8] == 7);
 }
 
-// check Dijkstra
-// large dataset is disabled because its image is currently unavailable
-// TEST_CASE("Test getParents with large graph", "[getParents]") {
-//     vector<Coord> nodes = FileReader::readRawNode("../tests/large.node.txt");
-//     vector<pair<int, int>> edges = FileReader::readEdge("../tests/large.edge.txt");
-//     // call constructor
-//     SFMap c(nodes, edges);
-//     configSmallGraph(c);
-//     vector<int> result = c.getParents(121);
-//     REQUIRE(result.size() == 200);
-//     // node121 - node108
-//     REQUIRE(result[107] == 20);
-//     // node121 - node70
-//     REQUIRE(result[70] == 70);
-// }
-
 TEST_CASE("Test SFMap nextPoliceStationAsIndex", "[SFMap][nextPoliceStation]") {
     int node = sfmap.nextPoliceStationAsIndex();
     cout << "Result: node " << node << endl;
