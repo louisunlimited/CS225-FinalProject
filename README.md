@@ -4,6 +4,14 @@
     <img src="entry/map-colorpicker.png" width="350"/>
 </p>
 
+<div align="center">
+    <img src="https://forthebadge.com/images/badges/made-with-c-plus-plus.svg" width="135"/> 
+    <br/>
+    <a href="https://louisunlimited.com">
+    <img src="entry/presentation-video-link.svg" width="200"/>
+    </a>
+</div>
+
 ## Data
 
 We are using [San Francisco Road Network Data](https://www.cs.utah.edu/~lifeifei/SpatialDataset.htm) and working with the following two datasets:
@@ -38,11 +46,11 @@ cmake ..
 
 ### Main
 
-To run our wonderful tool, make sure you first run `make` then run `./main` to run our **wonderful** CLI! Follow all the instructions there are you will be all set!
+To run our wonderful tool, make sure you first run `make` then run `./main` to run our **wonderful** CLI! Follow all the instructions there and you will be all set!
 
 ### Tests
 
-To run all of our testcases, make sure you run `make` first! Then execute `./test_all [optinal tag]` to run all the tests we have! 
+To run all of our testcases, make sure you run `make` first! Then execute `./test_all [optinal tag]` to run all the tests we have!
 
 We also provide extra tags for you so you don't have to run'em all in one go! Avaliable tags are:
 
@@ -68,4 +76,4 @@ If you have questions, please consult the gif below for reference.
 
 Thank you for choosing our wonderful tool. We hope you have a great day :)
 
-Made with ♡ by Daniel, Hezi, Louis, and Xiping
+#### Made with ♡ by Daniel, Hezi, Louis, and Xiping
