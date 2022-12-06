@@ -79,4 +79,9 @@ class MST {
          * @brief The vector of points to build your MST off of.
          */
         vector<MSTNode> _nodes;
+
+        /**
+         * @brief A vecotr of nodes with deg != 2
+         */
+        vector<MSTNode*> _mstNodes;
 };

@@ -21,10 +21,10 @@ MST::MST(const vector<pair<Coord, int>>& coords, const vector<vector<int>>& adjL
         }
     }
 
-    _MSTNodes = vector<MSTNode*>();
+    _mstNodes = vector<MSTNode*>();
     for (size_t i = 0; i < _adjList.size(); i++) {
         if (_adjList[i].size() != 2) {
-            _MSTNodes.push_back(&_nodes[i]);
+            _mstNodes.push_back(&_nodes[i]);
         }
     }
 }
