@@ -112,3 +112,7 @@ double MST::findDistance(const vector<const MSTNode*>& route) const {
     }
     return totalDist;
 }
+
+void MST::setMetric(function<double(const Coord&, const Coord&)> metric) {
+    _dist = metric;
+}

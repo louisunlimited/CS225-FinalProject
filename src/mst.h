@@ -64,6 +64,8 @@ class MST {
          */
         double findDistance(const vector<const MSTNode*>& route) const;
 
+        void setMetric(function<double(const Coord&, const Coord&)> metric);
+
     private:
         /**
          * @brief Adjacency list representation of the graph

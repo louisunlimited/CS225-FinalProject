@@ -314,12 +314,42 @@ TEST_CASE("Test importance as PNG with large graph", "[importance]") {
 //     image.writeToFile("importance.png");
 // }
 
-TEST_CASE("Test escapeRoute as GIF", "[escapeRoute]") {
-    Animation animation = sfmap.escapeRoute(Coord(37.5108, -122.1117), 10, 18);
-    animation.write("escapeRoute.gif");
+// TEST_CASE("Test escapeRoute as GIF", "[escapeRoute]") {
+//     Animation animation = sfmap.escapeRoute(Coord(37.5108, -122.1117), 10, 18);
+//     animation.write("escapeRoute.gif");
+//     cout << "GIF saved." << endl;
+// }
+
+void matchEdges(const vector<pair<int, int>>& result, const vector<pair<int, int>>& ans, int n) {
+    vector<vector<bool>> resultMatrix = vector(n, vector(n, false));
+    for (auto [a, b] : result) {
+        resultMatrix[a][b] = true;
+        resultMatrix[b][a] = true;
+    }
+
+    vector<vector<bool>> ansMatrix = vector(n, vector(n, false));
+    for (auto [a, b] : ans) {
+        ansMatrix[a][b] = true;
+    }
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            REQUIRE(resultMatrix[i][j] == ansMatrix[i][j]);
+        }
+    }
 }
 
-TEST_CASE("Test accessPoint", "[mst]") {
+TEST_CASE("Test getMST with small graph", "[mst]") {
+    vector<Coord> nodes = FileReader::readRawNode("../tests/small.node.txt");
+    vector<pair<int, int>> edges = FileReader::readEdge("../tests/small.edge.txt");
+    SFMap m(nodes, edges);
+    configSmallGraph(m);
+
+    vector<pair<int, int>> result = m.getMST();
+    vector<pair<int, int>> ans{ {0, 1}, {1, 4}, {1, 2}, {4, 3}, {3, 6}, {6, 7}, {2, 5}, {4, 8} };
+}
+
+TEST_CASE("Test accessPoint as PNG", "[accessPoint]") {
     PNG image = sfmap.accessPoint();
     image.writeToFile("access-point.png");
 }

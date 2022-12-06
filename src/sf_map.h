@@ -218,7 +218,6 @@ class SFMap {
         KDTree _tree;
         /* MST */
         MST _mst;
-        vector<pair<int, int>> _mstEdges;
         /* Map range */
         double _minLat;
         double _maxLat;
