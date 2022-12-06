@@ -45,7 +45,8 @@ SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges) {
         coords.push_back(pair(node.coord, node.index));
     }
 
-    tree = KDTree(coords, normalizedDist);
+    _tree = KDTree(coords, normalizedDist);
+    _mst = MST(coords, getAdjList(), _dist);
 }
 
 SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges,
@@ -58,7 +59,7 @@ SFMap::SFMap(const vector<Coord>& nodes, const vector<pair<int, int>>& edges,
 
 void SFMap::addPoliceStation(const Coord& coord) {
     // Find nearest node to the police station
-    int index = tree.search(coord);
+    int index = _tree.search(coord);
 
     MapNode* node = &_nodes[index];
     if (!node->isPoliceStation) {
@@ -167,6 +168,7 @@ vector<double> SFMap::importanceAsVec() const {
     int n = size();
     vector<double> importanceValues(n, 0);
 
+    cout << "Calculating importance..." << endl;
     for (int index = 0; index < n; index++) {
         if (index % 100 == 0) cout << index << " / " << n << endl;
         // call getParents function
@@ -191,6 +193,42 @@ vector<double> SFMap::importanceAsVec() const {
 }
 
 /***    Goal 2   ***/
+PNG SFMap::accessPoint() const {
+    // Get mst edges
+    vector<pair<int, int>> edges = getMST();
+    // Construct adjList with edges
+    vector<vector<int>> adjList = vector(size(), vector<int>());
+    for (auto [i, j] : edges) {
+        adjList[i].push_back(j);
+        adjList[j].push_back(i);
+    }
+
+    // draw edge in mstEdges
+    PNG image = drawMap([this](int index) {
+            if (_neighbors[index].size() == 2) {
+                return rgbaColor{ 0, 0, 0, 0 };
+            } else {
+                return rgbaColor{ 225, 0, 0, 255 };
+            }
+        }, [&adjList](int index1, int index2) {
+            if (find(adjList[index1].begin(), adjList[index1].end(), index2) != adjList[index1].end()) {
+                return rgbaColor{ 0, 0, 0, 255 };
+            } else {
+                return rgbaColor{ 0, 0, 0, 0 };
+            }
+        });
+
+    return image;
+}
+
+vector<pair<int, int>> SFMap::getMST() const {
+    for (int i = 0; i < size(); i++) {
+        if (_neighbors[i].size() != 2) {
+            return _mst.primMST(i);
+        }
+    }
+    throw runtime_error("All nodes have degree 2");
+}
 
 /***    Goal 3   ***/
 Animation SFMap::escapeRoute(const Coord& start, double minDist, double zoom) {
@@ -222,8 +260,10 @@ Animation SFMap::escapeRoute(const Coord& start, double minDist, double zoom) {
     // Draw frames
     int j = 0;
     Coord center = _nodes[route[0]].coord;
+
+    cout << "Drawing GIF for escape route..." << endl;
     for (int i = 0; i < FRAMES; i++) {
-        cout << i << " / " << FRAMES << endl;
+        if (i % 10 == 0) cout << i << " / " << FRAMES << endl;
 
         // Calculate criminal's current location
         double curDist = (i == FRAMES - 1) ? total : step * i;
@@ -274,7 +314,7 @@ Animation SFMap::escapeRoute(const Coord& start, double minDist, double zoom) {
 
 vector<int> SFMap::escapeRouteAsVec(const Coord& start, double minDist) const {
     // find start node
-    const MapNode* startNode = &_nodes[tree.search(start)];
+    const MapNode* startNode = &_nodes[_tree.search(start)];
 
     // check if start node is police station
     if (startNode->isPoliceStation) {

@@ -28,6 +28,7 @@ void SFMap::setLineWidth(double lineWidth) {
 
 void SFMap::setMetric(function<double(const Coord&, const Coord&)> metric) {
     _dist = metric;
+    _mst.setMetric(metric);
 }
 
 vector<bool> SFMap::getValidSubset() const {
@@ -368,4 +369,16 @@ pair<double, int> SFMap::getEccentricity(int start) const {
     }
 
     return pair(maxDist, maxIndex);
+}
+
+vector<vector<int>> SFMap::getAdjList() const {
+    vector<vector<int>> adjList;
+    for (int i = 0; i < size(); i++) {
+        vector<int> neighbors;
+        for (const MapNode* neighbor : _neighbors[i]) {
+            neighbors.push_back(neighbor->index);
+        }
+        adjList.push_back(neighbors);
+    }
+    return adjList;
 }

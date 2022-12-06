@@ -14,6 +14,7 @@
 #include "animation.h"
 #include "coord.h"
 #include "kdtree.h"
+#include "mst.h"
 
 
 using namespace std;
@@ -114,6 +115,8 @@ class SFMap {
          */
         PNG accessPoint() const;
 
+        vector<pair<int, int>> getMST() const;
+
         /**
          * Potential Helper for 2?
          *
@@ -212,7 +215,9 @@ class SFMap {
         /* Metric for measuring distance */
         function<double(const Coord&, const Coord&)> _dist;
         /* K-d tree */
-        KDTree tree;
+        KDTree _tree;
+        /* MST */
+        MST _mst;
         /* Map range */
         double _minLat;
         double _maxLat;
@@ -274,6 +279,13 @@ class SFMap {
         void drawLine(PNG& image, const Coord& start, const Coord& end, double width,
             const rgbaColor& color) const;
         void colorPixel(HSLAPixel& pixel, const rgbaColor& color, double percentage) const;
+
+        /**
+         * Helper for constructing the MST.
+         *
+         * @return The adjacency list, but replace all MapNode* with its corresponding index.
+         */
+        vector<vector<int>> getAdjList() const;
 
         /**
          * Helper for 3.
