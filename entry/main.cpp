@@ -35,6 +35,7 @@ void checkFileExistence(string filename) {
     if (!file) {
         cout << "File \033[1;31m" << filename << "\033[m failed to generate" << endl;
         cout << "Please restart the program and try again." << endl;
+        cout << "We are sorry for the inconvenience :( hope you have a great day XD" << endl;
         exit(1);
     } else {
         cout << "Your image is saved as \033[1;32m" + filename + "\033[m in your \033[1m/build\033[m directory" << endl;
@@ -62,12 +63,30 @@ int main(int argc, char* argv[]) {
         case 1:
         {
             cout << "You have chosen to identify the importance of places in the city" << endl;
-            if (!confirm()) return 1;
+            cout << "\033[1;33mWarning:\033[m this function may take a long time to run (potentially up to days)" << endl;
+            cout << "Do you want to run from the start or see the result of a previous run?" << endl;
+            cout << "1. Run from the start" << endl;
+            cout << "2. See the result of a previous run" << endl;
+            int choice;
+            cin >> choice;
+            if (choice == 1) {
+                if (!confirm()) return 1;
+                cout << "Please wait while we calculate the importance of places in the city!" << endl;
+                PNG image = map.importance();
+                cout << "Successfully calculated the importance of places in the city!" << endl;
+                cout << "Saving your image..." << endl;
+                image.writeToFile("importance.png");
+            } else if (choice == 2) {
+                system("cp ../entry/importance.png .");
+            } else {
+                cout << "Invalid choice, please restart the program X_X" << endl;
+                return 1;
+            }
+                checkFileExistence("importance.png");
             break;
         }
         case 2:
         {
-
             cout << "You have chosen to find the Emergency Contact Access Point" << endl;
             if (!confirm()) return 1;
             cout << "Please wait while we calculate all the possible point and cabel plans!" << endl;
