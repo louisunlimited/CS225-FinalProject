@@ -1,5 +1,9 @@
 # CS225-FinalProject
 
+<p>
+    <img src="entry/map-colorpicker.png"/>
+</p>
+
 ## Data
 
 We are using [San Francisco Road Network Data](https://www.cs.utah.edu/~lifeifei/SpatialDataset.htm) and working with the following two datasets:
@@ -30,17 +34,26 @@ cd build
 cmake ..
 ```
 
-Then, run
+### Executable
 
-```bash
-# run all (main + tests)
-make 
+#### Main
 
-# run main
-make main
-./main
+To run our wonderful tool, make sure you first run `make` then run `./main` to run our **wonderful** CLI! Follow all the instructions there are you will be all set!
 
-# run tests
-make test_all
-./test_all
-```
+#### Tests
+
+To run all of our testcases, make sure you run `make` first! Then execute `./test_all [optinal tag]` to run all the tests we have! 
+
+We also provide extra tags for you so you don't have to run'em all in one go! Avaliable tags are:
+
+`[FileReader]`: All data parsing tests
+
+`[SFMap]`: SFMap constructor related tests
+
+`[DFS]`: DFS testcases
+
+`[Dijkstra]`: Dijkstra testcases
+
+`[prim]`: Prim's algorithm testcase
+
+Apart from the above ones, you can use `[png]` or `[gif]` to run all the png/gif-outputting cases.
