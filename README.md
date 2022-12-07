@@ -70,7 +70,7 @@ The `/lib` directory contains all files for producing PNG, creating pixels, and 
     └── lodepng.h
 ```
 
-The `/src` directory is the heart of our project.
+In the `/src` directory lies the heart of our project.
 
 ```text
 .
@@ -132,7 +132,7 @@ We have four main goals in this project, and the required inputs for each of the
         N/A, but you can choose to run this yourself or see the result of a previous run as promoted by the CLI.
     - Output:
 
-        `importance.png` showing the importance of all nodes in this map by it's color lightness. Lighter means less important.
+        `importance.png` showing the importance of all nodes in this map by it's color lightness. More important nodes tends to be darker.
 2. Emergency Contact Access Point
     - Input:
 

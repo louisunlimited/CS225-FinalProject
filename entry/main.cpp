@@ -25,7 +25,7 @@ bool confirm() {
     cin >> confirm;
     if (confirm == 'Y' || confirm == 'y') {
         return true;
-    } 
+    }
     cout << "Please restart the program to try another function to run X_X" << endl;
     return false;
 }
@@ -133,8 +133,8 @@ int main(int argc, char* argv[]) {
                     double minDist;
                     cin >> minDist;
                     cout << "Using the minimum distance of " << minDist << " km" << endl;
-                    cout << "Please enter the zoom level for the map (we recommend 0 < zoom < 18): " << endl;
-                    int zoom;
+                    cout << "Please enter the zoom level for the map (we recommend 1 <= zoom <= 18): " << endl;
+                    double zoom;
                     cin >> zoom;
                     cout << "Using the zoom level of " << zoom << endl;
                     cout << "Please wait while we randomly choose an excape route for our virtual thief!" << endl;
