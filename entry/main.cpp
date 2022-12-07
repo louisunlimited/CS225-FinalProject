@@ -101,13 +101,55 @@ int main(int argc, char* argv[]) {
         {
             cout << "You have chosen to use the Police Training Simulator" << endl;
             if (!confirm()) return 1;
-            cout << "Please wait while we randomly choose an excape route for our virtual thief!" << endl;
-            cout << "Route found! Drawing GIF output!" << endl;
-            Animation animation = map.escapeRoute(Coord(37.5108, -122.1117), 10, 18); // TODO: enable user to input the start point
-            cout << "----------------------------------------------------------------" << endl;
-            cout << "Writing to GIF file..." << endl;
-            animation.write("escapeRoute.gif");
-            checkFileExistence("escapeRoute.gif");
+            cout << "Do you want to use the default setup {Coord: (37.5108, -122.1117), minDist: 10, zoom: 18} or enter your own?" << endl;
+            cout << "1. Use the default start point" << endl;
+            cout << "2. Enter my own start point" << endl;
+            int choice;
+            cin >> choice;
+            switch (choice) {
+                case 1: 
+                {
+                    cout << "Using the default default setup {Coord: (37.5108, -122.1117), minDist: 10, zoom: 18}" << endl;
+                    cout << "Please wait while we randomly choose an excape route for our virtual thief!" << endl;
+                    cout << "Route found! Drawing GIF output!" << endl;
+                    Animation animation = map.escapeRoute(Coord(37.5108, -122.1117), 10, 18);
+                    cout << "----------------------------------------------------------------" << endl;
+                    cout << "Writing to GIF file..." << endl;
+                    animation.write("escapeRoute.gif");
+                    checkFileExistence("escapeRoute.gif");
+                } 
+                case 2: 
+                {
+                    cout << "Please enter a valid start point coordinate (to 4 decimal):" << endl;
+                    cout << "Latitude: " << endl;
+                    double lat;
+                    cin >> lat;
+                    cout << "Longitude: " << endl;
+                    double lon;
+                    cin >> lon;
+                    cout << "Using the start point (" << lat << ", " << lon << ")" << endl;
+                    cout << "Please enter the minimum distance (in km) for the virtual thief to run: " << endl;
+                    double minDist;
+                    cin >> minDist;
+                    cout << "Using the minimum distance of " << minDist << " km" << endl;
+                    cout << "Please enter the zoom level for the map (we recommend 0 < zoom < 18): " << endl;
+                    int zoom;
+                    cin >> zoom;
+                    cout << "Using the zoom level of " << zoom << endl;
+                    cout << "Please wait while we randomly choose an excape route for our virtual thief!" << endl;
+                    cout << "Route found! Drawing GIF output!" << endl;
+                    Animation animation = map.escapeRoute(Coord(lat, lon), minDist, zoom);
+                    cout << "----------------------------------------------------------------" << endl;
+                    cout << "Writing to GIF file..." << endl;
+                    animation.write("escapeRoute.gif");
+                    checkFileExistence("escapeRoute.gif");
+                } 
+                default: 
+                {
+                    cout << "Invalid choice, please restart the program X_X" << endl;
+                    return 1;
+                }
+            }
             break;
         }
         case 4:
