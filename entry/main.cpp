@@ -117,6 +117,7 @@ int main(int argc, char* argv[]) {
                     cout << "Writing to GIF file..." << endl;
                     animation.write("escapeRoute.gif");
                     checkFileExistence("escapeRoute.gif");
+                    break;
                 } 
                 case 2: 
                 {
@@ -143,6 +144,7 @@ int main(int argc, char* argv[]) {
                     cout << "Writing to GIF file..." << endl;
                     animation.write("escapeRoute.gif");
                     checkFileExistence("escapeRoute.gif");
+                    break;
                 } 
                 default: 
                 {
