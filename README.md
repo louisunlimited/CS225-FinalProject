@@ -121,7 +121,46 @@ cmake ..
 
 ### Main
 
-To run our wonderful tool, make sure you first run `make` then run `./main` to run our **wonderful** CLI! Follow all the instructions there and you will be all set! By default, all the outputs will be exported to the `/buil` directory in this project, but please consult the CLI for further references.
+To run our wonderful tool, make sure you first run `make` then run `./main` to run our **wonderful** CLI! Follow all the instructions there and you will be all set! By default, all the outputs will be exported to the `/build` directory in this project, but please consult the CLI for further references.
+
+We have four main goals in this project, and the required inputs for each of the functionality are as follows:
+
+1. Identify the importance of places in the city
+    - Input:
+
+        N/A, but you can choose to run this yourself or see the result of a previous run as promted by the CLI.
+    - Output:
+
+        `importance.png` showing the importance of all the nodes in this map by it's color darkness. Darker means more important.
+2. Emergency Contact Access Point
+    - Input:
+
+        N/A
+    - Output:
+
+        `access-point.png` showing all the possible access points listed as nodes colored in red, along with black routes showing the optimum cable plannings for powering those access points.
+3. Police Training Simulator
+    - Input:
+
+        A pair of earth coordinates (to 4 decimal) as the starting point. We are using kd-tree to find the best match for your inputs, so technically we do not have hard restrictions on your input. But for the best result please try to be as accurate as possible and stay within the San Francisco Area.
+
+        An integer zoom factor for zooming the map. We recommend choosing between 0 and 18.
+
+        An integer minimum distant in kilometers for the thief to run. We recommend keeping this between 0 and 100 for the best result.
+
+    - Output: `escapeRoute.gif` showing an animated escape route for our virtual thief to run.
+4. Finding the next best position for a new police station
+    - Input:
+
+        A zoom factor for zooming the map. We recommend choosing between 0 and 18.
+
+        NOTE: You can choose to run this yourself or see the result of a previous run as promted by the CLI.
+
+    - Output:
+
+        `police-station.png` showing the next-best position for the next police station to be.
+
+We do not support custom datasets just yet, but we might consider adding it in the future.
 
 ### Tests
 
@@ -141,11 +180,17 @@ We also provide extra tags for you so you don't have to run'em all in one go! Av
 
 Apart from the above ones, you can use `[png]` or `[gif]` to run all the png/gif-outputting cases.
 
+We've also created several custom datasets for testing our algorithms to make sure they are working as expected. As mentioned above, they are all listed in the same directory as all the tests themselves. Feel free to take a look at them. Apart from testing DFS, Dijkstra, and Prim's; we also tested for more general functions like data parsing and PNGs.
+
+---
+
 If you have questions, please consult the gif below for reference.
 
 <p align="center">
     <img src="entry/runninginstruction.gif" width="350"/>
 </p>
+
+---
 
 ## Ending
 
