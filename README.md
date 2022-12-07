@@ -30,6 +30,73 @@ All relevant docs can be found inside the `/docs` directory. These include dev l
 
 Datasets can be found inside `/data` directory. These include all the relevant datas used in this project.
 
+### Code base
+
+```text
+.
+├── data
+├── docs
+├── entry
+├── lib
+│   ├── cs225
+│   └── lodepng
+├── src
+└── tests
+```
+
+The main entry point to our program lies with in `main.cpp` in the `/entry` directory. We call all the functions in this file for you! 
+
+The `/lib` directory contains all the files for producing PNG, creating pixels, and more.
+
+```text
+.
+├── CMakeLists.txt
+├── cs225                   /* CS225 lib */
+│   ├── HSLAPixel.cpp       /* Pixel Class */
+│   ├── HSLAPixel.h
+│   ├── PNG.cpp             /* PNG Class */
+│   ├── PNG.h
+│   └── RGB_HSL.h
+└── lodepng
+    ├── lodepng.cpp
+    └── lodepng.h
+```
+
+The `/src` directory lies the heart of our project.
+
+```text
+.
+├── CMakeLists.txt
+├── animation.cpp           /* GIF output */
+├── animation.h             
+├── coord.cpp               /* Class for Coordinates */
+├── coord.h
+├── filereader.cpp          /* Data Processing */
+├── filereader.h
+├── kdtree.cpp              /* KD Tree */
+├── kdtree.h
+├── mst.cpp                 /* MST w/ Prim's */
+├── mst.h
+├── sf_map.cpp              /* Main class for this program */
+├── sf_map.h
+└── sf_map_helpers.cpp      /* Extra helpers */
+```
+
+The `/test` directory contains all of our tests as well as our own dataset created for testing.
+
+```text
+.
+├── large.edge.txt          /* Custom Large Dataset */
+├── large.node.txt
+├── medium.edge.txt         /* Custom Medium Dataset */
+├── medium.node.txt
+├── small.edge.txt          /* Custom Small Dataset */
+├── small.node.txt
+└── tests.cpp               /* Main test file */
+```
+
+Furthermore, thanks to [Github Actions](https://docs.github.com/en/actions), we are utilizing CI/CD in our project to automate the developing process. We are surprised by how our CI/CD pipelines had helped us finding potential errors that are not reported on our own dev machines. It has been a great help and a great taste of DevOps in our project. As always, the workflow file can befound in the `cmake.yml` file inside `.github` directory.
+
 ## Running Instructions
 
 Make sure you have [docker](www.docker.com) installed on your machine and you are running this in your docker environment. If you have trouble setting up, please refer to [this](https://courses.engr.illinois.edu/cs225/fa2022/resources/own-machine/) link for reference.
@@ -46,7 +113,7 @@ cmake ..
 
 ### Main
 
-To run our wonderful tool, make sure you first run `make` then run `./main` to run our **wonderful** CLI! Follow all the instructions there and you will be all set!
+To run our wonderful tool, make sure you first run `make` then run `./main` to run our **wonderful** CLI! Follow all the instructions there and you will be all set! By default, all the outputs will be exported to the `/buil` directory in this project, but please consult the CLI for further references.
 
 ### Tests
 
