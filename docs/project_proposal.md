@@ -78,6 +78,7 @@ We have acquired a dataset on the San Fransico Road Network, and we are thinking
 
     **input:**
     - Starting coordinate: `Coord(double, double)`
+    - Zoom factor: `double`
 
     **Output:**
     - A `GIF` showing a regular map that shows the movement of the criminal out of town.
