@@ -46,7 +46,7 @@ We have acquired a dataset on the San Fransico Road Network, and we are thinking
 
     **Algorithm**: `Dijkstra's algorithm` will be applied to every node to find all shortest paths. Then for every point, we will calculate the betweenness centrality as its importance value.
 
-    **Input**: RBG value(optional)
+    **Input**: N/A
 
     **Output**:
 
@@ -78,7 +78,8 @@ We have acquired a dataset on the San Fransico Road Network, and we are thinking
 
     **input:**
     - Starting coordinate: `Coord(double, double)`
-    - Zoom factor: `double`
+    - Minumum Distant: `Int`
+    - Zoom factor: `Int`
 
     **Output:**
     - A `GIF` showing a regular map that shows the movement of the criminal out of town.
@@ -92,7 +93,7 @@ We have acquired a dataset on the San Fransico Road Network, and we are thinking
     **Algorithm**: We will traverse all the node one by one and regard each as a potential police station, then calculate the maximum distance for the police to reach any node on the graph using `Dijkstra's algorithm`. We aim to find the best solution that gives the minimum of such distance.
 
     **Input**:
-    - Zoom factor: `double`
+    - Zoom factor: `Int`
 
     **Output**:
     - A `PNG` with highlighted location for the next possible police station. The image is scaled by the given factor.

@@ -180,7 +180,7 @@ We also provide extra tags for you so you don't have to run'em all in one go! Av
 
 Apart from the above ones, you can use `[png]` or `[gif]` to run all the png/gif-outputting cases.
 
-We've also created several custom datasets for testing our algorithms to make sure they are working as expected. As mentioned above, they are all listed in the same directory as all the tests themselves. Feel free to take a look at them. Apart from testing DFS, Dijkstra, and Prim's; we also tested for more general functions like data parsing and PNGs.
+We've also created several custom datasets for testing our algorithms to make sure they are working as expected. As mentioned above, they are all listed in the same directory as all the tests themselves. Feel free to take a look at them. Apart from testing DFS, Dijkstra, and Prim's; we also tested for more general functions like data parsing and PNGs. There are two testcases being commented out because those may take days to run, but feel free to un-comment them and try them yourself.
 
 ---
 
