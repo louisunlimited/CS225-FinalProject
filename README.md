@@ -1,6 +1,14 @@
 # CS225-FinalProject
 
 <p align="center">
+    <a href="#data">Data</a> - 
+    <a href="#file-structure">File Structure</a> - 
+    <a href="#running-instructions">Running Instructions</a> - 
+    <a href="#executable">Executable</a> - 
+    <a href="#ending">Ending</a>
+</p>
+
+<p align="center">
     <img src="entry/map-colorpicker.png" width="350"/>
 </p>
 
