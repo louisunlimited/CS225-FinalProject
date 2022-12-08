@@ -67,7 +67,7 @@ class SFMap {
         void addPoliceStation(const Coord& coord);
 
         /**
-         * Return a map of the city of San Francisco. 5000 pixels represents 1 degree
+         * Return a map of the city of San Francisco. 1500 pixels represents 1 degree
          * The color pickers are closures that takes the node(s) index as input and output the
          * color as a rgbaColor object
          *

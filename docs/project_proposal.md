@@ -62,8 +62,7 @@ We have acquired a dataset on the San Fransico Road Network, and we are thinking
 
     **Algorithm**: Prim's algorithm will be used to construct a minimum spanning tree with desired positions (possibly nodes with degree $d \neq 2$) on top of the graph. Then, we would output a PNG with the access point and cable routes drawn.
 
-    **Input**:
-    - There will be no input apart from the Map data we have.
+    **Input**: N/A
 
     **Output**:
     - A `PNG` containing the map showing access point locations and cable routes.
@@ -78,8 +77,8 @@ We have acquired a dataset on the San Fransico Road Network, and we are thinking
 
     **input:**
     - Starting coordinate: `Coord(double, double)`
-    - Minumum Distant: `Int`
-    - Zoom factor: `Int`
+    - Minumum Distance: `double`
+    - Zoom factor: `double`
 
     **Output:**
     - A `GIF` showing a regular map that shows the movement of the criminal out of town.
@@ -93,7 +92,7 @@ We have acquired a dataset on the San Fransico Road Network, and we are thinking
     **Algorithm**: We will traverse all the node one by one and regard each as a potential police station, then calculate the maximum distance for the police to reach any node on the graph using `Dijkstra's algorithm`. We aim to find the best solution that gives the minimum of such distance.
 
     **Input**:
-    - Zoom factor: `Int`
+    - Zoom factor: `double`
 
     **Output**:
     - A `PNG` with highlighted location for the next possible police station. The image is scaled by the given factor.
