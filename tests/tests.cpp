@@ -282,6 +282,29 @@ TEST_CASE("Test SFMap nextPoliceStationAsIndex", "[SFMap][nextPoliceStation]") {
     cout << "Result: node " << node << endl;
 }
 
+TEST_CASE("Test SFMap nextPoliceStation as PNG", "[SFMap][nextPoliceStation][png]") {
+    PNG image = sfmap.nextPoliceStation(1.0);
+    image.writeToFile("police-station.png");
+}
+
+TEST_CASE("Test SFMap 10 nextPoliceStation as PNG", "[SFMap][nextPoliceStation][png]") {
+    vector<Coord> coords = FileReader::readRawNode("../data/SF.cnode.txt");
+    Coord anchor1(37.5108, -122.1117);
+    Coord normalizedAnchor1(5037.15, 4518.17);
+    Coord anchor2(37.9956, -123.0232);
+    Coord normalizedAnchor2(2261.93, 0);
+    FileReader::convertNode(coords, anchor1, normalizedAnchor1, anchor2, normalizedAnchor2);
+
+    SFMap sfmap_ = loadMap();
+    for (int i = 0; i < 9; i++) {
+        int node = sfmap_.nextPoliceStationAsIndex();
+        cout << "Result: node " << node << endl;
+        sfmap_.addPoliceStation(coords[node]);
+    }
+    PNG image = sfmap_.nextPoliceStation(1.0);
+    image.writeToFile("police-station-10.png");
+}
+
 // TEST_CASE("Test SFMap nextPoliceStationAsIndexSlow", "[SFMap][nextPoliceStationSlow]") {
 //     int index = 0;
 //     auto [targets, ecc] = sfmap.nextPoliceStationAsIndexSlow(index, 6);

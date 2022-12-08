@@ -157,7 +157,7 @@ PNG SFMap::importance() const {
             // red = 360, blue = 240
             return hsl2rgb(hslaColor{ 240 + 120 * (imp[index]), 0.8, 0.5, 1 });
         }, [](int index1, int index2) {
-            return rgbaColor{ 0, 0, 0, 225 };
+            return rgbaColor{ 0, 0, 0, 255 };
         });
 }
 
@@ -208,7 +208,7 @@ PNG SFMap::accessPoint() const {
             if (_neighbors[index].size() == 2) {
                 return rgbaColor{ 0, 0, 0, 0 };
             } else {
-                return rgbaColor{ 225, 0, 0, 255 };
+                return rgbaColor{ 255, 0, 0, 255 };
             }
         }, [&adjList](int index1, int index2) {
             if (find(adjList[index1].begin(), adjList[index1].end(), index2) != adjList[index1].end()) {
@@ -334,54 +334,32 @@ vector<int> SFMap::escapeRouteAsVec(const Coord& start, double minDist) const {
 /***    Goal 4   ***/
 
 PNG SFMap::nextPoliceStation(double zoom) const {
-    // PNG image = drawMap([this](int index) {
-    //         // red = 360, blue = 240
-    //         return rgbaColor{ 0, 0, 0, 225 };
-    //     }, [](int index1, int index2) {
-    //         return rgbaColor{ 0, 0, 0, 225 };
-    //     });
+    int next = nextPoliceStationAsIndex();
+    Coord center = _nodes[next].coord;
 
-    // Change size of image
-    const double MAX_DIM = 1000;
-    double originalScale = SCALE;
-    double originalRadius = RADIUS;
-    double originalWidth = LINE_WIDTH;
-    double latDiff = _maxLat - _minLat;
-    double longDiff = _maxLong - _minLong;
-    
-    int index = nextPoliceStationAsIndex();
-    Coord center = _nodes[index].coord;
-    
-    PNG image = drawMap([this](int index) {
-            // red = 360, blue = 240
-                return rgbaColor{ 0, 0, 0, 225 };
+    PNG image = drawMap(zoom, center, [next](int index) {
+                return rgbaColor{ 0, 0, 0, 255 };
             }, [](int index1, int index2) {
-                return rgbaColor{ 0, 0, 0, 225 };
+                return rgbaColor{ 0, 0, 0, 255 };
             });
-    
-    // draw new police stations
-        double zHeight = (_maxLat - _minLat + MARGIN * 2) / zoom;
-        double zWidth = (_maxLong - _minLong + MARGIN * 2) / zoom;
-        double zMinLat = min(max(center.lat_ - 0.5 * zHeight, _minLat - MARGIN), _maxLat + MARGIN - zHeight);
-        double zMinLong = min(max(center.long_ - 0.5 * zWidth, _minLong - MARGIN), _maxLong + MARGIN - zWidth);
-        Coord lowerLeft = Coord(zMinLat, zMinLong);
-        Coord zoomedTarget = coord2Pixel(center, lowerLeft, zoom);
-        drawCircle(image, zoomedTarget, RADIUS * sqrt(zoom) * 2, rgbaColor{ 0, 255, 0, 255 });
-    
-    // draw old police station
-    for (size_t j = 0; j < _police.size(); j++) {
-        double zHeight = (_maxLat - _minLat + MARGIN * 2) / zoom;
-        double zWidth = (_maxLong - _minLong + MARGIN * 2) / zoom;
-        double zMinLat = min(max(_police[j]->coord.lat_ - 0.5 * zHeight, _minLat - MARGIN), _maxLat + MARGIN - zHeight);
-        double zMinLong = min(max(_police[j]->coord.long_ - 0.5 * zWidth, _minLong - MARGIN), _maxLong + MARGIN - zWidth);
-        Coord lowerLeft = Coord(zMinLat, zMinLong);
-        Coord zoomedTarget = coord2Pixel(_police[j]->coord, lowerLeft, zoom);
-        drawCircle(image, zoomedTarget, RADIUS * sqrt(zoom) * 2, rgbaColor{ 255, 0, 0, 255 });
+
+    double zHeight = (_maxLat - _minLat + MARGIN * 2) / zoom;
+    double zWidth = (_maxLong - _minLong + MARGIN * 2) / zoom;
+    double zMinLat = min(max(center.lat_ - 0.5 * zHeight, _minLat - MARGIN), _maxLat + MARGIN - zHeight);
+    double zMinLong = min(max(center.long_ - 0.5 * zWidth, _minLong - MARGIN), _maxLong + MARGIN - zWidth);
+    Coord lowerLeft = Coord(zMinLat, zMinLong);
+
+    // draw original police stations
+    for (int i = 0; i < (int)_police.size(); i++) {
+        Coord zoomedTarget = coord2Pixel(_police[i]->coord, lowerLeft, zoom);
+        drawCircle(image, zoomedTarget, RADIUS * sqrt(zoom) * 5, rgbaColor{ 255, 0, 0, 255 });
     }
-    
-    
+
+    // draw new police stations
+    Coord zoomedTarget = coord2Pixel(center, lowerLeft, zoom);
+    drawCircle(image, zoomedTarget, RADIUS * sqrt(zoom) * 5, rgbaColor{ 0, 255, 0, 255 });
+
     return image;
-    
 }
 
 int SFMap::nextPoliceStationAsIndex() const {
