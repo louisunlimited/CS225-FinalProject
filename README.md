@@ -115,14 +115,19 @@ Once you are in your docker environment, navigate to the root directory of this 
 mkdir build
 cd build
 cmake ..
-make
 ```
 
 ## Executable
 
+If you followed the initialization steps above, you should already be in the `/build` directory!
+
+Now run `make` to compile all the executables mentioned below! As an alternative, you can make individual executables by running `make <exec name>`.
+
+After finishing this step, you may proceed to acctually run our program!
+
 ### Main
 
-In the `/build` directory, use `./main` to run our **wonderful** CLI! Follow all the instructions there and you will be all set! By default, all the outputs will be exported to the `/build` directory in this project, but please consult the CLI for further references.
+Run `./main` in the `/build` directory to run our **wonderful** CLI! Follow all the instructions there and you will be all set! By default, all the outputs will be exported to the `/build` directory in this project, but please consult the CLI for further references.
 
 We have four main goals in this project, and the required inputs for each of the functionalities are as follows:
 
