@@ -160,8 +160,6 @@ We have four main goals in this project, and the required inputs for each of the
 
         A zoom factor (double) for zooming the map. We recommend choosing between 1 and 18.
 
-        NOTE: You can choose to run this yourself or see the result of a previous run as promted by the CLI.
-
     - Output:
 
         `police-station.png` showing the next-best position for the next police station to be.
