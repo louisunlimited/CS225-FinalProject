@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-    <img src="entry/map-colorpicker.png" width="500"/>
+    <img src="entry/map-logo.png" width="500"/>
 </p>
 
 <div align="center">
