@@ -277,17 +277,17 @@ TEST_CASE("Test getParents with medium graph", "[getParents][Dijkstra]") {
     REQUIRE(result[8] == 7);
 }
 
-TEST_CASE("Test SFMap nextPoliceStationAsIndex", "[SFMap][nextPoliceStation]") {
+TEST_CASE("Test SFMap nextPoliceStationAsIndex", "[nextPoliceStation]") {
     int node = sfmap.nextPoliceStationAsIndex();
     cout << "Result: node " << node << endl;
 }
 
-TEST_CASE("Test SFMap nextPoliceStation as PNG", "[SFMap][nextPoliceStation][png]") {
+TEST_CASE("Test SFMap nextPoliceStation as PNG", "[nextPoliceStation][png]") {
     PNG image = sfmap.nextPoliceStation(1.0);
     image.writeToFile("police-station.png");
 }
 
-TEST_CASE("Test SFMap 10 nextPoliceStation as PNG", "[SFMap][nextPoliceStation][png]") {
+TEST_CASE("Test SFMap 10 nextPoliceStation as PNG", "[nextPoliceStation][png]") {
     vector<Coord> coords = FileReader::readRawNode("../data/SF.cnode.txt");
     Coord anchor1(37.5108, -122.1117);
     Coord normalizedAnchor1(5037.15, 4518.17);
