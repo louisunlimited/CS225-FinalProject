@@ -45,6 +45,14 @@ void checkFileExistence(string filename) {
 
 int main(int argc, char* argv[]) {
     cout << "\033[1mWelcome! Thanks for using \033[1;32mTHE BEST\033[m \033[1mtool for police training and planning!\033[m" << endl;
+    cout << R"( 
+            ███████╗███████╗███╗   ███╗ █████╗ ██████╗ 
+            ██╔════╝██╔════╝████╗ ████║██╔══██╗██╔══██╗
+            ███████╗█████╗  ██╔████╔██║███████║██████╔╝
+            ╚════██║██╔══╝  ██║╚██╔╝██║██╔══██║██╔═══╝ 
+            ███████║██║     ██║ ╚═╝ ██║██║  ██║██║     
+            ╚══════╝╚═╝     ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝     
+            )" << endl;
     cout << "============================================================" << endl;
     SFMap map = loadMap();
     cout << "Map successfully loaded!" << endl;
