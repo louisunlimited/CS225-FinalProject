@@ -22,6 +22,7 @@ SFMap loadMap() {
 bool confirm() {
     cout << "Are you sure you want to choose this function? (Y/N)" << endl;
     char confirm;
+    cout << "\033[1mYour choice: \033[m";
     cin >> confirm;
     if (confirm == 'Y' || confirm == 'y') {
         return true;
@@ -57,6 +58,7 @@ int main(int argc, char* argv[]) {
     cout << "Please enter the number of the function you want to use: " << endl;
 
     int choice;
+    cout << "\033[1mYour choice: \033[m";
     cin >> choice;
 
     switch (choice) {
@@ -68,6 +70,7 @@ int main(int argc, char* argv[]) {
             cout << "1. Run from the start" << endl;
             cout << "2. See the result of a previous run" << endl;
             int choice;
+            cout << "\033[1mYour choice: \033[m";
             cin >> choice;
             if (choice == 1) {
                 if (!confirm()) return 1;
@@ -105,6 +108,7 @@ int main(int argc, char* argv[]) {
             cout << "1. Use the default start point" << endl;
             cout << "2. Enter my own start point" << endl;
             int choice;
+            cout << "\033[1mYour choice: \033[m";
             cin >> choice;
             switch (choice) {
                 case 1: 
@@ -122,19 +126,21 @@ int main(int argc, char* argv[]) {
                 case 2: 
                 {
                     cout << "Please enter a valid start point coordinate (to 4 decimal):" << endl;
-                    cout << "Latitude: " << endl;
                     double lat;
+                    cout << "\033[1mLatitude: \033[m";
                     cin >> lat;
-                    cout << "Longitude: " << endl;
                     double lon;
+                    cout << "\033[1mLongitude: \033[m";
                     cin >> lon;
                     cout << "Using the start point (" << lat << ", " << lon << ")" << endl;
                     cout << "Please enter the minimum distance (in km) for the virtual thief to run: " << endl;
                     double minDist;
+                    cout << "\033[1mMinimun Distant: \033[m";
                     cin >> minDist;
                     cout << "Using the minimum distance of " << minDist << " km" << endl;
                     cout << "Please enter the zoom level for the map (we recommend 1 <= zoom <= 18): " << endl;
                     double zoom;
+                    cout << "\033[1mZoom Level: \033[m";
                     cin >> zoom;
                     cout << "Using the zoom level of " << zoom << endl;
                     cout << "Please wait while we randomly choose an excape route for our virtual thief!" << endl;
@@ -158,6 +164,47 @@ int main(int argc, char* argv[]) {
         {
             cout << "You have chosen to find the next best position for a new police station" << endl;
             if (!confirm()) return 1;
+            cout << "This function accepts an optional zoom level (we recommend 1 <= zoom <= 18)" << endl;
+            cout << "Do you want to use the default zoom level (1.0) or enter your own?" << endl;
+            cout << "1. Use the default zoom level" << endl;
+            cout << "2. Enter my own zoom level" << endl;
+            int choice;
+            cout << "\033[1mYour choice: \033[m";
+            cin >> choice;
+            switch (choice) {
+                case 1: 
+                {
+                    cout << "Using the default zoom level (1.0)" << endl;
+                    cout << "Please wait while we calculate the next best position for a new police station!" << endl;
+                    PNG image = map.nextPoliceStation(1.0);
+                    cout << "Successfully calculated the next best position for a new police station!" << endl;
+                    cout << "Saving your image..." << endl;
+                    image.writeToFile("police-station.png");
+                    checkFileExistence("police-station.png");
+                    break;
+                } 
+                case 2: 
+                {
+                    cout << "Please enter the zoom level for the map (we recommend 1 <= zoom <= 18): " << endl;
+                    double zoom;
+                    cout << "\033[1mZoom Level: \033[m";
+                    cin >> zoom;
+                    cout << "Using the zoom level of " << zoom << endl;
+                    cout << "Please wait while we calculate the next best position for a new police station!" << endl;
+                    PNG image = map.nextPoliceStation(zoom);
+                    cout << "Successfully calculated the next best position for a new police station!" << endl;
+                    cout << "Saving your image..." << endl;
+                    image.writeToFile("police-station.png");
+                    cout << "The next best position is highlighted in \033[1;32mGREEN\033[m on the graph" << endl;
+                    checkFileExistence("police-station.png");
+                    break;
+                } 
+                default: 
+                {
+                    cout << "Invalid choice, please restart the program X_X" << endl;
+                    return 1;
+                }
+            }
             break;
         }
         default:
