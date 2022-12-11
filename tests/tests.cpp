@@ -1,10 +1,11 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <cmath>
 #include <iostream>
 #include <limits>
+#include <set>
 #include "filereader.h"
 #include "sf_map.h"
-#include <cmath>
 
 using namespace std;
 
@@ -345,6 +346,12 @@ TEST_CASE("Test escapeRoute as GIF", "[escapeRoute][gif]") {
     cout << "GIF saved." << endl;
 }
 
+void checkEqual(const vector<pair<int, int>>& list1, const vector<pair<int, int>>& list2) {
+    set<pair<int, int>> set1(list1.cbegin(), list1.cend());
+    set<pair<int, int>> set2(list2.cbegin(), list2.cend());
+    REQUIRE(set1 == set2);
+}
+
 TEST_CASE("Test getMST with small graph", "[mst][prim]") {
     vector<Coord> nodes = FileReader::readRawNode("../tests/small.node.txt");
     vector<pair<int, int>> edges = FileReader::readEdge("../tests/small.edge.txt");
@@ -353,6 +360,7 @@ TEST_CASE("Test getMST with small graph", "[mst][prim]") {
 
     vector<pair<int, int>> result = m.getMST();
     vector<pair<int, int>> ans{ {0, 1}, {1, 4}, {1, 2}, {4, 3}, {3, 6}, {6, 7}, {2, 5}, {4, 8} };
+    checkEqual(result, ans);
 }
 
 TEST_CASE("Test accessPoint as PNG", "[accessPoint][png]") {
