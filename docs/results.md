@@ -22,9 +22,9 @@
 ## Goal 2: Emergency Contact Access Point
   - **Algorithm**:
 
-    The second goal aims to place "emergency contact access points" (a fictional non-portable device that notifies the police when activated) at every cross and ends, and minimize the total lengths of wires connecting them. Note that the wires need to be placed along roads to avoid violation of the residents' underground spaces. Our solution is to construct a minimum spanning tree on all nodes with degree not equal to 2 (since we are only considering cross and ends) using Prim's algorithm. Nodes with degree equal to 2 will be considered as a midpoint of a longer edge.
+    The second goal aims to place "emergency contact access points" (a fictional non-portable device that notifies the police when activated) at every cross and ends, and minimize the total lengths of wires connecting them. Note that the wires need to be placed along roads to avoid violation of the residents' underground spaces. Our solution is to construct a minimum spanning tree (MST) on all nodes with degree not equal to 2 (since we are only considering cross and ends) using Prim's algorithm. Nodes with degree equal to 2 will be considered as a midpoint of a longer edge.
 
-    After the minimum spanning tree is constructed, it will be presented as an image showing all access points and the wires connecting them.
+    After the MST is constructed, it will be presented as an image showing all access points and the wires connecting them.
 
   - **Test Cases**:
 
@@ -37,6 +37,17 @@
 ---
 
 ## Goal 3: Police Training Simulator
+  - **Algorithm**:
+
+    The third goal is to simulate the escape route of criminals using depth-first search (DFS). In most cases, the criminal does not have time to choose their path carefully, and will choose the first path they see (unless it leads to a police station). However, considering the possibility of the criminal running into a dead end, which would make the training too easy, we specify a minimum distance that the criminal have to run. Therefore, the complete implementation includes using DFS to search for a path and stop when the total length of the path exceeds the given minimum distance.
+
+  - **Test Cases**:
+
+    The test cases only test that the total lengths of the path must be greater than the minimum distance. The actual nodes in the path, on the other hand, is not tested, as there are multiple paths that are correct under the given restrictions.
+
+  - **Output**:
+
+    <p align="center"><img src="../results/escape-route.gif" width="400"/></p>
 
 ---
 
