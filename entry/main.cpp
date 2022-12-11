@@ -127,8 +127,8 @@ int main(int argc, char* argv[]) {
                     Animation animation = map.escapeRoute(Coord(37.5108, -122.1117), 10, 18);
                     cout << "----------------------------------------------------------------" << endl;
                     cout << "Writing to GIF file..." << endl;
-                    animation.write("escapeRoute.gif");
-                    checkFileExistence("escapeRoute.gif");
+                    animation.write("escape-route.gif");
+                    checkFileExistence("escape-route.gif");
                     break;
                 } 
                 case 2: 
@@ -156,8 +156,8 @@ int main(int argc, char* argv[]) {
                     Animation animation = map.escapeRoute(Coord(lat, lon), minDist, zoom);
                     cout << "----------------------------------------------------------------" << endl;
                     cout << "Writing to GIF file..." << endl;
-                    animation.write("escapeRoute.gif");
-                    checkFileExistence("escapeRoute.gif");
+                    animation.write("escape-route.gif");
+                    checkFileExistence("escape-route.gif");
                     break;
                 } 
                 default: 
