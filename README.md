@@ -148,7 +148,7 @@ We have four main goals in this project, and the required inputs for each of the
 3. Police Training Simulator
     - Input:
 
-        A pair of earth coordinates (latitude before longitude, to 4 decimal) as the starting point. We are using k-d tree to find the best match for your inputs, so technically we do not have hard restrictions on your input. But for the best result please try to be as accurate as possible and stay within the San Francisco Area.
+        A pair of earth coordinates (latitude before longitude, to 4 decimal) as the starting point. We are using k-d tree (KNN) to find the best match for your inputs, so technically we do not have hard restrictions on your input. But for the best result please try to be as accurate as possible and stay within the San Francisco Area.
 
         A zoom factor (double) for zooming the map. We recommend choosing between 1 and 18.
 

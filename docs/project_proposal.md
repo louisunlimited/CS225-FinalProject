@@ -73,7 +73,7 @@ We have acquired a dataset on the San Fransico Road Network, and we are thinking
 
 3. Police Training Simulator
 
-    **Algorithm:** Depth-First-Search will be used to select the path for the criminal through a graph. The nodes will be coordinates, and the edges correspond to the length of the road between them.
+    **Algorithm:** Depth-First-Search will be used to select the path for the criminal through a graph. The nodes will be coordinates, and the edges correspond to the length of the road between them. We will also use K-Nearest-Neighbor to find the nearest node to the starting coordinate, if applicable.
 
     **input:**
     - Starting coordinate: `Coord(double, double)`
