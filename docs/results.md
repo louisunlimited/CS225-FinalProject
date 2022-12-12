@@ -60,7 +60,7 @@
 
     The best new police station is defined as the new point $u$ such that, when added to the set of police stations $P$, will minimize the eccentricity:
 
-    $$\text{best new police station} = \underset{u \in V}{\operatorname{argmin\,}}\text{ecc}(u + P) = \underset{u \in V}{\operatorname{argmin\,}}\max_{v \in V}\min_{p \in u + P}{d(v, p)}$$
+    $$\text{best new police station} = \underset{u \in V}{\operatorname{argmin}}\,\text{ecc}(u + P) = \underset{u \in V}{\operatorname{argmin}}\,\max_{v \in V}\min_{p \in u + P}{d(v, p)}$$
 
     A traditional way of solving this problem would involve calculating the eccentricity (which requires applying Dijkstra's algorithm using $u + P$ as the starting nodes) for every possible values of $u$. The problem with this approach is that it would take more than 20 hours of runtime.
 
