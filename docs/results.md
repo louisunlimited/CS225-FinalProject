@@ -52,3 +52,26 @@
 ---
 
 ## Goal 4: Finding the next best position for a new police station
+  - **Algorithm**:
+
+    To explain the purpose of the last goal, we need to define a term called eccentricity. The eccentricity of a set of police stations is the maximum of the distance between any node in the graph and the nearest police station. If we use $V$ to represent the nodes in the graph, $P$ to represent the police stations, and $d(x, y)$ represent the length of the shortest path between nodes $x$ and $y$, then the eccentricity can be calculated with
+
+    $$\text{ecc}(P) = \max_{v \in V}\min_{p \in P}{d(v, p)}$$
+
+    The best new police station is defined as the new point $u$ such that, when added to the set of police stations $P$, will minimize the eccentricity:
+
+    $$\text{best new police station} = \argmin_{u \in V}\text{ecc}(u + P) = \argmin_{u \in V}\max_{v \in V}\min_{p \in u + P}{d(v, p)}$$
+
+    A traditional way of solving this problem would involve calculating the eccentricity (which requires applying Dijkstra's algorithm using $u + P$ as the starting nodes) for every possible values of $u$. The problem with this approach is that it would take more than 20 hours of runtime.
+
+    Note that the inefficiency mainly comes from wasting computing power on impossible locations. For example, if the eccentricity is large because the police stations cannot effectively cover the northeastern corner, then adding police stations on the southwest will definitely fail to reduce the eccentricity. By iteratively removing impossible nodes, we reduced the runtime to merely 4 seconds.
+
+    Eventually, the new police station and the old police station will be shown on the output map, with the former colored green and the latter colored red.
+
+  - **Test Cases**:
+
+    The Dijkstra's algorithm part is not tested since it is already done in goal 1. We did verify that the output location of the new police station indeed satisfy the conditions given above by using the traditional (slow) method and compare the outcomes.
+
+  - **Output**:
+
+    <p align="center"><img src="../results/police-station.png" width="400"/></p>
