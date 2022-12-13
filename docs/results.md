@@ -17,6 +17,12 @@
 
     <p align="center"><img src="../results/importance.png" width="400"/></p>
 
+  - **Answer to Leading Question**:
+
+    The leading question asks for the importance of all locations in San Francisco, which is shown in the output. The image shows several lines of darker colored nodes, which correspond to important locations, surrounded by lighter colored nodes. This result suggests that areas with a dense road network only contains a few pivotal road that the police need to focus on.
+
+    Still, this algorithm is not perfect. With a runtime of 4-6 hours, it is only capable of producing near accurate results. One solution to this issue is to apply multithreading, which would allow a more efficient usage of computing power. Heuristics can also increase the accuracy of estimations to the betweeness centrality.
+
 ---
 
 ## Goal 2: Emergency Contact Access Point
@@ -34,6 +40,10 @@
 
     <p align="center"><img src="../results/access-point.png" width="400"/></p>
 
+  - **Answer to Leading Question**:
+
+    The above image provides the locations of the access points as well as the optimal network of wires as the answer to the leading question. Though we consider this as a successful result, there are still a few possible improvements to our algorithm. For example, access points are currently chosen solely based on the degree of the nodes, thus making it impossible to adjust the density of the access points. To solve this, we need to introduce a new node selection algorithm. In addition, while the current answer connects all access points together via one tree, it is more reasonable to connect the access points into multiple trees where each tree contains exactly one police station. In this case, the signals from the access points will be sent directly to the nearest police station on the map.
+
 ---
 
 ## Goal 3: Police Training Simulator
@@ -48,6 +58,10 @@
   - **Output**:
 
     <p align="center"><img src="../results/escape-route.gif" width="400"/></p>
+
+  -**Answer to the Leading Question**:
+
+    Our algorithm is able to generate an escape route for the virtual thief as presented in the GIF above. Using DFS instead of Dijkstra's algorithm guarantees that the theif does not follow the shortest path, making the escape route more realistic. The minimum distance restriction also prevents the simulation from being too short. The only drawback of this approach is the lack of randomness in the selection of the route. The same inputs always result in the same output. This can be considered during future improvements.
 
 ---
 
@@ -75,3 +89,9 @@
   - **Output**:
 
     <p align="center"><img src="../results/police-station.png" width="400"/></p>
+
+  - **Answer to Leading Question**:
+
+    Our function successfully answers the leading question. Testing shows that our implementation will give a reasonable location for the new police station in almost all cases. However, we did discover an interesting fact, where the optimal location is not necessarily unique under the given restrictions. Our solution will pick a random location from these possible answers.
+
+    The direct consequence of this is that the algorithm sometimes chooses awkward locations when there are ties for the optimal. This is especially frequent when we use the same algorithm to iteratively pick multiple locations instead of just one. One possible solution to this problem is to design a tie-breaker heuristic to decide the true optimal location. The downside is this may slow down the algorithm considerably.
