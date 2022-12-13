@@ -238,7 +238,7 @@ class SFMap {
         /* Width of edge */
         double LINE_WIDTH = 1;
         /* Number of frames in escapeRoute */
-        const int FRAMES = 100;
+        const int FRAMES = 150;
         /* Camera movement smoothness */
         const double ALPHA = 0.15;
 

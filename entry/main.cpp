@@ -119,7 +119,7 @@ int main(int argc, char* argv[]) {
             cout << "\033[1mYour choice: \033[m";
             cin >> choice;
             switch (choice) {
-                case 1: 
+                case 1:
                 {
                     cout << "Using the default default setup {Coord: (37.5108, -122.1117), minDist: 10, zoom: 18}" << endl;
                     cout << "Please wait while we randomly choose an excape route for our virtual thief!" << endl;
@@ -127,8 +127,8 @@ int main(int argc, char* argv[]) {
                     Animation animation = map.escapeRoute(Coord(37.5108, -122.1117), 10, 18);
                     cout << "----------------------------------------------------------------" << endl;
                     cout << "Writing to GIF file..." << endl;
-                    animation.write("escapeRoute.gif");
-                    checkFileExistence("escapeRoute.gif");
+                    animation.write("escape-route.gif");
+                    checkFileExistence("escape-route.gif");
                     break;
                 } 
                 case 2: 
@@ -143,7 +143,7 @@ int main(int argc, char* argv[]) {
                     cout << "Using the start point (" << lat << ", " << lon << ")" << endl;
                     cout << "Please enter the minimum distance (in km) for the virtual thief to run: " << endl;
                     double minDist;
-                    cout << "\033[1mMinimun Distant: \033[m";
+                    cout << "\033[1mMinimum Distance: \033[m";
                     cin >> minDist;
                     cout << "Using the minimum distance of " << minDist << " km" << endl;
                     cout << "Please enter the zoom level for the map (we recommend 1 <= zoom <= 18): " << endl;
@@ -156,8 +156,8 @@ int main(int argc, char* argv[]) {
                     Animation animation = map.escapeRoute(Coord(lat, lon), minDist, zoom);
                     cout << "----------------------------------------------------------------" << endl;
                     cout << "Writing to GIF file..." << endl;
-                    animation.write("escapeRoute.gif");
-                    checkFileExistence("escapeRoute.gif");
+                    animation.write("escape-route.gif");
+                    checkFileExistence("escape-route.gif");
                     break;
                 } 
                 default: 

@@ -352,12 +352,12 @@ PNG SFMap::nextPoliceStation(double zoom) const {
     // draw original police stations
     for (int i = 0; i < (int)_police.size(); i++) {
         Coord zoomedTarget = coord2Pixel(_police[i]->coord, lowerLeft, zoom);
-        drawCircle(image, zoomedTarget, RADIUS * sqrt(zoom) * 5, rgbaColor{ 255, 0, 0, 255 });
+        drawCircle(image, zoomedTarget, RADIUS * sqrt(zoom) * 10, rgbaColor{ 255, 0, 0, 255 });
     }
 
     // draw new police stations
     Coord zoomedTarget = coord2Pixel(center, lowerLeft, zoom);
-    drawCircle(image, zoomedTarget, RADIUS * sqrt(zoom) * 5, rgbaColor{ 0, 255, 0, 255 });
+    drawCircle(image, zoomedTarget, RADIUS * sqrt(zoom) * 10, rgbaColor{ 0, 255, 0, 255 });
 
     return image;
 }
